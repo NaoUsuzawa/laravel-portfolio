@@ -16,7 +16,7 @@ body {
     color: #9F6B46;
 }
 
-.topround {
+.tab-topround {
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
 }
@@ -26,14 +26,28 @@ body {
     background-color: #ffffff;
 }
 
-.custom-tab button{
-    color: #9F6B46;
-}
-
 .custom-tab:hover{
     flex: 0 0 150px;
     background-color: #9F6B46;
 }
+
+@media (max-width: 768px) {
+  .custom-tab {
+    flex: 1 1 0; /* 均等幅に */
+  }
+
+  .custom-tab:hover {
+    flex: 1 1 0;
+    background-color: #9F6B46;
+  }
+}
+
+.custom-tab button{
+    color: #9F6B46;
+    white-space: nowrap;
+}
+
+
 
 .custom-tab:hover button{
     color: #ffffff;
