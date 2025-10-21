@@ -27,7 +27,7 @@ route::get('/message', function () {
     return view('messages.message');
 });
 
-route::get('/message/board',function(){
+route::get('/message/board', function () {
     return view('messages.chat');
 });
 
