@@ -81,18 +81,18 @@ class ProfileController extends Controller
 
     }
 
-    public function followers($id){
+    public function followers($id)
+    {
         $user = $this->user->findOrFail($id);
-        
+
         return view('followers_followings')->with('user', $user);
 
     }
 
-    public function following($id){
+    public function following($id)
+    {
         $user = $this->user->findOrFail($id);
 
         return view('followers_followings')->with('user', $user);
     }
-
-
 }

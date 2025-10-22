@@ -68,5 +68,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/{id}/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/{id}/followers', [ProfileController::class, 'followers'])->name('profile.followers');
-    
+
 });
