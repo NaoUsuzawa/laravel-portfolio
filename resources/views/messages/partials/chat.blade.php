@@ -1,7 +1,7 @@
 <div class="position-relative mb-2" style="height:50px">
 
     <div class="d-flex align-items-center d-md-none gap-3">
-        <a href=""><i class="fa-solid fa-angle-left" style="font-size:35px; line-height:50px; color: #D9D9D9"></i></a>
+        <a href="http://127.0.0.1:8000/message"><i class="fa-solid fa-angle-left" style="font-size:35px; line-height:50px; color: #D9D9D9"></i></a>
         <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg" alt="user" class="rounded-circle" style="width:50px; height:50px;">
     
         <h6 class="mb-0" style="line-height: 1">USER 3</h6>
@@ -45,6 +45,33 @@
 
     <div class="d-flex" style="color: #f1bdb2;">
         <i class="fa-regular fa-face-smile me-4" style="font-size: 38px;"></i>
-        <i class="fa-solid fa-image" style="font-size: 38px;"></i>
+
+        <input type="file" id="imageInput" accept="image/*" style="display:none">
+        <i class="fa-solid fa-image" id="imageIcon" style="font-size: 38px;cursor:pointer;"></i>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const imageIcon = document.getElementById("imageIcon");
+    const imageInput = document.getElementById("imageInput");
+
+    // imageInput excute when imageIcon is clicked
+    imageIcon.addEventListener("click", () => {
+        imageInput.click(); 
+    });
+
+    imageInput.addEventListener("change", function() {
+        const file = this.files[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            const previewImg = document.createElement("img");
+            previewImg.src = previewUrl;
+            previewImg.style.maxWidth = "150px";
+            previewImg.style.borderRadius = "10px";
+
+            document.querySelector(".message-board").appendChild(previewImg);
+            }
+    });
+});
+</script>

@@ -1,5 +1,13 @@
 <div class="container w-100">
-    <h2 class="mb-0" style="font-size: 32px;">Talking Users</h2>
+    <div class="d-flex">
+        <h2 class="mb-0" style="font-size: 32px;">Talking Users</h2>
+        <div class="d-flex align-items-center ms-auto">
+            <button class="btn border-0" data-bs-toggle="modal" data-bs-target="#followListModal">
+            <i class="fa-solid fa-square-plus" style="font-size:24px; color:#F1BDB2"></i>
+        </button>
+        </div>
+        
+    </div>
 
     <form action="" method="">
         <div class="d-flex mb-3 mt-2 align-items-center" style="width: 100%">
@@ -97,6 +105,8 @@
         </div>
     </div>
     <div class="d-flex align-items-center justify-content-center rounded-3 p-3 message-users">
-        <i class="fa-regular fa-square-plus" style="font-size: 50px;"></i>
+        <button class="btn border-0" data-bs-toggle="modal" data-bs-target="#followListModal">
+            <i class="fa-regular fa-square-plus" style="font-size: 50px;"></i>
+        </button>
     </div>
 </div>
