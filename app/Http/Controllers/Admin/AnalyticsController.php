@@ -43,6 +43,37 @@ class AnalyticsController extends Controller
         $saves = Save::whereIn('post_id', $postIds)->where('created_at', '>=', $since)->count();
         $interactionsTotal = $likes + $comments + $saves;
 
+        $followerIds = $user->followers()->pluck('id')->toArray();
+
+        $likesFromFollowers = $followerIds
+            ? Like::whereIn('post_id', $postIds)
+                ->where('created_at', '>=', $since)
+                ->whereIn('user_id', $followerIds)
+                ->count()
+            : 0;
+
+        $commentsFromFollowers = $followerIds
+            ? Comment::whereIn('post_id', $postIds)
+                    ->where('created_at', '>=', $since)
+                    ->whereIn('user_id', $followerIds)
+                    ->count()
+            : 0;
+
+        $savesFromFollowers = $followerIds
+            ? Save::whereIn('post_id', $postIds)
+                ->where('created_at', '>=', $since)
+                ->whereIn('user_id', $followerIds)
+                ->count()
+            : 0;
+
+        $interactionFollowers = $likesFromFollowers + $commentsFromFollowers + $savesFromFollowers;
+
+        $interactionFollowersRate = $interactionsTotal > 0
+            ? round(($interactionFollowers / $interactionsTotal) * 100, 1)
+            : 0;
+
+        $interactionNonFollowersRate = 100 - $interactionFollowersRate;
+
         $topInteractionPosts = Post::whereIn('id', $postIds)
             ->withCount(['likes', 'comments', 'saves'])
             ->orderByRaw('(likes_count + comments_count + saves_count) DESC')
@@ -82,7 +113,7 @@ class AnalyticsController extends Controller
             'viewsTotal', 'viewsFollowers', 'viewsNonFollowers',
             'topViewedPosts', 'interactionsTotal', 'likes', 'comments', 'saves',
             'topInteractionPosts', 'followersNow', 'followersPercent', 'countryStats',
-            'profileVisitsNow', 'profileVisitChange'
+            'profileVisitsNow', 'profileVisitChange', 'interactionFollowersRate', 'interactionNonFollowersRate'
         ));
     }
 }
