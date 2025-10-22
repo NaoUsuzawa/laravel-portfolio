@@ -168,18 +168,24 @@ body {
     transition: all 0.2s ease;
 }
 
-
-
-.follow-tab button{
-    color: #F1BDB2;
-    border-color: #F1BDB2;
-    transition: all 0.2s ease;
-
+.follow-tab .nav-link {
+    color:#F1BDB2;               
+    background-color: #ffffff;   
+    border: 1px solid #F1BDB2;
+    border-radius: 8px 8px 0 0;  
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.follow-tab:hover button{
+.follow-tab .nav-link:hover {
+    background-color: #f1bdb2;
     color: #ffffff;
+}
+
+.follow-tab .nav-link.active {
     background-color: #F1BDB2;
+    color: #ffffff;
+    border-color:#f1bdb2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .follow-btn{
