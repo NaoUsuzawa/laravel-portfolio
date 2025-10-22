@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\ProfileVisit;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +23,26 @@ class ProfileController extends Controller
     public function show($id)
     {
         $user = $this->user->findOrFail($id);
+        $visitor = Auth::user();
+
+        if ($visitor && $visitor->id !== $user->id) {
+            $alreadyVisited = ProfileVisit::where('profile_user_id', $user->id)
+                ->where('visitor_user_id', $visitor->id)
+                ->whereDate('created_at', Carbon::today())
+                ->exists();
+
+            if (! $alreadyVisited) {
+                ProfileVisit::create([
+                    'profile_user_id' => $user->id,
+                    'visitor_user_id' => $visitor->id,
+                ]);
+            }
+        } elseif (! Auth::check()) {
+            ProfileVisit::create([
+                'profile_user_id' => $user->id,
+                'visitor_user_id' => null,
+            ]);
+        }
 
         return view('users.profile.show')->with('user', $user);
     }
