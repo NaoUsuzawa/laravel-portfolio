@@ -138,6 +138,12 @@ body {
     color: #ffffff;
 }
 
+.user-list-scroll {
+    max-height: 300px; 
+    overflow-y: auto;  
+    padding-right: 5px; 
+}
+
 .message-board{
     background-color: #FFFBEB;
     width: 100%;
