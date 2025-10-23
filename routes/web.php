@@ -63,9 +63,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // PROFILE
-    Route::get('/profile/{id}/show', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile/{id}/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/{id}/followers', [ProfileController::class, 'followers'])->name('profile.followers');
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile/{id}/show', 'show')->name('profile.show');
+        Route::get('profile/edit', 'edit')->name('profile.edit');
+        Route::patch('/profile/{id}/update', 'update')->name('profile.update');
+        Route::get('/profile/{id}/followers', 'followers')->name('profile.followers');
+        Route::get('/profile/{id}/following', 'following')->name('profile.following');
+    });
 
 });
