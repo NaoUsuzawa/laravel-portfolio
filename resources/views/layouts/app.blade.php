@@ -40,6 +40,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js']) 
+
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 </head>
 <body>
     <div id="app">
@@ -206,5 +211,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         </main>
     </div>
     @yield('scripts')
+
+    @stack('scripts')
 </body>
 </html>

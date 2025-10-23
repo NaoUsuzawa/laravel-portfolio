@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
+Auth::routes();
 // Admin
 Route::get('admin/users', function () {
     return view('admin.users.index');
@@ -21,20 +25,22 @@ Route::get('admin/categories', function () {
 });
 
 // Analytics
-Route::get('users/analytics', function () {
-    return view('users.analytics.index');
-});
+Route::get('/users/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
 route::get('/message', function () {
-    return view('message');
+    return view('messages.message');
 });
 
-Auth::routes();
+route::get('/message/board', function () {
+    return view('messages.chat');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+route::get('/favorites', function () {
+    return view('favorite');
+});
 
-Route::get('/profile', function () {
-    return view('users.profile.show');
+route::get('/followers', function () {
+    return view('followers_followings');
 });
 
 Route::get('/show2', function () {
@@ -52,6 +58,18 @@ Route::get('/post/{id}/show', [PostController::class, 'show'])->name('post.show'
 Route::get('/post/{id}/edit', [PostController::class, 'edit'])->name('post.edit');
 Route::patch('/post/{id}/update', [PostController::class, 'update'])->name('post.update');
 Route::delete('/post/{id}/destroy', [PostController::class, 'destroy'])->name('post.destroy');
-Route::get('/users/profile', function () {
-    return view('users.profile.edit');
+
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    // PROFILE
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile/{id}/show', 'show')->name('profile.show');
+        Route::get('profile/edit', 'edit')->name('profile.edit');
+        Route::patch('/profile/{id}/update', 'update')->name('profile.update');
+        Route::get('/profile/{id}/followers', 'followers')->name('profile.followers');
+        Route::get('/profile/{id}/following', 'following')->name('profile.following');
+    });
+
 });
