@@ -66,7 +66,6 @@ class FollowController extends Controller
         return redirect()->route('profile.show', $user_id);
     }
 
-
     public function getSuggestedUsers()
     {
         $currentUser = Auth::user();
@@ -87,7 +86,7 @@ class FollowController extends Controller
         $activeTab = $tab;
         $keyword = $request->get('search');
 
-        if (!$keyword) {
+        if (! $keyword) {
             return redirect()->route('profile.followers', $user->id);
         }
 
