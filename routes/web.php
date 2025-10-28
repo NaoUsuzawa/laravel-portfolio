@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,17 +40,13 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/profile', function () {
-    return view('users.profile.show');
-});
+//Profile
+Route::get('/profile', function () {return view('users.profile.show');});
+Route::get('/profile/{id}/trip-map', [MapController::class,'show'])->name('map.show');
+Route::get('/profile/{id}/pref/{pref_id}',[MapController::class, 'showPost'])->name('map.showPost');
+Route::get('/profile/{id}/pref/{pref_id}', [MapController::class, 'showPost'])->name('map.showPost');
 
-Route::get('/show2', function () {
-    return view('users.profile.show2');
-});
 
-Route::get('profile/trip-map', function () {
-    return view('users.profile.trip-map');
-});
 
 // ★★★ 修正不要、このルート定義で 'post.store' が有効です ★★★
 // ルート名は post. で統一されているため、Blade側を post.store に合わせましょう。
