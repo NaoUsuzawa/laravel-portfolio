@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prefecture extends Model
 {
-     public function posts(){
+    public function posts()
+    {
         return $this->hasMany(Post::class);
-     }
+    }
 }
