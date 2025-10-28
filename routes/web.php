@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -44,12 +45,20 @@ Route::get('/followers', function () {
     return view('followers_followings');
 });
 
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Profile
+Route::get('/profile', function () {
+    return view('users.profile.show');
+});
+Route::get('/profile/{id}/trip-map', [MapController::class, 'show'])->name('map.show');
+Route::get('/profile/{id}/pref/{pref_id}', [MapController::class, 'showPost'])->name('map.showPost');
+Route::get('/profile/{id}/pref/{pref_id}', [MapController::class, 'showPost'])->name('map.showPost');
+
 Route::get('/show2', function () {
     return view('users.profile.show2');
-});
-
-Route::get('profile/trip-map', function () {
-    return view('users.profile.trip-map');
 });
 
 Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
