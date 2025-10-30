@@ -9,13 +9,13 @@ use App\Models\User;
 class MapController extends Controller
 {
     protected $user;
+
     private $post;
 
     public function __construct(Post $post)
     {
         $this->post = $post;
     }
-
 
     public function show($id)
     {
@@ -33,6 +33,7 @@ class MapController extends Controller
                 return $pref;
 
             });
+
         return view('users.profile.trip-map', [
             'user' => $this->user,
             'prefectures' => $prefectures,
@@ -55,25 +56,24 @@ class MapController extends Controller
     public function getPost($id)
     {
         // get all the post
-        // $all_posts = $this->post->where('user_id', $id)->distinct()->get(); 
+        // $all_posts = $this->post->where('user_id', $id)->distinct()->get();
         $all_posts = $this->post
-        ->where('user_id', $id)
-        ->whereIn('id', function ($query) use ($id) {
-            $query->selectRaw('MIN(id)')
-                  ->from('posts')
-                  ->where('user_id', $id)
-                  ->groupBy('prefecture_id');
-        })
-        ->get();
-    
+            ->where('user_id', $id)
+            ->whereIn('id', function ($query) use ($id) {
+                $query->selectRaw('MIN(id)')
+                    ->from('posts')
+                    ->where('user_id', $id)
+                    ->groupBy('prefecture_id');
+            })
+            ->get();
+
         // dd($all_posts);
 
         // roop each of the post
         $map_posts = [];
-        foreach($all_posts as $post)
-        {
+        foreach ($all_posts as $post) {
             // if($post->user->has_post){
-                $map_posts[] =  ['code' => $post->prefecture->code, 'has_post' => true] ;
+            $map_posts[] = ['code' => $post->prefecture->code, 'has_post' => true];
             // }
 
         }

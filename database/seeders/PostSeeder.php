@@ -85,7 +85,7 @@ class PostSeeder extends Seeder
                 } else {
                     echo "⚠️ Image file not found: {$fileName}\n";
                 }
-                
+
             }
         }
     }

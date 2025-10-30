@@ -67,7 +67,6 @@ Route::get('/prefectures/{id}/posts', [MapController::class, 'getPost'])->name('
 //     ]);
 // });
 
-
 Route::get('/show2', function () {
     return view('users.profile.show3');
 });
