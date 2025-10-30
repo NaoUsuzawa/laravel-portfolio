@@ -69,4 +69,10 @@ class RegisterController extends Controller
             'country' => $data['country'],
         ]);
     }
+
+    public function showRegistrationForm()
+    {
+        $countries = collect(countries())->sortBy('name');
+        return view('auth.register', compact('countries'));
+    }
 }
