@@ -16,45 +16,45 @@ class PostSeeder extends Seeder
     {
         $posts = [
             [
-                'title' => 'Tokyo',
-                'prefecture_id' => 13,
+                'title' => 'Hokkaido',
+                'prefecture_id' => 1,
                 'visited_at' => Carbon::now()->subDays(10),
                 'cost' => '10000',
-                'image_files' => ['sample1.jpg'],
+                'image_files' => ['sample1.jpeg'],
                 'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             ],
             [
-                'title' => 'Oosaka万博',
-                'prefecture_id' => 27,
+                'title' => 'Okinawa',
+                'prefecture_id' => 47,
                 'visited_at' => Carbon::now()->subDays(5),
                 'cost' => '8000',
-                'image_files' => ['sample2.jpg'],
+                'image_files' => ['sample2.jpeg'],
                 'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             ],
-            [
-                'title' => '福岡旅行',
-                'prefecture_id' => 40,
-                'visited_at' => Carbon::now()->subDays(2),
-                'cost' => '12000',
-                'image_files' => ['sample3.jpg'],
-                'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            ],
-            [
-                'title' => 'Kyoto',
-                'prefecture_id' => 26,
-                'visited_at' => Carbon::now()->subDays(2),
-                'cost' => '2000',
-                'image_files' => ['sample4.jpg'],
-                'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            ],
-            [
-                'title' => 'Kanagawa',
-                'prefecture_id' => 14,
-                'visited_at' => Carbon::now()->subDays(2),
-                'cost' => '112000',
-                'image_files' => ['sample5.jpg'],
-                'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            ],
+            // [
+            //     'title' => '福岡旅行',
+            //     'prefecture_id' => 40,
+            //     'visited_at' => Carbon::now()->subDays(2),
+            //     'cost' => '12000',
+            //     'image_files' => ['sample3.jpeg'],
+            //     'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            // ],
+            // [
+            //     'title' => 'Kyoto',
+            //     'prefecture_id' => 26,
+            //     'visited_at' => Carbon::now()->subDays(2),
+            //     'cost' => '2000',
+            //     'image_files' => ['sample4.jpeg'],
+            //     'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            // ],
+            // [
+            //     'title' => 'Kanagawa',
+            //     'prefecture_id' => 14,
+            //     'visited_at' => Carbon::now()->subDays(2),
+            //     'cost' => '112000',
+            //     'image_files' => ['sample5.jpeg'],
+            //     'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            // ],
         ];
 
         foreach ($posts as $postData) {
@@ -82,6 +82,7 @@ class PostSeeder extends Seeder
 
                     $imagesArray[] = $base64;
                 }
+                
             }
         }
     }
