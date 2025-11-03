@@ -75,16 +75,17 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
                                 </li>
+                        
                             @endif
                         @else
                                 <li class="nav-item">
-                                <a href="" class="nav-link fs-2" style="color:#9F6B46;">
+                                <a href="{{ route('post.create') }}" class="nav-link fs-2" style="color:#9F6B46;">
                                     <i class="fa-solid fa-circle-plus"></i>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="" class="nav-link fs-2" style="color:#9F6B46;">
+                                <a href="#" class="nav-link fs-2" style="color:#9F6B46;">
                                     <i class="fa-regular fa-comment "></i>
                                 </a>
                             </li>
