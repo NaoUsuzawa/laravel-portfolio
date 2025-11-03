@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     private $user;
+
     private $post;
 
     public function __construct(User $user, Post $post)
@@ -50,15 +51,17 @@ class ProfileController extends Controller
         }
 
         $prefecture_ids = Post::where('user_id', $user->id)
-        ->pluck('prefecture_id')
-        ->unique();
+            ->pluck('prefecture_id')
+            ->unique();
 
-        $prefectures = Prefecture::select('id','name','code')
-        ->get()
-        ->map(function($pref) use ($prefecture_ids){
-            $pref->has_post = $prefecture_ids->contains($pref->id);
-            return $pref;
-        });
+        $prefectures = Prefecture::select('id', 'name', 'code')
+            ->get()
+            ->map(function ($pref) use ($prefecture_ids) {
+                $pref->has_post = $prefecture_ids->contains($pref->id);
+
+                return $pref;
+            });
+
         return view('users.profile.show')
             ->with('user', $user)
             ->with('prefectures', $prefectures);
@@ -130,15 +133,17 @@ class ProfileController extends Controller
         $activeTab = $request->get('tab', 'followers');
 
         $prefecture_ids = Post::where('user_id', $user->id)
-        ->pluck('prefecture_id')
-        ->unique();
+            ->pluck('prefecture_id')
+            ->unique();
 
-    $prefectures = Prefecture::select('id', 'name', 'code')
-        ->get()
-        ->map(function($pref) use ($prefecture_ids){
-            $pref->has_post = $prefecture_ids->contains($pref->id);
-            return $pref;
-        });
+        $prefectures = Prefecture::select('id', 'name', 'code')
+            ->get()
+            ->map(function ($pref) use ($prefecture_ids) {
+                $pref->has_post = $prefecture_ids->contains($pref->id);
+
+                return $pref;
+            });
+
         return view('followers_followings', compact('user', 'suggested_users', 'activeTab', 'prefectures'));
     }
 
@@ -151,15 +156,16 @@ class ProfileController extends Controller
         $activeTab = $request->get('tab', 'following');
 
         $prefecture_ids = Post::where('user_id', $user->id)
-        ->pluck('prefecture_id')
-        ->unique();
+            ->pluck('prefecture_id')
+            ->unique();
 
-    $prefectures = Prefecture::select('id', 'name', 'code')
-        ->get()
-        ->map(function($pref) use ($prefecture_ids){
-            $pref->has_post = $prefecture_ids->contains($pref->id);
-            return $pref;
-        });
+        $prefectures = Prefecture::select('id', 'name', 'code')
+            ->get()
+            ->map(function ($pref) use ($prefecture_ids) {
+                $pref->has_post = $prefecture_ids->contains($pref->id);
+
+                return $pref;
+            });
 
         return view('followers_followings', compact('user', 'suggested_users', 'activeTab', 'prefectures'));
     }
@@ -218,6 +224,7 @@ class ProfileController extends Controller
             $map_posts[] = ['code' => $post->prefecture->code, 'has_post' => true];
 
         }
+
         return response()->json($map_posts);
     }
 }

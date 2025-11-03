@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Auth;
 class FollowController extends Controller
 {
     private $follow;
+
     private $post;
+
     private $user;
 
-    public function __construct(Follow $follow,Post $post,User $user)
+    public function __construct(Follow $follow, Post $post, User $user)
     {
         $this->follow = $follow;
         $this->post = $post;
@@ -44,19 +46,20 @@ class FollowController extends Controller
 
         $user = $this->user->findOrFail($user_id);
         $prefecture_ids = Post::where('user_id', $user->id)
-        ->pluck('prefecture_id')
-        ->unique();
+            ->pluck('prefecture_id')
+            ->unique();
 
-        $prefectures = Prefecture::select('id','name','code')
-        ->get()
-        ->map(function($pref) use ($prefecture_ids){
-            $pref->has_post = $prefecture_ids->contains($pref->id);
-            return $pref;
-        });
+        $prefectures = Prefecture::select('id', 'name', 'code')
+            ->get()
+            ->map(function ($pref) use ($prefecture_ids) {
+                $pref->has_post = $prefecture_ids->contains($pref->id);
+
+                return $pref;
+            });
 
         return redirect()->route('profile.show', $user_id)
-                        ->with('user', $user)
-                        ->with('prefecture', $prefectures);
+            ->with('user', $user)
+            ->with('prefecture', $prefectures);
     }
 
     public function destroy(Request $request, $user_id)
@@ -125,7 +128,6 @@ class FollowController extends Controller
         ]);
     }
 
-
     public function showPref($id)
     {
         $this->user = User::findOrFail($id);
@@ -180,7 +182,7 @@ class FollowController extends Controller
             $map_posts[] = ['code' => $post->prefecture->code, 'has_post' => true];
 
         }
+
         return response()->json($map_posts);
     }
-
 }

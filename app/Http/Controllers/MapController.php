@@ -71,6 +71,7 @@ class MapController extends Controller
         foreach ($all_posts as $post) {
             $map_posts[] = ['code' => $post->prefecture->code, 'has_post' => true];
         }
+
         return response()->json($map_posts);
     }
 }
