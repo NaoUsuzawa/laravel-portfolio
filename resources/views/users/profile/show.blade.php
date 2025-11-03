@@ -199,11 +199,12 @@
                             <div class="fs-5 fw-bold">{{ $user->posts->count() }}</div>
                             <div class="small">Posts</div>
                         </a>
-                        <a href="{{ route('profile.followers', $user->id) }}" class="text-decoration-none flex-fill">
+                        <a href="{{ route('profile.followers', ['id' => $user->id, 'tab' => 'followers']) }}" class="text-decoration-none flex-fill">
                             <div class="fs-5 fw-bold">{{ $user->followers->count() }}</div>
                             <div class="small">{{ $user->followers->count() == 1 ? 'Follower' : 'Followers' }}</div>
                         </a>
-                        <a href="{{ route('profile.following', $user->id) }}" class="text-decoration-none flex-fill">
+
+                        <a href="{{ route('profile.following', ['id' => $user->id, 'tab' => 'following']) }}" class="text-decoration-none flex-fill">
                             <div class="fs-5 fw-bold">{{ $user->following->count() }}</div>
                             <div class="small">Following</div>
                         </a>
@@ -232,7 +233,7 @@
                         </a>
                     </div>
                     <div class="col-auto">
-                        <a href="#" 
+                        <a href="{{ route('favorite') }}" 
                             class="btn editbtn shadow-sm"
                             style="background-color:white; color:#F1BDB2; font-weight:bold; width:190px; border:2px solid #F1BDB2; transition:0.3s;"
                             onmouseover="this.style.backgroundColor='#F1BDB2'; this.style.color='white';"
@@ -242,40 +243,41 @@
                     </div>
                 @else
                     <div class="col-auto px-2">
-                        {{-- @if ($user->isFollowed())
+                        @if ($user->isFollowed())
                             <form action="{{ route('follow.destroy', $user->id) }}" method="post" class="d-inline">
                                 @csrf
                                 @method('DELETE')
+                                <input type="hidden" name="return_url" value="{{ url()->current() }}">
                                 <button type="submit" 
-                                        class="btn editbtn shadow-sm"
-                                        style="background-color:transparent; color:#B0B0B0; font-weight:bold; width:180px; border:2px solid #B0B0B0; transition:0.3s;"
-                                        onmouseover="this.style.backgroundColor='#B0B0B0'; this.style.color='white';"
-                                        onmouseout="this.style.backgroundColor='transparent'; this.style.color='#B0B0B0';">
-                                    <i class="fa-regular fa-circle-check"></i>Following
+                                    class="btn shadow-sm"
+                                    style="background-color:#B0B0B0; color:white; font-weight:bold; width:180px; border:2px solid #B0B0B0; transition:0.3s;"
+                                    onmouseover="this.style.backgroundColor='white'; this.style.color='#B0B0B0';"
+                                    onmouseout="this.style.backgroundColor='#B0B0B0'; this.style.color='white';">
+                                    Following
                                 </button>
                             </form>
                         @else
                             <form action="{{ route('follow.store', $user->id) }}" method="post" class="d-inline">
                                 @csrf
+                                <input type="hidden" name="return_url" value="{{ url()->current() }}">
                                 <button type="submit" 
-                                        class="btn editbtn shadow-sm"
+                                        class="btn shadow-sm"
                                         style="background-color:#F1BDB2; color:white; font-weight:bold; width:180px; border:2px solid #F1BDB2; transition:0.3s;"
                                         onmouseover="this.style.backgroundColor='transparent'; this.style.color='#F1BDB2';"
                                         onmouseout="this.style.backgroundColor='#F1BDB2'; this.style.color='white';">
                                     Follow
                                 </button>
                             </form>
-                        @endif --}}
+                        @endif
                     </div>
-
                     <div class="col-auto">
-                        {{-- <a href="{{ route('dm.show', $user->id) }}" 
-                            class="btn editbtn shadow-sm"
+                        <a href="#" 
+                            class="btn shadow-sm"
                             style="background-color:white; color:#F1BDB2; font-weight:bold; width:180px; border:2px solid #F1BDB2; transition:0.3s;"
                             onmouseover="this.style.backgroundColor='#F1BDB2'; this.style.color='white';"
                             onmouseout="this.style.backgroundColor='white'; this.style.color='#F1BDB2';">
                             DM
-                        </a> --}}
+                        </a>
                     </div>
                 @endif
             </div>
@@ -284,8 +286,9 @@
             <div class="row">
                 <p class="fw-bold h5 click-map text-center">Click map <span>to view full map</span></p>
                 <div class="map-container">
-                    <a href="profile/trip-map" class="trip-map-a"></a>
-                    <div id="map" style="width: 100%; height: 350px;"></div>
+                    <a href="/profile/trip-map" class="trip-map-a"> 
+                   <div id="map" style="width: 100%; height: 350px;"></div>
+                   </a>
                     <div class="spinner-wrapper">
                         <div class="spinner-outer">
                             <div class="spinner-text">
@@ -303,11 +306,11 @@
             <div class="row mt-3 mb-2">
                 <div class="col-12">
                     @if ($user->posts->isNotEmpty())
-                        <div class="row g-4">
+                        <div class="row g-3">
                             @foreach ($user->posts as $post)
                                 @if ($post->images->isNotEmpty())
-                                    <div class="col-lg-4 col-md-6 col-sm-12">
-                                        <div class="card border-0 p-0 shadow-sm rounded-4 overflow-hidden">
+                                    <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                        <div class="card border-0 p-0 shadow-sm rounded-2 overflow-hidden">
                                             <div class="card-header border-0 p-0">
                                                 <a href="{{ route('post.show', $post->id) }}" class="d-block position-relative">
                                                     @if ($post->images->count() > 1)
@@ -317,7 +320,7 @@
                                                             <div class="carousel-inner">
                                                                 @foreach ($post->images as $key => $image)
                                                                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                                                        <img src="{{ $image->image }}" 
+                                                                        <img src="data:image/jpeg;base64,{{ $image->image }}" 
                                                                             alt="Post image {{ $post->id }}" 
                                                                             class="d-block w-100 post-image"
                                                                             style="width: 100%; height: auto; object-fit: cover;">
@@ -335,7 +338,7 @@
                                                             </button>
                                                         </div>
                                                     @else
-                                                        <img src="{{ $post->images->first()->image }}" 
+                                                        <img src="data:image/jpeg;base64,{{ $post->images->first()->image }}" 
                                                             alt="Post image {{ $post->id }}" 
                                                             class="post-image"
                                                             style="width: 100%; height: auto; object-fit: cover;">

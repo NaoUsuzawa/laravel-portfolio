@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes;
+    // ※Push前に戻す  use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -80,5 +80,21 @@ class Post extends Model
     public function saves()
     {
         return $this->hasMany(Save::class);
+    }
+
+    public function prefecture()
+    {
+        return $this->belongsTo(Prefecture::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function isFavorited()
+    {
+        return $this->favorites()->where('user_id', Auth::user()->id)->exists();
+
     }
 }

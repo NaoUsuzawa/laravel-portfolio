@@ -7,6 +7,7 @@
     body, html {
         font-family: 'Source Serif Pro', serif; 
         background-color: white; 
+        
     }
 
     .full-page-container {
@@ -14,7 +15,6 @@
         justify-content: center;
         align-items: flex-start; 
         min-height: 100vh;
-        padding-top: 80px;
         position: relative; 
         background-color: white; 
     }
