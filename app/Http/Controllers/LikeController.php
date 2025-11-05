@@ -9,7 +9,7 @@ class LikeController extends Controller
 {
     private $like;
 
-    public function  __construct(Like $like)
+    public function __construct(Like $like)
     {
         $this->like = $like;
     }
@@ -30,6 +30,6 @@ class LikeController extends Controller
             ->where('user_id', Auth::user()->id)
             ->delete();
 
-            return redirect()->back();
+        return redirect()->back();
     }
 }

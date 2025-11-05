@@ -64,7 +64,7 @@ Route::get('/profile/{id}/trip-map', [MapController::class, 'show'])->name('map.
 Route::get('/profile/{id}/pref/{pref_id}', [MapController::class, 'showPost'])->name('map.showPost');
 Route::get('/prefectures/{id}/posts', [MapController::class, 'getPost'])->name('map.getPost');
 
-//Like
+// Like
 Route::post('/like/{post_id}/store', [LikeController::class, 'store'])->name('like.store');
 Route::delete('/like/{post_id}/destroy', [LikeController::class, 'destroy'])->name('like.destroy');
 

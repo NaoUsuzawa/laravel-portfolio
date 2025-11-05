@@ -13,9 +13,9 @@ use Schema;
 
 class User extends Authenticatable
 {
-   // use SoftDeletes;
+    // use SoftDeletes;
 
-   // protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -93,7 +93,7 @@ class User extends Authenticatable
         return $this->following()->where('following_id', $user->id)->exists();
     }
 
-    //use HasFactory, SoftDeletes;
+    // use HasFactory, SoftDeletes;
 
     // public function up()
     // {
