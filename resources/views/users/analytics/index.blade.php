@@ -23,7 +23,7 @@
         <div class="main-value">{{ number_format($viewsTotal) }}</div>
         
         <div class="chart">
-          <div class="donut"></div>
+          <canvas id="viewsDonutChart"></canvas>
         </div>
 
         <div class="legend">
@@ -65,7 +65,9 @@
       <div class="card">
         <h2>Interactions</h2>
         <div class="main-value">{{ number_format($interactionsTotal) }}</div>
-        <div class="chart"><div class="donut"></div></div>
+        <div class="chart">
+          <canvas id="interactionsDonutChart"></canvas>
+        </div>
         <div class="legend">
           <span class="followers">Followers {{ $interactionFollowersRate }}%</span>
           <span class="non-followers">Non-followers {{ $interactionNonFollowersRate }}%</span>
@@ -81,7 +83,12 @@
           <div class="thumbs">
             @foreach($topInteractionPosts as $post)
             <div class="content-item">
-              <img src="{{ asset('storage/' . $post->image) }}" alt="">
+              @if ($post->images->first())
+                <img src="data:image/jpeg;base64,{{ $post->images->first()->image }}" alt="Post image {{ $post->id }}">
+              @else
+                <img src="/no-image.png" alt="No image">
+              @endif
+
               <span class="views">{{ $post->created_at->format('M j') }}</span>
             </div>
             @endforeach
@@ -98,7 +105,7 @@
         </div>
 
         <div class="sub-section">
-          <h4>Follower details</h4>
+          <h4>Followers Trend</h4>
 
           <!-- Chart.js 読み込み -->
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -109,6 +116,33 @@
           </div>
 
           <script>
+              // Views donut
+              new Chart(document.getElementById('viewsDonutChart'), {
+                type: 'doughnut',
+                data: {
+                  labels: ['Followers', 'Non-followers'],
+                  datasets: [{
+                    data: [{{ $followersRate }}, {{ $nonFollowersRate }}],
+                    backgroundColor: ['#9F6B46', '#F1BDB2'],
+                  }]
+                },
+                options: { cutout: '60%', plugins: { legend: { display: false } } }
+              });
+
+              // Interactions donut
+              new Chart(document.getElementById('interactionsDonutChart'), {
+                type: 'doughnut',
+                data: {
+                  labels: ['Followers', 'Non-followers'],
+                  datasets: [{
+                    data: [{{ $interactionFollowersRate }}, {{ $interactionNonFollowersRate }}],
+                    backgroundColor: ['#9F6B46', '#F1BDB2'],
+                  }]
+                },
+                options: { cutout: '60%', plugins: { legend: { display: false } } }
+              });
+
+
             const ctx = document.getElementById('followersChangeChart').getContext('2d');
 
             new Chart(ctx, {
@@ -117,7 +151,7 @@
                 labels: ['Oct 1', 'Oct 5', 'Oct 10', 'Oct 15', 'Oct 20', 'Oct 25', 'Oct 30'],
                 datasets: [{
                   label: 'Follower Change',
-                  data: [2, -1, 3, 0, -2, 1, -1],
+                  data: [250, 260, 340, 120, 500, 440, 600],
                   borderColor: '#9F6B46',
                   backgroundColor: 'rgba(241,189,178,0.25)',
                   tension: 0.35,
@@ -131,10 +165,10 @@
                 maintainAspectRatio: false,
                 scales: {
                   y: {
-                    min: -3,
-                    max: 3,
+                    min: 0,
+                    max: 1000,
                     ticks: {
-                      stepSize: 1,
+                      stepSize: 250,
                       color: '#9F6B46',
                       font: { size: 11 }
                     },
@@ -186,7 +220,7 @@
                 $percent = round(($country->count / $maxCount) * 100);
               @endphp
               <div class="country">
-                {{ $country->country ?? 'Unknown' }} ({{ $country->count }})
+                {{ $country->country ?? 'Unknown' }} {{ $percent }} % 
                 <div class="bar" style="width:{{ $percent }}%;"></div>
               </div>
             @endforeach

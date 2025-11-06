@@ -82,6 +82,7 @@ class AnalyticsController extends Controller
         $interactionNonFollowersRate = 100 - $interactionFollowersRate;
 
         $topInteractionPosts = Post::whereIn('id', $postIds)
+            ->with(['images'])
             ->withCount(['likes', 'comments', 'saves'])
             ->orderByRaw('(likes_count + comments_count + saves_count) DESC')
             ->take(3)
