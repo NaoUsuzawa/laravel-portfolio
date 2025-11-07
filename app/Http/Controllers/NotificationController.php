@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class NotificationController extends Controller
 {
     public function index()
@@ -14,13 +12,13 @@ class NotificationController extends Controller
                 'user' => 'Test2',
                 'action' => 'liked your post',
                 'time' => '3h',
-                'image' => 'https://via.placeholder.com/100'
+                'image' => 'https://via.placeholder.com/100',
             ],
             [
                 'user' => 'Test3',
                 'action' => 'liked your post',
                 'time' => '1d',
-                'image' => 'https://via.placeholder.com/100'
+                'image' => 'https://via.placeholder.com/100',
             ],
         ];
 

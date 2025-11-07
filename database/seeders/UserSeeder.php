@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -16,7 +15,7 @@ class UserSeeder extends Seeder
             'country' => 'Japan',
             'email' => 'test1@mail.com',
             'password' => Hash::make('asdfasdf'),
-            'role_id' => 1
+            'role_id' => 1,
         ]);
     }
 }

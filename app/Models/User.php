@@ -13,13 +13,13 @@ use Schema;
 
 class User extends Authenticatable
 {
-
     protected $dates = ['deleted_at'];
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
     const ADMIN_ROLE_ID = 1;
+
     const USER_ROLE_ID = 2;
 
     /**
