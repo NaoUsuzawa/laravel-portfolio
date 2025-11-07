@@ -92,4 +92,10 @@ class Post extends Model
         return $this->favorites()->where('user_id', Auth::user()->id)->exists();
 
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'post_id', 'id');
+    }
+    
 }
