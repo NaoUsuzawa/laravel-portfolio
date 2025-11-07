@@ -13,12 +13,14 @@ use Schema;
 
 class User extends Authenticatable
 {
-    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
+
+    const ADMIN_ROLE_ID = 1;
+    const USER_ROLE_ID = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -107,5 +109,15 @@ class User extends Authenticatable
         Schema::table('users', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role_id === 1;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role_id === 2;
     }
 }

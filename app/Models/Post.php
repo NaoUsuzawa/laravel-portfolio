@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
-    // ※Push前に戻す  use HasFactory, SoftDeletes;
+     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
