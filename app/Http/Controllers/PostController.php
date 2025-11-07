@@ -46,15 +46,13 @@ class PostController extends Controller
             str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT).':'.
             str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
 
-       
-            if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $base64Images = [];
             foreach ($request->file('image') as $image) {
                 $base64Images[] = base64_encode(file_get_contents($image));
             }
             $validated['image'] = json_encode($base64Images, JSON_UNESCAPED_SLASHES);
         }
-
 
         $post = new Post([
             'user_id' => Auth::id(),
@@ -63,8 +61,8 @@ class PostController extends Controller
             'prefecture_id' => $validated['prefecture_id'],
             'visited_at' => $visitedAt,
             'cost' => $validated['cost'] ?? 0,
-            // 'image' => $base64Images,  
-            'image' => $validated['image'] ?? null, 
+            // 'image' => $base64Images,
+            'image' => $validated['image'] ?? null,
             'time_hour' => $validated['time_hour'],
             'time_min' => $validated['time_min'],
         ]);
@@ -131,7 +129,7 @@ class PostController extends Controller
                     $base64Images[] = base64_encode(file_get_contents($image));
                 }
             }
-            
+
             $base64Images = array_slice($base64Images, 0, 3);
         }
 
@@ -154,7 +152,6 @@ class PostController extends Controller
 
         return redirect()->route('post.show', $post->id)->with('success');
     }
-
 
     public function destroy($id)
     {
