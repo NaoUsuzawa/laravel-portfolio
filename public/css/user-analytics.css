@@ -80,29 +80,18 @@ select {
    ドーナツチャート
 ------------------------------ */
 .chart {
+  width: 100%;
+  height: 120px; /*← 元と同じくらいのコンパクトサイズ */
   display: flex;
   justify-content: center;
-  margin: 15px 0;
+  align-items: center;
 }
 
-.donut {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: conic-gradient(#F1BDB2 0deg 310deg, #9F6B46 310deg 360deg);
-  position: relative;
+.chart canvas {
+  max-width: 120px;
+  max-height: 120px;
 }
 
-.donut::after {
-  content: "";
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  width: 74px;
-  height: 74px;
-  background-color: #FFFFFF;
-  border-radius: 50%;
-}
 
 .legend {
   display: flex;

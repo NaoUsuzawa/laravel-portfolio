@@ -296,30 +296,44 @@
                                 <div class="card-footer bg-white border-0">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <span class="fs-5 mb-0">{{ $post->title ?? 'Title' }}</span>
-                                        <div>
-                                            <span>♡ 123</span>
-                                            <span>☆</span>
+                                        <div class="d-flex align-items-center gap-2">
+                                                @if ($post->isLiked())
+                                                <form action="{{ route('like.destroy', $post->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm p-0">
+                                                        <i class="fa-solid fa-heart me-1"  style="color: #9F6B46"></i>
+                                                    </button>
+                                                    <span class="fw-bold" style="color: #9F6B46">{{ $post->likes->count() }}</span>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('like.store', $post->id) }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm p-0">
+                                                        <i class="fa-regular fa-heart"  style="color: #9F6B46"></i>
+                                                    </button>
+                                                    <span class="fw-bold"  style="color: #9F6B46">{{ $post->likes->count() }}</span>
+
+                                                </form>
+                                            @endif
+                                            <span>☆</span>                                      
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="small mb-0">{{ $post->date ?? 'Date' }}
-</span>
-                                         <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                            @foreach ($post->categories as $category)
-                                                <span style="
-                                                    background-color:rgb(236, 239, 255);
-                                                    color:#9F6B46 ;
-                                                    border-radius: 12px;
-                                                    padding: 2px 8px;
-                                                    font-size: 13px;
-                                                    font-weight: 500;
-                                                ">
-                                                    {{ $category->name }}
-                                                </span>
-                                            @endforeach
-                                        </div>
-
-
+                                        <span class="small mb-0">{{ $post->date ?? 'Date' }}</span>
+                                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                                @foreach ($post->categories as $category)
+                                                    <span style="
+                                                        background-color:rgb(236, 239, 255);
+                                                        color:#9F6B46 ;
+                                                        border-radius: 12px;
+                                                        padding: 2px 8px;
+                                                        font-size: 13px;
+                                                        font-weight: 500;">
+                                                        {{ $category->name }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
                                     </div>
                                 </div>
                             </div>
