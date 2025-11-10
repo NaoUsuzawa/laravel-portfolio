@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
+use App\Models\Prefecture;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -25,11 +27,10 @@ class HomeController extends Controller
             ->when($order === 'newest', fn($q) => $q->orderByDesc('created_at'))
             ->get();
 
-        return view('home', compact('posts'));
-        $categoryCounts = DB::table('category_posts')
+       $categoryCounts = DB::table('category_posts')
             ->join('categories', 'category_posts.category_id', '=', 'categories.id')
-            ->select('categories.name', DB::raw('COUNT(category_posts.post_id) as count'))
-            ->groupBy('categories.name')
+            ->select('categories.id', 'categories.name', DB::raw('COUNT(category_posts.post_id) as count')) // ✅ idを追加
+            ->groupBy('categories.id', 'categories.name')
             ->orderByDesc('count')
             ->get();
 
@@ -42,6 +43,7 @@ class HomeController extends Controller
             }
             $categoryRanked[] = [
                 'rank' => $currentRank,
+                'id' => $item->id,
                 'name' => $item->name,
                 'count' => $item->count,
             ];
@@ -73,6 +75,36 @@ class HomeController extends Controller
         }
         $prefectureRanked = array_slice($prefectureRanked, 0, 5);
 
-        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked','order'));
+        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order'));
+    }
+
+    public function rankingPost(Request $request)
+    {
+        $query = Post::with(['categories', 'prefecture'])->latest();
+
+        $title = '';
+        $headerImage = 'images/default.jpg';
+
+        if ($request->has('category_id')) {
+            $category = Category::find($request->category_id);
+            if ($category) {
+                $query->whereHas('categories', fn($q) => $q->where('id', $category->id));
+                $title = $category->name;
+                $headerImage = 'images/category.jpg';
+            }
+        }
+
+        if ($request->has('prefecture_id')) {
+            $prefecture = Prefecture::find($request->prefecture_id);
+            if ($prefecture) {
+                $query->where('prefecture_id', $prefecture->id);
+                $title = strtoupper($prefecture->name);
+                $headerImage = 'images/' . strtolower($prefecture->name) . '.jpeg';
+            }
+        }
+
+        $posts = $query->get();
+
+        return view('users.posts.rank', compact('posts', 'title', 'headerImage'));
     }
 }
