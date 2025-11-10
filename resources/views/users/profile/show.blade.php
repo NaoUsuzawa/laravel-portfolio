@@ -305,6 +305,7 @@
         </div>
 
         {{-- Post area --}}
+      
         <div class="col-md-8">
             <div class="row mt-3 mb-2">
                 <div class="col-12">
