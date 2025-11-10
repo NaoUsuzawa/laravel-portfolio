@@ -98,4 +98,12 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+    //Rnanking
+    // Route::get('/category/ranking/{id}', [CategoriesController::class,'c_RankShow']->name('c_rank.show') );
+
+    Route::get('/ranking/category', function(){
+        return view('users.posts.c-rank');
+    });
+
 });

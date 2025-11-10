@@ -126,7 +126,7 @@
                         </ul>
                     </div>
 
-                     Posts
+                   
                 <div class="row g-4 mt-3">
                     @forelse ($posts as $post)
                         <div class="col-12 col-md-6 d-flex justify-content-center">

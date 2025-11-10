@@ -8,7 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
-{
+/*{
     private $category;
 
     private $post;
@@ -69,4 +69,12 @@ class CategoriesController extends Controller
         return redirect()->back();
 
     }
-}
+
+    public function c_RankShow($id)
+    {
+        $cagtegory = Category::findOrFail($id);
+        $posts = Post::where('category_id', $id)->latest()->paginate(10);
+
+        return view('users.posts.c-rank')
+    }
+}*/
