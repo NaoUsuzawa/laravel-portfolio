@@ -105,7 +105,7 @@
                                         <img src="{{ Auth::user()->avatar }}" 
                                             alt="{{ Auth::user()->name }}" 
                                             class="rounded-circle" 
-                                            style="width: 40px; height: 40px; object-fit: cover;">
+                                            style="width: 40px; height: 40px; object-fit: cover;  flex-shrink: 0;">
                                     @else
                                         <i class="fa-solid fa-circle-user text-secondary" 
                                         style="font-size: 40px;"></i>

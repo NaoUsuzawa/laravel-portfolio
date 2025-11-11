@@ -52,7 +52,7 @@ if (!empty($post->image)) {
 
         <form method="POST" action="{{ route('post.update', $post->id) }}" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
+            @method('PATCH')
 
             {{-- Title --}}
             <div class="mb-3">
