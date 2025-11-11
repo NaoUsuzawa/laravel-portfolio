@@ -114,13 +114,16 @@
                     <div class="sort mb-4">
                         <ul class="nav nav-tabs">
                             <li class="nav-item text-center border  custom-tab tab-topround">
-                                <a href="{{ route('home', ['order' => 'recommend'])}}" class="btn m-0 tab-btn {{ request('order') === 'recommend' ? 'active' : '' }}">Recommend</a>
-                            </li>
+                                <a href="{{ route('home', ['order' => 'newest']) }}"
+                                    class="btn m-0 tab-btn {{ request('order') === 'newest' || !request()->has('order') ? 'active' : '' }}">
+                                    Newest
+                                 </a>
+                              </li>
                             <li class="nav-item text-center border  custom-tab tab-topround">
                                 <a href="{{ route('home', ['order' => 'most_liked'])}}" class="btn m-0 tab-btn {{ request('order') === 'most_liked' ? 'active' : '' }}">Most liked</a>
                             </li>
                             <li class="nav-item text-center border custom-tab tab-topround">
-                                <a href="{{ route('home', ['order' => 'newest'])}}" class="btn m-0 tab-btn {{ request('order') === 'newest' ? 'active' : '' }}">Newest</a>
+                                <a href="{{ route('home', ['order' => 'recommend'])}}" class="btn m-0 tab-btn {{ request('order') === 'recommend' ? 'active' : '' }}">Recommend</a>
                             </ul>
                     </div>
 
@@ -260,9 +263,12 @@
                         </div>
                     @endforelse
                 </div>
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $posts->appends(['order' => request('order')])->links() }}
+                </div>
+            </div> 
+        </div> 
 
-            </div> {{-- col-md-8 --}}
-        </div> {{-- row --}}
-    </div> {{-- article --}}
+    </div> 
 </div>
 @endsection
