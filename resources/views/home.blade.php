@@ -212,58 +212,53 @@
                      Posts
                 <div class="row g-4 mt-3">
                     @forelse ($posts as $post)
+
                         <div class="col-12 col-md-6 d-flex justify-content-center">
                             <div class="card border-0 shadow-sm w-100">
                                 <div class="card-body p-0">
 
                                 @php
-                                   
-                                    if (is_string($post->image)) {
-                                        $decoded = json_decode($post->image, true);
-                                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                                            $images = $decoded;
-                                        } else {
-                                            $images = [$post->image]; 
-                                        }
-                                    } elseif (is_array($post->image)) {
-                                        $images = $post->image;
-                                    } else {
-                                        $images = [];
-                                    }
+                                    // hasMany で取得した Image モデルの image カラムだけを取り出す
+                                    $images = $post->images->pluck('image')->toArray();
                                 @endphp
-                                {{-- @php dump($images); @endphp --}}
 
+                                @if (count($images) > 0)
 
-                                @if (!empty($images) && count($images) > 0)
+                                    {{-- 画像が2枚以上 → カルーセル --}}
                                     @if (count($images) > 1)
                                         <div id="carouselPost{{ $post->id }}" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
+
                                                 @foreach ($images as $index => $image)
                                                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                                         <a href="{{ route('post.show', $post->id) }}">
                                                             <div class="ratio ratio-1x1">
-                                                                <img src="data:image/jpeg;base64,{{ $image }}"
+                                                                <img 
+                                                                    src="data:image/jpeg;base64,{{ $image }}"
                                                                     class="d-block w-100 h-100"
                                                                     style="object-fit: cover; border-radius: 10px;"
                                                                     alt="Post Image {{ $index + 1 }}">
                                                             </div>
                                                         </a>
-                                                        
                                                     </div>
                                                 @endforeach
+
                                             </div>
-    
+
+                                            {{-- 前後ボタン --}}
                                             <button class="carousel-control-prev" type="button"
                                                     data-bs-target="#carouselPost{{ $post->id }}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="carousel-control-prev-icon"></span>
                                                 <span class="visually-hidden">Previous</span>
                                             </button>
+
                                             <button class="carousel-control-next" type="button"
                                                     data-bs-target="#carouselPost{{ $post->id }}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="carousel-control-next-icon"></span>
                                                 <span class="visually-hidden">Next</span>
                                             </button>
 
+                                            {{-- インジケータ --}}
                                             <div class="carousel-indicators">
                                                 @foreach ($images as $index => $image)
                                                     <button type="button"
@@ -276,20 +271,24 @@
                                                 @endforeach
                                             </div>
                                         </div>
+
+                                    {{-- 1枚のみ --}}
                                     @else
-                                    
                                         <a href="{{ route('post.show', $post->id) }}">
                                             <div class="ratio ratio-1x1">
-                                                <img src="data:image/jpeg;base64,{{ $images[0] }}"
+                                                <img 
+                                                    src="data:image/jpeg;base64,{{ $images[0] }}"
                                                     class="d-block w-100 h-100"
                                                     style="object-fit: cover; border-radius: 10px;"
                                                     alt="Post Image">
                                             </div>
                                         </a>
                                     @endif
+
                                 @else
                                     <div class="text-center py-5 text-muted">No image available.</div>
                                 @endif
+
 
                                 </div>
 
@@ -320,12 +319,13 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="small mb-0">{{ $post->date ?? 'Date' }}</span>
+                                       <span>{{ $post->visited_at ? $post->visited_at->format('Y-m-d') : 'Unknown' }}</span>
+
                                             <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                                 @foreach ($post->categories as $category)
                                                     <span style="
                                                         background-color:rgb(236, 239, 255);
-                                                        color:#9F6B46 ;
+                                                        color:#9F6B46;
                                                         border-radius: 12px;
                                                         padding: 2px 8px;
                                                         font-size: 13px;
@@ -341,7 +341,7 @@
                     @empty
                         <div class="text-center py-5 text-muted">
                             <h5>No posts available</h5>
-                            <a href="{{ route('post.create') }}" class="text-decoration-none">Share your first photo!</a>
+                            <a href="{{ route('post.create') }}" class="text-decoration-none"> Share your first photo!</a>
                         </div>
                     @endforelse
                 </div>

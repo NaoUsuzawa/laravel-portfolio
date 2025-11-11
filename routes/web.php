@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminpostController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
@@ -99,3 +100,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
 });
+
+// comment
+ Route::post('/comment/{post_id}/store', [CommentController::class, 'store'])->name('comment.store');
+ Route::delete('/comment/{id}/destroy', [CommentController::class, 'destroy'])->name('comment.destroy');
+
