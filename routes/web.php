@@ -52,13 +52,7 @@ Route::get('/favorites', [FavoriteController::class, 'show'])->name('favorite');
 Route::post('/favorite/{post_id}/store', [FavoriteController::class, 'store'])->name('favorite.store');
 Route::delete('/favorite/{post_id}/destroy', [FavoriteController::class, 'destroy'])->name('favorite.destroy');
 
-Route::get('/followers', function () {
-    return view('followers_followings');
-});
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Profile
 Route::get('/profile/{id}/trip-map', [MapController::class, 'show'])->name('map.show');
@@ -102,11 +96,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
 
-    //Rnanking
-    // Route::get('/category/ranking/{id}', [CategoriesController::class,'c_RankShow']->name('c_rank.show') );
-
-    Route::get('/ranking/category', function(){
-        return view('users.posts.c-rank');
-    });
 
 });
