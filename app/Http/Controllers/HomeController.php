@@ -19,6 +19,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $order = $request->get('order', 'newest');
+        $categories = Category::orderBy('id')->get();
+        $prefectures = Prefecture::orderBy('id')->get();
 
         $posts = Post::with(['categories'])
             ->withCount('likes')
@@ -29,7 +31,7 @@ class HomeController extends Controller
 
        $categoryCounts = DB::table('category_posts')
             ->join('categories', 'category_posts.category_id', '=', 'categories.id')
-            ->select('categories.id', 'categories.name', DB::raw('COUNT(category_posts.post_id) as count')) // ✅ idを追加
+            ->select('categories.id', 'categories.name', DB::raw('COUNT(category_posts.post_id) as count')) 
             ->groupBy('categories.id', 'categories.name')
             ->orderByDesc('count')
             ->get();
@@ -75,36 +77,50 @@ class HomeController extends Controller
         }
         $prefectureRanked = array_slice($prefectureRanked, 0, 5);
 
-        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order'));
+        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order', 'categories', 'prefectures'));
     }
 
-    public function rankingPost(Request $request)
+   public function rankingPost(Request $request)
     {
         $query = Post::with(['categories', 'prefecture'])->latest();
 
-        $title = '';
+        $titleParts = [];
         $headerImage = 'images/default.jpg';
 
-        if ($request->has('category_id')) {
-            $category = Category::find($request->category_id);
-            if ($category) {
-                $query->whereHas('categories', fn($q) => $q->where('id', $category->id));
-                $title = $category->name;
-                $headerImage = 'images/category.jpg';
-            }
-        }
-
-        if ($request->has('prefecture_id')) {
+        if ($request->filled('prefecture_id')) {
             $prefecture = Prefecture::find($request->prefecture_id);
             if ($prefecture) {
                 $query->where('prefecture_id', $prefecture->id);
-                $title = strtoupper($prefecture->name);
-                $headerImage = 'images/' . strtolower($prefecture->name) . '.jpeg';
+                $titleParts[] = $prefecture->name;
+
+                $imagePath = 'images/prefectures/' . strtolower($prefecture->name) . '.jpg';
+                if (file_exists(public_path($imagePath))) {
+                    $headerImage = $imagePath;
+                }
+            }
+        }
+      
+        if ($request->filled('category_id')) {
+            $category = Category::find($request->category_id);
+            if ($category) {
+                $query->whereHas('categories', fn($q) => $q->where('id', $category->id));
+                $titleParts[] = $category->name;
             }
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+            $titleParts[] = '' . $search . '';
+        }
+
+        $title = implode(' × ', $titleParts) ?: 'RANKING';
         $posts = $query->get();
 
         return view('users.posts.rank', compact('posts', 'title', 'headerImage'));
     }
+
 }

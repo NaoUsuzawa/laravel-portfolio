@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <form action="#" method="get">
+    <form action="{{ route('ranking.post') }}" method="get">
         <div class="row align-items-end">
             <div class="col-12 col-md-4 mb-3 mb-md-0">
                 <input type="text" name="search" class="form-control" placeholder="Search...">
@@ -12,21 +12,22 @@
             <div class="col-12 col-md-8">
                 <div class="row g-2  align-items-end">
                     <div class="col-6 col-md-5 mb-3 mb-md-0">
-                        <label for="" class="form-label">Prefecture</label>
-                        <select name="prefecture" class="form-select text-muted">
-                            <option value="" selected disabled hidden>Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                        <label for="prefecture" class="form-label">Prefecture</label>
+                        <select name="prefecture_id" class="form-select text-muted">
+                            <option value="" selected hidden>Select</option>
+                            @foreach ($prefectures as $prefecture)
+                                <option value="{{ $prefecture->id }}">{{ $prefecture->name }}</option>
+                            @endforeach
                         </select>
                     </div>
+
                     <div class="col-6 col-md-5 mb-3 mb-md-0">
-                        <label for="" class="form-label">Category</label>
-                        <select name="category" class="form-select text-muted">
-                            <option value="" selected disabled hidden>Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category_id" class="form-select text-muted">
+                            <option value="" selected hidden>Select</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-12 col-md-2 d-grid">
