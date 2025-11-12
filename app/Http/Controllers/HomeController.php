@@ -27,7 +27,8 @@ class HomeController extends Controller
             ->when($order === 'most_liked', fn($q) => $q->orderByDesc('likes_count'))
             ->when($order === 'recommend', fn($q) => $q->orderByDesc('visited_at'))
             ->when($order === 'newest', fn($q) => $q->orderByDesc('created_at'))
-            ->get();
+            ->paginate(30)
+            ->appends(['order' => $order]);
 
        $categoryCounts = DB::table('category_posts')
             ->join('categories', 'category_posts.category_id', '=', 'categories.id')

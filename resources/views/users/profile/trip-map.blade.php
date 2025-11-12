@@ -426,16 +426,16 @@ div{
           .on("mouseout", function() { d3.select(this).attr("fill", "#dcdcdc"); })
 
           .on("click", function(event, d) {
-  const prefNameJa = d.properties.nam_ja;
-  const engName = prefectureNameMap[prefNameJa];
-  const prefData = prefectures.find(p => p.name === engName);
+            const prefNameJa = d.properties.nam_ja;
+            const engName = prefectureNameMap[prefNameJa];
+            const prefData = prefectures.find(p => p.name === engName);
 
-  if (prefData) {
-    loadPosts(prefData.id, prefNameJa);
-  } else {
-    console.warn("There is no post yet.:", prefNameJa);
-  }
-});
+            if (prefData) {
+              loadPosts(prefData.id, prefNameJa);
+            } else {
+              console.warn("There is no post yet.:", prefNameJa);
+            }
+          });
           // 沖縄のpath描画
         const okinawaProjection = d3.geoMercator()
           .center([127.6, 26.2])
@@ -460,16 +460,16 @@ div{
           .on("mouseover", function() { d3.select(this).attr("fill", "#ffb37f"); })
           .on("mouseout", function() { d3.select(this).attr("fill", "#ffdcb2"); })
           .on("click", function(event, d) {
-  const prefNameJa = d.properties.nam_ja;
-  const engName = prefectureNameMap[prefNameJa];
-  const prefData = prefectures.find(p => p.name === engName);
+            const prefNameJa = d.properties.nam_ja;
+            const engName = prefectureNameMap[prefNameJa];
+            const prefData = prefectures.find(p => p.name === engName);
 
-  if (prefData) {
-    loadPosts(prefData.id, prefNameJa);
-  } else {
-    console.warn("There is no post yet.:", prefNameJa);
-  }
-});
+            if (prefData) {
+              loadPosts(prefData.id, prefNameJa);
+            } else {
+              console.warn("There is no post yet.:", prefNameJa);
+            }
+          });
           prefectures.forEach(pref => {
             if(pref.has_post){
                 const prefElement = document.querySelector(`#pref-${pref.code}`);

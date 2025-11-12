@@ -115,13 +115,16 @@
                     <div class="sort mb-4">
                         <ul class="nav nav-tabs">
                             <li class="nav-item text-center border  custom-tab tab-topround">
-                                <a href="{{ route('home', ['order' => 'recommend'])}}" class="btn m-0 tab-btn {{ request('order') === 'recommend' ? 'active' : '' }}">Recommend</a>
-                            </li>
+                                <a href="{{ route('home', ['order' => 'newest']) }}"
+                                    class="btn m-0 tab-btn {{ request('order') === 'newest' || !request()->has('order') ? 'active' : '' }}">
+                                    Newest
+                                 </a>
+                              </li>
                             <li class="nav-item text-center border  custom-tab tab-topround">
                                 <a href="{{ route('home', ['order' => 'most_liked'])}}" class="btn m-0 tab-btn {{ request('order') === 'most_liked' ? 'active' : '' }}">Most liked</a>
                             </li>
                             <li class="nav-item text-center border custom-tab tab-topround">
-                                <a href="{{ route('home', ['order' => 'newest'])}}" class="btn m-0 tab-btn {{ request('order') === 'newest' ? 'active' : '' }}">Newest</a>
+                                <a href="{{ route('home', ['order' => 'recommend'])}}" class="btn m-0 tab-btn {{ request('order') === 'recommend' ? 'active' : '' }}">Recommend</a>
                             </ul>
                     </div>
 
@@ -133,10 +136,10 @@
                             <div class="card border-0 shadow-sm w-100">
                                 <div class="card-body p-0">
 
-                                @php
-                                    // hasMany で取得した Image モデルの image カラムだけを取り出す
-                                    $images = $post->images->pluck('image')->toArray();
-                                @endphp
+                               @php
+                                    $images = $post->images->pluck('image')->take(3)->toArray();
+                               @endphp
+
 
                                 @if (count($images) > 0)
 
@@ -144,20 +147,19 @@
                                     @if (count($images) > 1)
                                         <div id="carouselPost{{ $post->id }}" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
-
                                                 @foreach ($images as $index => $image)
-                                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                                        <a href="{{ route('post.show', $post->id) }}">
-                                                            <div class="ratio ratio-1x1">
-                                                                <img 
-                                                                    src="data:image/jpeg;base64,{{ $image }}"
-                                                                    class="d-block w-100 h-100"
-                                                                    style="object-fit: cover; border-radius: 10px;"
-                                                                    alt="Post Image {{ $index + 1 }}">
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                @endforeach
+                                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                    <a href="{{ route('post.show', $post->id) }}">
+                                                        <div class="ratio ratio-1x1">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $image) }}" 
+                                                                class="d-block w-100 h-100"
+                                                                style="object-fit: cover; border-radius: 10px;"
+                                                                alt="Post Image {{ $index + 1 }}">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
 
                                             </div>
 
@@ -189,11 +191,11 @@
                                         </div>
 
                                     {{-- 1枚のみ --}}
-                                    @else
+                                    @elseif(count($images) === 1)
                                         <a href="{{ route('post.show', $post->id) }}">
                                             <div class="ratio ratio-1x1">
                                                 <img 
-                                                    src="data:image/jpeg;base64,{{ $images[0] }}"
+                                                    src="{{ asset('storage/' . $images[0]) }}"
                                                     class="d-block w-100 h-100"
                                                     style="object-fit: cover; border-radius: 10px;"
                                                     alt="Post Image">
@@ -261,9 +263,12 @@
                         </div>
                     @endforelse
                 </div>
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $posts->appends(['order' => request('order')])->links() }}
+                </div>
+            </div> 
+        </div> 
 
-            </div> {{-- col-md-8 --}}
-        </div> {{-- row --}}
-    </div> {{-- article --}}
+    </div> 
 </div>
 @endsection
