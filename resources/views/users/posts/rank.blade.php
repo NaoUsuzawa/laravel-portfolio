@@ -38,7 +38,7 @@
                         <img src="{{ asset($post->image_path ?? 'images/たぬきち.png') }}" 
                              alt="{{ $post->title }}" 
                              class="d-block w-100 h-100"
-                             style="object-fit: cover; border-radius:10px;">
+                             style="object-fit: cover;">
                     </div>
 
                     <div class="card-footer bg-white border-0">

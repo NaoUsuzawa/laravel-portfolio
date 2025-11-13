@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <form action="#" method="get">
+    <form action="{{ route('ranking.post') }}" method="get">
         <div class="row align-items-end">
             <div class="col-12 col-md-4 mb-3 mb-md-0">
                 <input type="text" name="search" class="form-control" placeholder="Search...">
@@ -12,21 +12,22 @@
             <div class="col-12 col-md-8">
                 <div class="row g-2  align-items-end">
                     <div class="col-6 col-md-5 mb-3 mb-md-0">
-                        <label for="" class="form-label">Prefecture</label>
-                        <select name="prefecture" class="form-select text-muted">
-                            <option value="" selected disabled hidden>Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                        <label for="prefecture" class="form-label">Prefecture</label>
+                        <select name="prefecture_id" class="form-select text-muted">
+                            <option value="" selected hidden>Select</option>
+                            @foreach ($prefectures as $prefecture)
+                                <option value="{{ $prefecture->id }}">{{ $prefecture->name }}</option>
+                            @endforeach
                         </select>
                     </div>
+
                     <div class="col-6 col-md-5 mb-3 mb-md-0">
-                        <label for="" class="form-label">Category</label>
-                        <select name="category" class="form-select text-muted">
-                            <option value="" selected disabled hidden>Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category_id" class="form-select text-muted">
+                            <option value="" selected hidden>Select</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-12 col-md-2 d-grid">
@@ -135,10 +136,10 @@
                             <div class="card border-0 shadow-sm w-100">
                                 <div class="card-body p-0">
 
-                                @php
-                                    // hasMany で取得した Image モデルの image カラムだけを取り出す
-                                    $images = $post->images->pluck('image')->toArray();
-                                @endphp
+                               @php
+                                    $images = $post->images->pluck('image')->take(3)->toArray();
+                               @endphp
+
 
                                 @if (count($images) > 0)
 
@@ -146,20 +147,19 @@
                                     @if (count($images) > 1)
                                         <div id="carouselPost{{ $post->id }}" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
-
                                                 @foreach ($images as $index => $image)
-                                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                                        <a href="{{ route('post.show', $post->id) }}">
-                                                            <div class="ratio ratio-1x1">
-                                                                <img 
-                                                                    src="data:image/jpeg;base64,{{ $image }}"
-                                                                    class="d-block w-100 h-100"
-                                                                    style="object-fit: cover; border-radius: 10px;"
-                                                                    alt="Post Image {{ $index + 1 }}">
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                @endforeach
+                                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                    <a href="{{ route('post.show', $post->id) }}">
+                                                        <div class="ratio ratio-1x1">
+                                                            <img 
+                                                                src="{{ asset('storage/' . $image) }}" 
+                                                                class="d-block w-100 h-100"
+                                                                style="object-fit: cover; border-radius: 10px;"
+                                                                alt="Post Image {{ $index + 1 }}">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
 
                                             </div>
 
@@ -191,11 +191,11 @@
                                         </div>
 
                                     {{-- 1枚のみ --}}
-                                    @else
+                                    @elseif(count($images) === 1)
                                         <a href="{{ route('post.show', $post->id) }}">
                                             <div class="ratio ratio-1x1">
                                                 <img 
-                                                    src="data:image/jpeg;base64,{{ $images[0] }}"
+                                                    src="{{ asset('storage/' . $images[0]) }}"
                                                     class="d-block w-100 h-100"
                                                     style="object-fit: cover; border-radius: 10px;"
                                                     alt="Post Image">
