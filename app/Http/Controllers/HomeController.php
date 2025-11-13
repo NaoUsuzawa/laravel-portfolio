@@ -91,7 +91,7 @@ class HomeController extends Controller
             if ($category) {
                 $query->whereHas('categories', fn($q) => $q->where('id', $category->id));
                 $title = $category->name;
-                $headerImage = 'images/category.jpg';
+                $headerImage = $category -> image ?? 'default.jpg';
             }
         }
 
@@ -100,7 +100,7 @@ class HomeController extends Controller
             if ($prefecture) {
                 $query->where('prefecture_id', $prefecture->id);
                 $title = strtoupper($prefecture->name);
-                $headerImage = 'images/' . strtolower($prefecture->name) . '.jpeg';
+                $headerImage = $prefecture->image ?? 'default.jpg';
             }
         }
 
