@@ -25,66 +25,49 @@ class FollowController extends Controller
     }
 
     public function store(Request $request, $user_id)
-    {
-        $this->follow->follower_id = Auth::id();
-        $this->follow->following_id = $user_id;
-        $this->follow->save();
+{
+    $this->follow->follower_id = Auth::id();
+    $this->follow->following_id = $user_id;
+    $this->follow->save();
 
-        $tab = $request->input('tab');
-        $returnUrl = $request->input('return_url');
-
-        if ($returnUrl) {
-            return redirect($returnUrl);
-        }
-
-        $currentUser = Auth::user();
-        if ($tab === 'following') {
-            return redirect()->route('profile.following', $currentUser->id);
-        } elseif ($tab === 'followers') {
-            return redirect()->route('profile.followers', $currentUser->id);
-        }
-
-        $user = $this->user->findOrFail($user_id);
-        $prefecture_ids = Post::where('user_id', $user->id)
-            ->pluck('prefecture_id')
-            ->unique();
-
-        $prefectures = Prefecture::select('id', 'name', 'code')
-            ->get()
-            ->map(function ($pref) use ($prefecture_ids) {
-                $pref->has_post = $prefecture_ids->contains($pref->id);
-
-                return $pref;
-            });
-
-        return redirect()->route('profile.show', $user_id)
-            ->with('user', $user)
-            ->with('prefecture', $prefectures);
+    if ($request->has('return_url')) {
+        return redirect($request->input('return_url'));
     }
 
-    public function destroy(Request $request, $user_id)
-    {
-        $this->follow
-            ->where('follower_id', Auth::id())
-            ->where('following_id', $user_id)
-            ->delete();
+    $tab = $request->input('tab');
+    $currentUser = Auth::user();
 
-        $tab = $request->input('tab');
-        $returnUrl = $request->input('return_url');
-
-        if ($returnUrl) {
-            return redirect($returnUrl);
-        }
-
-        $currentUser = Auth::user();
-        if ($tab === 'following') {
-            return redirect()->route('profile.following', $currentUser->id);
-        } elseif ($tab === 'followers') {
-            return redirect()->route('profile.followers', $currentUser->id);
-        }
-
-        return redirect()->route('profile.show', $user_id);
+    if ($tab === 'following') {
+        return redirect()->route('profile.following', $currentUser->id);
+    } elseif ($tab === 'followers') {
+        return redirect()->route('profile.followers', $currentUser->id);
     }
+
+    return redirect()->route('profile.show', $user_id);
+}
+
+public function destroy(Request $request, $user_id)
+{
+    $this->follow
+        ->where('follower_id', Auth::id())
+        ->where('following_id', $user_id)
+        ->delete();
+
+    if ($request->has('return_url')) {
+        return redirect($request->input('return_url'));
+    }
+
+    $tab = $request->input('tab');
+    $currentUser = Auth::user();
+
+    if ($tab === 'following') {
+        return redirect()->route('profile.following', $currentUser->id);
+    } elseif ($tab === 'followers') {
+        return redirect()->route('profile.followers', $currentUser->id);
+    }
+
+    return redirect()->route('profile.show', $user_id);
+}
 
     public function getSuggestedUsers()
     {
