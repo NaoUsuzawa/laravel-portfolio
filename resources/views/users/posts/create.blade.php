@@ -130,6 +130,61 @@ textarea.post-input {
     font-weight: 500;
     display: inline-block;
 }
+
+/* --- Cost Slider Custom --- */
+#cost-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+    appearance: none;
+    background: transparent; 
+}
+
+/* ピンクの線（WebKit系ブラウザ用） */
+#cost-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #F8C7B3; 
+    border-radius: 5px;
+}
+
+/* 丸いスライダー（WebKit） */
+#cost-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px; 
+    border-radius: 50%;
+    background-color: #9F6B46; 
+    border: 2px solid white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+#cost-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Firefox用*/
+#cost-slider::-moz-range-track {
+    height: 6px;
+    background: #F8C7B3;
+    border-radius: 5px;
+}
+
+/* Firefox用 */
+#cost-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #9F6B46;
+    border: 2px solid white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+#cost-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
 </style>
 
 <div class="full-page-container">
@@ -167,7 +222,6 @@ textarea.post-input {
                     
                     @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
-                
                 <div class="col-md-6">
                     <label class="form-label post-label">Time</label>
                     <div class="d-flex align-items-center gap-1">
@@ -197,7 +251,7 @@ textarea.post-input {
             </div>
 
             {{-- Prefecture --}}
-            <div class="mb-3">
+            <div class="mb-3" style="width:48%;">
                 <label class="form-label post-label">Prefecture</label>
                 <select name="prefecture_id" class="form-select post-input" required>
                     <option value="">Select Prefecture</option>
