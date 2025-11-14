@@ -43,7 +43,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::delete('/categories/{id}/delete', [CategoriesController::class, 'delete'])->name('categories.delete');
 });
 
-
 Route::get('/message', function () {
     return view('messages.message');
 });
@@ -144,5 +143,3 @@ Route::middleware('auth')->group(function () {
 
 Route::get('auth/{provider}', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
-
-
