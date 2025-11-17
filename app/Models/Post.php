@@ -25,6 +25,7 @@ class Post extends Model
 
     protected $casts = [
         'image' => 'array',
+        'visited_at' => 'datetime',
     ];
 
     public function user()
@@ -47,10 +48,6 @@ class Post extends Model
         return $this->belongsTo(Prefecture::class);
     }
 
-    // public function comments()
-    // {
-    //     return $this->hasMany(Comment::class);
-    // }
     public function isLiked()
     {
         return $this->likes()->where('user_id', Auth::id())->exists();
@@ -58,7 +55,7 @@ class Post extends Model
 
     public function views()
     {
-        return $this->hasMany(PostView::class);
+        return $this->hasMany(PostView::class, 'post_id', 'id');
     }
 
     public function likes()
@@ -68,7 +65,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->with('user')->latest();
     }
 
     public function saves()
