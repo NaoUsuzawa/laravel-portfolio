@@ -87,17 +87,16 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-auto d-flex align-items-center">
                             <a href="{{ route('profile.show', $post->user->id) }}">
-                                @if ($post->user->profile_image)
-                                    <img src="{{ asset('storage/' . $post->user->profile_image) }}" 
-                                        alt="{{ $post->user->name }}" class="rounded-circle me-3" width="40" height="40">
+                                @if ($post->user->avatar)
+                                    <img src="{{ $post->user->avatar }}" 
+                                        alt="{{ $post->user->name }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;  flex-shrink: 0;">
                                 @else
                                     <i class="fa-solid fa-circle-user text-secondary me-3" style="font-size: 2rem;"></i>
                                 @endif
                             </a>
 
-                            <a href="{{ route('profile.show', $post->user->id) }}"
-                            class="text-decoration-none fw-bold text-brown">
-                            {{ $post->user->name }}
+                            <a href="{{ route('profile.show', $post->user->id) }}" class="text-decoration-none fw-bold text-brown">
+                                {{ $post->user->name }}
                             </a>
 
                         </div>
@@ -225,7 +224,22 @@
                                             @endif
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <i class="fa-regular fa-star text-brown me-1"></i>
+                                            @if ($post->isFavorited())
+                                                <form action="{{ route('favorite.destroy', $post->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm p-0">
+                                                        <i class="fa-solid fa-star text-brown me-1"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('favorite.store', $post->id) }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm p-0">
+                                                        <i class="fa-regular fa-star text-brown me-1"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

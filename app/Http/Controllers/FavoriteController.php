@@ -26,33 +26,22 @@ class FavoriteController extends Controller
 
     public function store($post_id)
     {
-        $this->favorite->user_id = Auth::user()->id;
-        $this->favorite->post_id = $post_id;
-        $this->favorite->save();
-
-        $post_id = Post::findOrfail($post_id);
-
-        return response()->json([
-            'success' => true,
-            'favorited' => true,
+        Favorite::firstOrCreate([
+        'user_id' => Auth::id(),
+        'post_id' => $post_id,
         ]);
+
+        return redirect()->back();
 
     }
 
     public function destroy($post_id)
     {
-        $this->favorite->where('user_id', Auth::user()->id)
-            ->where('post_id', $post_id)
-            ->delete();
+        Favorite::where('user_id', Auth::id())
+        ->where('post_id', $post_id)
+        ->delete();
 
-        $post_id = Post::findOrFail($post_id);
-
-        return response()->json([
-            'success' => true,
-            'favorited' => false,
-
-        ]);
-
+        return redirect()->back();
     }
 
     public function show(Request $request)
