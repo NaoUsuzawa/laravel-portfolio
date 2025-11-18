@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::table('messages', function (Blueprint $table) {
 
-        $table->foreignId('conversation_id')
-              ->after('id')
-              ->nullable()
-              ->constrained('conversations')
-              ->onDelete('cascade');
+            $table->foreignId('conversation_id')
+                ->after('id')
+                ->nullable()
+                ->constrained('conversations')
+                ->onDelete('cascade');
         });
     }
 
@@ -27,14 +27,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('messages', function (Blueprint $table) {
-    
-        $table->dropForeign(['conversation_id']);
-        $table->dropColumn('conversation_id');
 
-        
-        $table->foreignId('receiver_id')
-              ->constrained('users')
-              ->onDelete('cascade');
+            $table->dropForeign(['conversation_id']);
+            $table->dropColumn('conversation_id');
+
+            $table->foreignId('receiver_id')
+                ->constrained('users')
+                ->onDelete('cascade');
         });
     }
 };

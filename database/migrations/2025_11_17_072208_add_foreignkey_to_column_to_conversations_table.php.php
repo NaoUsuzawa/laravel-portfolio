@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('conversations', function (Blueprint $table) {
-        $table->foreign('last_message_id')->references('id')->on('messages')->nullOnDelete();
-    });
-    
+            $table->foreign('last_message_id')->references('id')->on('messages')->nullOnDelete();
+        });
+
     }
 
     /**

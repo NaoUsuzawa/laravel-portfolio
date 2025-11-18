@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('user1_id')->constrained('users')->delete('cascade');
             $table->foreignId('user2_id')->constrained('users')->delete('cascade');
             $table->foreignId('last_message_id')->nullable();
-            
+
             $table->timestamps();
 
-            $table->unique(['user1_id','user2_id']);
+            $table->unique(['user1_id', 'user2_id']);
         });
     }
 

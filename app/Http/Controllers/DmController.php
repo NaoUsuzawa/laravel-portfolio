@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;
 use App\Models\Conversation;
+use App\Models\Follow;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationData;
 
 class DmController extends Controller
 {
     private $message;
+
     private $conversation;
+
     private $follow;
 
     public function __construct(Conversation $conversation, Message $message, Follow $follow)
@@ -22,7 +23,8 @@ class DmController extends Controller
         $this->follow = $follow;
     }
 
-    public function show(){
+    public function show()
+    {
 
         $user_id = Auth::id();
 
@@ -39,10 +41,10 @@ class DmController extends Controller
         $excludeUserIds = array_merge($existingConversationUserIds, $existingConversationUserIds2);
 
         $followings = $this->follow
-                            ->where('follower_id', $user_id)
-                            ->whereNotIn('following_id', $excludeUserIds)
-                            ->with('following')
-                            ->get();
+            ->where('follower_id', $user_id)
+            ->whereNotIn('following_id', $excludeUserIds)
+            ->with('following')
+            ->get();
 
         $conversations = $this->conversation
             ->where('user1_id', $user_id)
@@ -52,20 +54,21 @@ class DmController extends Controller
             ->get();
 
         // when conversation in not started yet
-        $conversation = null; 
+        $conversation = null;
         $partner = null;
 
-        return view('messages.message',[
-            'followings'=>$followings,
-            'conversations'=>$conversations,
-            'user_id' =>$user_id,
+        return view('messages.message', [
+            'followings' => $followings,
+            'conversations' => $conversations,
+            'user_id' => $user_id,
             'conversation' => $conversation,
             'partner' => $partner,
         ]);
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $validated = $request->validate([
             'conversation_id' => 'required|exists:conversations,id',
@@ -74,16 +77,16 @@ class DmController extends Controller
         ]);
 
         // if there is no content and image, return error
-        if(empty($validated['content']) && !$request->hasFile('image')){
+        if (empty($validated['content']) && ! $request->hasFile('image')) {
             return response()->json([
-                'success'=> false,
-                'error' => 'Please enter a message or attach an image.'
+                'success' => false,
+                'error' => 'Please enter a message or attach an image.',
             ], 422);
         }
 
         // check author
-        if (!Auth::check()) {
-        return response()->json(['success' => false, 'error' => 'Unauthorized'], 401);
+        if (! Auth::check()) {
+            return response()->json(['success' => false, 'error' => 'Unauthorized'], 401);
         }
 
         // login userID
@@ -91,7 +94,7 @@ class DmController extends Controller
 
         // get the conversation
         $conversation = $this->conversation->findOrFail($validated['conversation_id']);
-        
+
         // judge  partnerID
         $receiver_id = $conversation->user1_id == $user_id
             ? $conversation->user2_id
@@ -104,8 +107,8 @@ class DmController extends Controller
             'content' => $validated['content'] ?? null,
         ];
 
-        if($request->hasFile('image')){
-            $path = $request->file('image')->store('messages','public');
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('messages', 'public');
             $messageData['image_path'] = $path;
         }
 
@@ -119,19 +122,20 @@ class DmController extends Controller
         return response()->json([
             'success' => true,
             'message' => [
-                'id'         => $message->id,
-                'content'    => $message->content,
-                'image_url'  => $message->image_path ? asset('storage/'.$message->image_path) : null,
-                'sender_id'  => $message->sender_id,
+                'id' => $message->id,
+                'content' => $message->content,
+                'image_url' => $message->image_path ? asset('storage/'.$message->image_path) : null,
+                'sender_id' => $message->sender_id,
                 'created_at' => $message->created_at->format('m/d H:i'),
             ],
         ]);
-        
+
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
 
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -145,7 +149,7 @@ class DmController extends Controller
         }
 
         if ($message->image_path) {
-            $filePath = storage_path('app/public/'. $message->image_path);
+            $filePath = storage_path('app/public/'.$message->image_path);
 
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -158,16 +162,15 @@ class DmController extends Controller
         if ($conversation->last_message_id == $id) {
 
             $newLast = $this->message
-                ->where("conversation_id", $conversation->id)
-                ->orderBy("created_at", "desc")
+                ->where('conversation_id', $conversation->id)
+                ->orderBy('created_at', 'desc')
                 ->first();
 
-                $conversation->last_message_id = $newLast ? $newLast->id : null;
-                $conversation->save();
+            $conversation->last_message_id = $newLast ? $newLast->id : null;
+            $conversation->save();
         }
 
         return response()->json(['success' => true]);
 
     }
-
 }

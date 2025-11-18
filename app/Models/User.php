@@ -129,12 +129,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function conversations()
     {
-        return $this->hasMany(Conversation::class,'user1_id')
-                    ->onWhere('user2_id',$this->id);
-    } 
+        return $this->hasMany(Conversation::class, 'user1_id')
+            ->onWhere('user2_id', $this->id);
+    }
 
     public function messages()
     {
-        return $this->hasMany(Message::class,'sender_id');
+        return $this->hasMany(Message::class, 'sender_id');
     }
 }

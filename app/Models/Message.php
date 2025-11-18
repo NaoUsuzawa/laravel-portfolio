@@ -9,14 +9,14 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['conversation_id','receiver_id', 'sender_id', 'content', 'read_at','image_path'];
+    protected $fillable = ['conversation_id', 'receiver_id', 'sender_id', 'content', 'read_at', 'image_path'];
 
     public function conversation()
     {
         return $this->belongsTo(Conversation::class);
     }
 
-     public function receiver()
+    public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
     }
@@ -25,6 +25,4 @@ class Message extends Model
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
-
-    
 }
