@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\DmController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
@@ -43,13 +45,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::delete('/categories/{id}/delete', [CategoriesController::class, 'delete'])->name('categories.delete');
 });
 
-Route::get('/message', function () {
-    return view('messages.message');
-});
+Route::get('/message', [DmController::class, 'show'])->name('messages.show');
+Route::post('/messages/store', [DmController::class, 'store'])->name('messages.store');
+Route::delete('/messages/destroy/{id}', [DmController::class, 'destroy'])->name('messages.destroy');
 
-Route::get('/message/board', function () {
-    return view('messages.chat');
-});
+Route::get('/conversations', [ConversationController::class, 'index'])->name('conversation.show');
+Route::get('/conversations/refresh-list', [ConversationController::class, 'refreshList'])->name('conversations.refresh_list');
+Route::post('/conversations/start', [ConversationController::class, 'start_conversation'])->name('conversations.start');
+Route::post('/conversations/search', [ConversationController::class, 'search'])->name('conversations.search');
+Route::post('/conversations/search-followings', [ConversationController::class, 'searchFollowings'])->name('conversations.searchFollowings');
+Route::get('/conversations/{id}', [ConversationController::class, 'show_conversation'])->name('conversations.show');
+Route::delete('/conversations/destroy/{id}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -91,6 +97,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/follow/{user_id}/search', 'search')->name('follow.search');
     });
 
+    // Notification
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index')
+        ->middleware('auth');
     // Like
     Route::controller(LikeController::class)->group(function () {
         Route::post('/like/{post_id}/store', 'store')->name('like.store');
