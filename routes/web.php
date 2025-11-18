@@ -6,6 +6,8 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DmController;
+use App\Http\Controllers\ConversationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,13 +30,18 @@ Route::get('admin/categories', function () {
 // Analytics
 Route::get('/users/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
-Route::get('/message', function () {
-    return view('messages.message');
-});
+Route::get('/message', [DmController::class,'show'])->name('messages.show');
+Route::post('/messages/store',[DmController::class,'store'])->name('messages.store');
+Route::delete('/messages/destroy/{id}',[DmController::class,'destroy'])->name('messages.destroy');
 
-Route::get('/message/board', function () {
-    return view('messages.chat');
-});
+Route::get('/conversations', [ConversationController::class, 'index'])->name('conversation.show');
+Route::get('/conversations/refresh-list', [ConversationController::class, 'refreshList'])->name('conversations.refresh_list');
+Route::post('/conversations/start',[ConversationController::class,'start_conversation'])->name('conversations.start');
+Route::post('/conversations/search',[ConversationController::class,'search'])->name('conversations.search');
+Route::post('/conversations/search-followings', [ConversationController::class, 'searchFollowings'])->name('conversations.searchFollowings');
+Route::get('/conversations/{id}',[ConversationController::class,'show_conversation'])->name('conversations.show');
+Route::delete('/conversations/destroy/{id}',[ConversationController::class,'destroy'])->name('conversations.destroy');
+
 
 Route::get('/favorites', [FavoriteController::class, 'show'])->name('favorite');
 Route::post('/favorite/{post_id}/store', [FavoriteController::class, 'store'])->name('favorite.store');

@@ -85,4 +85,15 @@ class User extends Authenticatable
     {
         return $this->following()->where('following_id', $user->id)->exists();
     }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class,'user1_id')
+                    ->onWhere('user2_id',$this->id);
+    } 
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class,'sender_id');
+    }
 }
