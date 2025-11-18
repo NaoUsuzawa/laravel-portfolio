@@ -1,101 +1,100 @@
-@extends('layouts.admin.app') 
-{{-- 共通レイアウト layouts/app.blade.php を継承 --}}
+@extends('layouts.app') 
 
-@section('title', 'Categories Management') 
-{{-- タイトル設定（layoutsで @yield("title") を使う） --}}
+@section('title', 'Admin: Categories') 
 
 @section('content')
-{{-- ================= カテゴリー管理ページ ================= --}}
+@vite(['public/css/admin.css'])
 
-<div class="category-page">
+<div class="container my-4 category-page">
 
-  <!-- === ナビゲーション === -->
-  <nav>
-    <a href="#">User</a>
-    <a href="#">Post</a>
-    <a href="#" class="active">Category</a>
-  </nav>
+    <!-- === ナビゲーション === -->
+    <ul class="nav nav-underline text-center w-25">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.users') }}">User</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.posts') }}">Post</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ route('admin.categories') }}">Category</a>
+        </li>
+    </ul>
 
-  <!-- === 検索バー === -->
-  <div class="search-bar">
-    <input type="text" placeholder="Add a category...">
-    <button>+ Add</button>
-  </div>
+    <hr>
 
-  <!-- === ユーザー一覧テーブル === -->
-    <table>
-    <thead>
-        <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Count</th>
-        <th>Last Update</th>
-        <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>Mountain</td>
-            <td>23</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Cafe</td>
-            <td>62</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Temple</td>
-            <td>45</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Tour</td>
-            <td>5</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Sea</td>
-            <td>13</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <td>Culture</td>
-            <td>26</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <td>Food</td>
-            <td>89</td>
-            <td>2025-10-06 13:25</td>
-            <td><i class="fa-regular fa-pen-to-square"></i><i class="fa-regular fa-trash-can"></i></td>
-        </tr>
-    </tbody>
-    </table>
+    <!-- === カテゴリー追加フォーム === -->
+    <div class="my-5">
+        <form action="{{ route('admin.categories.store') }}" method="post" class="row justify-content-center gap-2">
+            @csrf
+              <div class="col-5">
+                  <input type="text" name="name" class="form-control flex-grow-1" placeholder="Add a category..." value="{{ old('name') }}">
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-outline">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+            </div>
 
-  <!-- === ページネーション === -->
-  <div class="pagination">
-    <button>&lt;</button>
-    <button class="active">1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>4</button>
-    <button>&gt;</button>
-  </div>
+
+        </form>
+        @error('name')
+        <div class="text-danger small mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- === カテゴリー一覧テーブル === -->
+    <div class="container table-responsive">
+        <table class="table table-hover align-middle text-center">
+            <thead>
+                <tr class="fs-5">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Count</th>
+                    <th>Last Update</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($all_categories as $category)
+                <tr>
+                    <td>{{ $category->id }}</td>
+                    <td class="text-truncate" style="max-width: 150px;">{{ $category->name }}</td>
+                    <td>{{ $category->categoryPost()->count() }}</td>
+                    <td>{{ $category->updated_at->format('Y-m-d H:i') }}</td>
+                    <td class="text-end">
+                        <div class="d-flex flex-wrap gap-1 justify-content-center">
+                            <button class="btn btn-sm btn-warning w-25" data-bs-toggle="modal" data-bs-target="#edit-category-{{ $category->id }}">
+                                <i class="fa-solid fa-pen mx-auto"></i>
+                            </button>
+                            @include('admin.categories.modal.edit')
+
+                            <button class="btn btn-sm btn-danger w-25" data-bs-toggle="modal" data-bs-target="#delete-category-{{ $category->id }}">
+                                <i class="fa-solid fa-trash-can mx-auto"></i>
+                            </button>
+                            @include('admin.categories.modal.delete')
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+                @if ($uncategorised_count > 0)
+                <tr class="table-secondary">
+                    <td>-</td>
+                    <td>Uncategorised</td>
+                    <td>{{ $uncategorised_count }}</td>
+                    <td>-</td>
+                    <td></td>
+                </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+
+    <!-- === ページネーション === -->
+    <div class="d-flex justify-content-center mt-3">
+        {{ $all_categories->links('vendor.pagination.custom') }}
+    </div>
 
 </div>
 @endsection
-

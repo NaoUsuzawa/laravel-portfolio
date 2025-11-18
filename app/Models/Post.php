@@ -19,20 +19,18 @@ class Post extends Model
         'visited_at',
         'cost',
         'image',
+        'time_hour',
+        'time_min',
     ];
 
     protected $casts = [
         'image' => 'array',
+        'visited_at' => 'datetime',
     ];
-
-    public function images()
-    {
-        return $this->hasMany(Image::class);
-    }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function categories()
@@ -45,24 +43,19 @@ class Post extends Model
         return $this->hasMany(CategoryPost::class);
     }
 
-    // public function comments()
-    // {
-    //     return $this->hasMany(Comment::class);
-    // }
+    public function prefecture()
+    {
+        return $this->belongsTo(Prefecture::class);
+    }
 
-    // public function likes()
-    // {
-    //     return $this->hasMany(Like::class)->with('user');
-    // }
-
-    // public function isLiked()
-    // {
-    //     return $this->likes()->where('user_id', Auth::id())->exists();
-    // }
+    public function isLiked()
+    {
+        return $this->likes()->where('user_id', Auth::id())->exists();
+    }
 
     public function views()
     {
-        return $this->hasMany(PostView::class);
+        return $this->hasMany(PostView::class, 'post_id', 'id');
     }
 
     public function likes()
@@ -72,17 +65,12 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->with('user')->latest();
     }
 
     public function saves()
     {
         return $this->hasMany(Save::class);
-    }
-
-    public function prefecture()
-    {
-        return $this->belongsTo(Prefecture::class);
     }
 
     public function favorites()
@@ -94,5 +82,10 @@ class Post extends Model
     {
         return $this->favorites()->where('user_id', Auth::user()->id)->exists();
 
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'post_id', 'id');
     }
 }

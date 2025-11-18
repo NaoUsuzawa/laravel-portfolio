@@ -54,3 +54,54 @@ h5, span, label {
     text-decoration: none;
     transition: color 0.2s ease;
 }
+
+/* edit profile */
+.edit-profile-page .card {
+    max-width: 800px;
+    margin: auto;
+}
+
+.edit-profile-page .form-check-inline {
+    width: 120px;
+}
+
+.edit-profile-page .form-check-label {
+    margin-left: 6px;
+}
+
+.edit-profile-page .form-control::placeholder {
+    color: #C9A28C !important;
+}
+
+/* analytics */
+.card {
+    border: 1px solid #9F6B46;
+    background-color: #FFFFFF;
+}
+
+.card h4  {
+    color: #F1BDB2;
+}
+
+div > .text-followers {
+    color: #F1BDB2;
+}
+
+div > .text-nonfollowers {
+    color: #9F6B46;
+}
+
+.country-name > span {
+    color: #000;
+}
+
+/* interests */
+.category-label {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: end;
+    height: 150px;
+    border-radius: 10px;
+    padding: 10px;
+}
