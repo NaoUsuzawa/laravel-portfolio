@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Favorite;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\PostView;
 use App\Models\ProfileVisit;
-use App\Models\Favorite;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
