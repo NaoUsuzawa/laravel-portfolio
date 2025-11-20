@@ -25,21 +25,32 @@ class LikeController extends Controller
 
         // 🔔 通知
         $post = Post::find($post_id);
+
         if ($post && $post->user_id !== $user->id) {
 
+            // ✔ プロフィール画像の正しいURLを作る
             $avatar = $user->avatar
-                ? asset('storage/'.$user->avatar)
+                ? asset('storage/avatars/'.$user->avatar)
                 : 'https://via.placeholder.com/50';
 
+            // ✔ 通知を送る（配列が正しく渡る）
             $post->user->notify(new LikeNotification(
                 $user->name,
                 $avatar,
                 $post->id,
-                $post->title
+                $post->title,
+                $post->image,
+                $user->id
             ));
         }
 
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'liked' => true,
+            'like_count' => $post->likes()->count(),
+        ]);
+
     }
 
     public function destroy($post_id)
@@ -49,7 +60,14 @@ class LikeController extends Controller
             ->where('user_id', Auth::user()->id)
             ->delete();
 
-        return redirect()->back();
+        $post = Post::find($post_id);
+
+        // return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'liked' => false,
+            'like_count' => $post->likes()->count(),
+        ]);
     }
 
     public function getNotifications()
