@@ -102,8 +102,8 @@ class FavoriteController extends Controller
 
         $all_categories = $this->category->all();
         $all_prefectures = $this->prefecture
-                                ->orderBy('name', 'asc')
-                                ->get();
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('favorite.index')->with('favorites', $favorites)
             ->with('all_prefectures', $all_prefectures)
