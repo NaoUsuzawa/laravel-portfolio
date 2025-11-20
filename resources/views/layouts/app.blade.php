@@ -60,10 +60,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    <ul class="navbar-nav ms-auto align-items-center gap-3">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -76,7 +75,6 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
                                 </li>
-                        
                             @endif
                         @else
                             <li class="nav-item">
@@ -119,7 +117,6 @@
                                         <hr class="dropdown-divider">
                                     @endcan
 
-                                    
                                     <a href="{{ route('profile.show', Auth::user()->id) }}" class="dropdown-item"><i class="fa-solid fa-user me-2"></i> Profile</a>
 
                                     <a href="#" class="dropdown-item"
@@ -151,15 +148,25 @@
                     <span class="brand-text fw-bold fs-3">Go Nippon!</span>
                 </a>
 
-                <button class="btn p-0 border-0 bg-transparent" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-                    <i class="fa-solid fa-bars fa-2x"></i>
-                </button>
+                @guest
+                    <ul class="d-flex mb-0 gap-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}" style="color:#9F6B46;">{{ __('Login') }}</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
+                        </li>
+                    </ul>          
+                @else
+                    <button class="btn p-0 border-0 bg-transparent" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                        <i class="fa-solid fa-bars fa-2x"></i>
+                    </button>
+                @endguest
             </div>
         </nav>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" style="border-left:2px solid #d1a07d;">
-    
             <div class="offcanvas-header border-bottom" style="background-color:#fff5ee;">
                 @if (Auth::check())
                     <a href="{{ route('profile.show', Auth::user()->id) }}" class="d-flex align-items-center text-decoration-none">
@@ -174,24 +181,25 @@
                         @endif
                         <span class="fw-bold" style="color:#9F6B46; font-size:20px;">{{ Auth::user()->name }}</span>
                     </a>
-                @else
-                    <a href="{{ route('login') }}" class="d-flex align-items-center text-decoration-none">
-                        <i class="fa-solid fa-circle-user text-secondary me-3" style="font-size:50px;"></i>
-                        <span class="fw-bold" style="color:#9F6B46; font-size:20px;">Login</span>
-                    </a>
                 @endif
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
             <div class="offcanvas-body d-flex flex-column align-items-center justify-content-start text-center pt-4">
                 <ul class="list-unstyled w-100">
                     <li class="mb-3">
-                        <a href="{{ route('home') }}" class="menu-link nav-text-brown">
-                            <i class="fa-solid fa-store me-3"></i> Home
+                        <a href="{{ route('post.create') }}" class="menu-link nav-text-brown">
+                            <i class="fa-solid fa-circle-plus me-3"></i> Create Post
                         </a>
                     </li>
                     <li class="mb-3">
-                        <a href="{{ route('post.create') }}" class="menu-link nav-text-brown">
-                            <i class="fa-solid fa-circle-plus me-3"></i> Create Post
+                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown">
+                            <i class="fa-regular fa-comment me-3"></i> Messages
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="{{ route('favorite') }}" class="menu-link nav-text-brown">
+                            <i class="fa-regular fa-star me-3"></i> Favorite Post
                         </a>
                     </li>
                     {{-- <li class="mb-3">
@@ -211,23 +219,13 @@
                         </a>
                     </li>
                     <li class="mb-3">
-                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-comment me-3"></i>Messages
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="{{ route('favorite') }}" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-star me-3"></i>Favorite Post
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="notificationBtn menu-link nav-text-brown">
-                            <i class="fa-solid fa-toggle-on me-3"></i> Notification
+                        <a href="{{ route('analytics.index') }}" class="notificationBtn menu-link nav-text-brown">
+                            <i class="fa-solid fa-chart-line me-3"></i> Analytics
                         </a>
                     </li>
                 </ul>
 
-                <div class="d-flex justify-content-around mt-3 w-100">
+                <div class="d-flex justify-content-around mt-2 w-100">
                     <a href="{{ route('logout') }}" 
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                     class="btn" style="border: 2px solid #F1BDB2; color: #F1BDB2; font-weight: bold; background-color: transparent; transition: 0.3s;">
@@ -237,9 +235,11 @@
                         @csrf
                     </form>
 
-                    <a href="" class="btn" style="background-color:#F1BDB2; color:white; font-weight:bold; transition:0.3s;">
-                        <i class="fa-solid fa-lock"></i> Admin
-                    </a>
+                    @can('admin')
+                        <a href="{{ route('admin.users') }}" class="btn" style="background-color:#F1BDB2; color:white; font-weight:bold; transition:0.3s;">
+                            <i class="fa-solid fa-lock"></i> Admin
+                        </a>
+                    @endcan
                 </div>
             </div>
         </div>

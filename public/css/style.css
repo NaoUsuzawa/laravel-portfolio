@@ -159,25 +159,32 @@ h5, span, label {
 }
 
 /* analytics */
+.card .card-title {
+    color: #F1BDB2 !important;
+    text-shadow: .5px .5px 1px #9F6B46;
+}
+
+.card .text-decoration-underline {
+    color: #F1BDB2 !important;
+}
+
 .card {
     border: 1px solid #9F6B46;
     background-color: #FFFFFF;
-}
-
-.card h4  {
-    color: #F1BDB2;
 }
 
 div > .text-followers {
     color: #F1BDB2;
 }
 
-div > .text-nonfollowers {
+div > .text-nonfollowers,
+.country-name > span,
+.visit {
     color: #9F6B46;
 }
 
-.country-name > span {
-    color: #000;
+.progress-bar {
+    background-color: #9F6B46;
 }
 
 /* interests */
