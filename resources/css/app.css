@@ -383,3 +383,11 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* notification */
+.post-image-square {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    display: block;
+}
