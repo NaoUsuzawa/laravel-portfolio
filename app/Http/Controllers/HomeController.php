@@ -21,7 +21,7 @@ class HomeController extends Controller
     {
         $order = $request->get('order', 'newest');
         $categories = Category::orderBy('id')->get();
-        $prefectures = Prefecture::orderBy('id')->get();
+        $prefectures = Prefecture::orderBy('name')->get();
 
         $user = Auth::user();
         $categoryIds = $user->categories()->pluck('categories.id')->toArray();
@@ -72,7 +72,7 @@ class HomeController extends Controller
             ];
             $prevCount = $item->count;
         }
-        $categoryRanked = array_slice($categoryRanked, 0, 5);
+        $categoryRanked = array_slice($categoryRanked, 0, 10);
 
         $prefectureCounts = DB::table('posts')
             ->join('prefectures', 'posts.prefecture_id', '=', 'prefectures.id')
@@ -96,7 +96,7 @@ class HomeController extends Controller
             ];
             $prevCount = $item->count;
         }
-        $prefectureRanked = array_slice($prefectureRanked, 0, 5);
+        $prefectureRanked = array_slice($prefectureRanked, 0, 10);
 
         return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order', 'categories', 'prefectures'));
     }
