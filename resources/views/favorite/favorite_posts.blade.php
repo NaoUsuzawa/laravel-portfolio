@@ -41,25 +41,14 @@
                                     <span class="visually-hidden">Next</span>
                                 </button>
 
-                                <div class="carousel-indicators">
-                                    @foreach ($images as $index => $image)
-                                        <button type="button"
-                                                data-bs-target="#carouselPost{{ $favorite->post->id }}"
-                                                data-bs-slide-to="{{ $index }}"
-                                                class="{{ $index === 0 ? 'active' : '' }}"
-                                                aria-current="{{ $index === 0 ? 'true' : 'false' }}"
-                                                aria-label="Slide {{ $index + 1 }}">
-                                        </button>
-                                    @endforeach
-                                </div>
                             </div>
+
                         @elseif(count($images)===1)
                             <a href="{{ route('post.show', $favorite->post->id) }}">
                                 <div class="card-body ratio ratio-1x1">
                                     <img src="{{ asset('storage/' . $images[0]) }}" class="d-block w-100 h-100" style="object-fit: cover; border-top-left-radius: 5px; border-top-right-radius: 5px;" alt="Post Image">
                                 </div>
                             </a>
-                            
                         @endif
                     @else
                         <div class="text-center py-5 text-muted">No image available.</div>
@@ -70,24 +59,15 @@
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="fs-5 mb-0">{{ $favorite->post->title ?? 'Title' }}</span>
                         <div class="d-flex align-items-center gap-2">
-                            @if ($favorite->post->isLiked())
-                                <form action="{{ route('like.destroy', $favorite->post->id) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm p-0">
-                                        <i class="fa-solid fa-heart me-1"  style="color: #9F6B46"></i>
-                                    </button>
-                                    <span class="fw-bold" style="color: #9F6B46">{{ $favorite->post->likes->count() }}</span>
-                                </form>
-                            @else
-                                <form action="{{ route('like.store', $favorite->post->id) }}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm p-0">
-                                        <i class="fa-regular fa-heart"  style="color: #9F6B46"></i>
-                                    </button>
-                                    <span class="fw-bold"  style="color: #9F6B46">{{ $favorite->post->likes->count() }}</span>
-                                </form>
-                            @endif
+                            <button class="like-button btn btn-sm p-0" data-post-id="{{ $favorite->post->id }}" data-liked="{{ $favorite->post->isLiked() ? 'true' : 'false' }}">
+                                @if ($favorite->post->isLiked())
+                                    <i class="fa-solid fa-heart me-1" style="color:#F1BDB2; font-size:18px;"></i>
+                                @else
+                                    <i class="fa-regular fa-heart me-1" style="color:#9F6B46; font-size:18px;"></i>
+                                @endif
+                            </button>
+                            <span class="like-count fw-bold" style="color:#9F6B46">{{ $favorite->post->likes->count() }}</span>
+                            
                             <button class="btn btn-sm shadow-none favorite-btn" data-post-id="{{ $favorite->post->id }}" data-favorited="{{ $favorite->post->isFavorited() ? 'true' : 'false' }}">
                                 @if ($favorite->post->isFavorited())
                                     <i class="fa-solid fa-star text-warning" style="font-size: 18px;"></i>

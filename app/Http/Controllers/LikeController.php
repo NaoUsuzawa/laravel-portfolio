@@ -39,7 +39,13 @@ class LikeController extends Controller
             ));
         }
 
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'liked' => true,
+            'like_count' => $post->likes()->count(),
+        ]);
+
     }
 
     public function destroy($post_id)
@@ -48,8 +54,15 @@ class LikeController extends Controller
             ->where('post_id', $post_id)
             ->where('user_id', Auth::user()->id)
             ->delete();
+            
+        $post = Post::find($post_id);
 
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'liked' => false,
+            'like_count' => $post->likes()->count(),
+        ]);
     }
 
     public function getNotifications()

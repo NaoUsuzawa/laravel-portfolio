@@ -66,6 +66,10 @@ class FavoriteController extends Controller
         $favorites = $this->favorite
             ->select('favorites.*')
             ->join('posts', 'favorites.post_id', '=', 'posts.id')
+
+            // except for soft deleted data
+            ->whereNull('posts.deleted_at')
+
             ->with(['post' => function ($q) {
                 $q->with(['categories'])
                     ->withCount('likes');

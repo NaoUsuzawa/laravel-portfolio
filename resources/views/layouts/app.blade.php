@@ -93,7 +93,7 @@
 
                             <li class="nav-item">
                                 <a href="{{ route('favorite') }}" class="nav-link fs-3" style="color:#9F6B46;">
-                                    <i class="fa-regular fa-heart fa-lg"></i>
+                                    <i class="fa-regular fa-star"></i>
                                 </a>
                             </li>
 
@@ -202,7 +202,6 @@
                     <li class="mb-3">
                         <a href="#" class="notificationBtn menu-link nav-text-brown position-relative">
                             <i class="fa-regular fa-bell me-3"></i> Notifications
-
                             {{-- 未読通知がある場合に赤丸バッジ --}}
                             {{-- @if(Auth::check() && Auth::user()->unreadNotifications->count() > 0)
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -213,12 +212,12 @@
                     </li>
                     <li class="mb-3">
                         <a href="" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-comment me-3"></i> Messages
+                            <i class="fa-regular fa-comment me-3"></i>Messages
                         </a>
                     </li>
                     <li class="mb-3">
-                        <a href="" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-star me-3"></i> Favorite Post
+                        <a href="{{ route('favorite') }}" class="menu-link nav-text-brown">
+                            <i class="fa-regular fa-star me-3"></i>Favorite Post
                         </a>
                     </li>
                     <li class="mb-3">
