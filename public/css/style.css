@@ -16,6 +16,18 @@ body {
     border-color: #F1BDB2;
 }
 
+.btn-pink {
+    background-color: transparent;
+    color: #F1BDB2;
+    border: 2px solid #F1BDB2;
+    transition: 0.3s;
+    }
+
+.btn-pink:hover {
+    background-color: #F1BDB2;
+    color: white;
+}   
+
 h5, span, label {
     color: #9F6B46;
 }
@@ -136,26 +148,43 @@ h5, span, label {
     transform: scale(1.1); 
 }
 
+/* post */
+.category-name {
+    background-color:#ECF9FF;
+    color:#9F6B46;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
 /* analytics */
+.card .card-title {
+    color: #F1BDB2 !important;
+    text-shadow: .5px .5px 1px #9F6B46;
+}
+
+.card .text-decoration-underline {
+    color: #F1BDB2 !important;
+}
+
 .card {
     border: 1px solid #9F6B46;
     background-color: #FFFFFF;
-}
-
-.card h4  {
-    color: #F1BDB2;
 }
 
 div > .text-followers {
     color: #F1BDB2;
 }
 
-div > .text-nonfollowers {
+div > .text-nonfollowers,
+.country-name > span,
+.visit {
     color: #9F6B46;
 }
 
-.country-name > span {
-    color: #000;
+.progress-bar {
+    background-color: #9F6B46;
 }
 
 /* interests */

@@ -66,6 +66,10 @@ class FavoriteController extends Controller
         $favorites = $this->favorite
             ->select('favorites.*')
             ->join('posts', 'favorites.post_id', '=', 'posts.id')
+
+            // except for soft deleted data
+            ->whereNull('posts.deleted_at')
+
             ->with(['post' => function ($q) {
                 $q->with(['categories'])
                     ->withCount('likes');
@@ -97,7 +101,9 @@ class FavoriteController extends Controller
             ->paginate(6);
 
         $all_categories = $this->category->all();
-        $all_prefectures = $this->prefecture->all();
+        $all_prefectures = $this->prefecture
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('favorite.index')->with('favorites', $favorites)
             ->with('all_prefectures', $all_prefectures)

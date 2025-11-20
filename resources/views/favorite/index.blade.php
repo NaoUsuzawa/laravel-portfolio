@@ -47,11 +47,6 @@
 
                 @php $query = request()->all(); @endphp
                 <li class="nav-item tab-item">
-                    <a href="{{ route('favorite', array_merge($query, ['order' => 'most_liked'])) }}" class="tab-btn {{ $order === 'most_liked' ? 'active' : '' }}" data-order="most_liked">
-                        Most liked
-                    </a>
-                </li>
-                <li class="nav-item tab-item">
                     <a href="{{ route('favorite', ['order' => 'newest']) }}" class="tab-btn {{ $order === 'newest' ? 'active' : '' }}" data-order="newest">
                     Newest
                     </a>
@@ -60,6 +55,11 @@
                 <li class="nav-item tab-item">
                     <a href="{{ route('favorite', ['order' => 'oldest']) }}" class="tab-btn {{ $order === 'oldest' ? 'active' : '' }}" data-order="oldest">
                     Oldest
+                    </a>
+                </li>
+                <li class="nav-item tab-item">
+                    <a href="{{ route('favorite', array_merge($query, ['order' => 'most_liked'])) }}" class="tab-btn {{ $order === 'most_liked' ? 'active' : '' }}" data-order="most_liked">
+                        Most liked
                     </a>
                 </li>
             </ul>
@@ -176,6 +176,57 @@
             });
         });
     </script>
+
+    {{-- For Liked button --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', async () => {
+
+                    const postId = button.dataset.postId;
+                    const liked = button.dataset.liked === 'true';
+
+                    const url = liked 
+                        ? `/like/${postId}/destroy`  // DELETE
+                        : `/like/${postId}/store`; // POST same route
+
+                    const method = liked ? 'DELETE' : 'POST';
+
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+
+                        const icon = button.querySelector('i');
+                        const countElement = button.nextElementSibling;
+
+                        if (data.liked) {
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
+                            icon.style.color = '#F1BDB2';
+                        } else {
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
+                            icon.style.color = '#9F6B46';
+                        }
+
+                        countElement.textContent = data.like_count;
+
+                        button.dataset.liked = data.liked ? 'true' : 'false';
+                    }
+                });
+            });
+        });
+    </script>
+
     
 @endsection
 
