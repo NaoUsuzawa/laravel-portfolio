@@ -30,6 +30,8 @@ class HomeController extends Controller
             ->paginate(30)
             ->appends(['order' => $order]);
 
+        $notifications = auth()->user()->notifications()->take(20)->get();
+
         $categoryCounts = DB::table('category_posts')
             ->join('categories', 'category_posts.category_id', '=', 'categories.id')
             ->select('categories.id', 'categories.name', DB::raw('COUNT(category_posts.post_id) as count'))
@@ -78,7 +80,7 @@ class HomeController extends Controller
         }
         $prefectureRanked = array_slice($prefectureRanked, 0, 5);
 
-        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order', 'categories', 'prefectures'));
+        return view('home', compact('posts', 'categoryRanked', 'prefectureRanked', 'order', 'categories', 'prefectures', 'notifications'));
     }
 
     public function rankingPost(Request $request)

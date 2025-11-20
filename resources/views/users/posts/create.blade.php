@@ -156,6 +156,7 @@
                     <label class="form-label">Images (up to 3)</label>
                     <div id="image-inputs"></div>
                     <div id="image-previews" class="image-preview-area"></div>
+                    @error('image') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="text-end mt-4">

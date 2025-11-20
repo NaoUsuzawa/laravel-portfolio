@@ -253,64 +253,72 @@
 
     @stack('scripts')
 
+                <!-- 通知モーダル -->
+                <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content p-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Notifications 🔔</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
 
-    <!-- 通知モーダル -->
-    <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-3">
-                <div class="modal-header">
-                    <h5 class="modal-title">Notifications 🔔</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-body">
+                                @forelse ($notifications as $n)
+                                    <div class="d-flex align-items-center mb-3">
+
+                                        @php
+                                            // いいねしたユーザーのアバター
+                                            $avatar = $n->data['liker_avatar'] ?? null;
+                                            if ($avatar) {
+                                                $avatar = str_replace('/storage/avatars//storage/avatars/', '/storage/avatars/', $avatar);
+                                            }
+
+                                            // 投稿画像URLの初期値（プレースホルダー）
+                                            $postImageUrl = 'https://via.placeholder.com/60';
+
+                                            // 投稿に紐づく最初の画像を取得
+                                            if (isset($n->data['post_id']) && $post = \App\Models\Post::find($n->data['post_id'])) {
+                                                $firstImage = $post->images->first()?->image; // imagesテーブルのカラム名に合わせる
+                                                if ($firstImage) {
+                                                    $postImageUrl = asset('storage/' . $firstImage);
+                                                }
+                                            }
+                                        @endphp
+
+                                        <!-- いいねしたユーザー画像 -->
+                                        <a href="{{ isset($n->data['liker_id']) ? route('profile.show', ['id' => $n->data['liker_id']]) : '#' }}">
+                                            <img src="{{ $avatar ?? 'https://via.placeholder.com/50' }}"
+                                                class="rounded-circle me-3"
+                                                width="50"
+                                                height="50"
+                                                style="object-fit: cover;">
+                                        </a>
+
+                                        <!-- 名前と通知文 -->
+                                        <div class="flex-grow-1">
+                                            <strong>{{ $n->data['liker_name'] ?? 'Unknown' }}</strong>
+                                            <small>liked your post</small><br>
+                                            <span class="text-muted">{{ $n->created_at->diffForHumans() }}</span>
+                                        </div>
+
+                                        <!-- 投稿画像（右側） -->
+                                        <a href="{{ route('post.show', $n->data['post_id']) }}">
+                                            <img src="{{ $postImageUrl }}" class="post-image-square rounded-0">
+                                        </a>
+
+                                    </div>
+                                @empty
+                                    <p class="text-muted">No notifications.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body" id="notificationList">
-                    <p>Loading...</p>
-                </div>
+
             </div>
         </div>
     </div>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const notificationBtns = document.querySelectorAll(".notificationBtn, #notificationBtn");
-        const notificationList = document.getElementById("notificationList");
-
-        notificationBtns.forEach(btn => {
-            btn.addEventListener("click", async () => {
-                notificationList.innerHTML = "<p>Loading...</p>";
-
-                try {
-                    const res = await fetch("/notifications");
-                    const notifications = await res.json();
-
-                    if (!Array.isArray(notifications) || notifications.length === 0) {
-                        notificationList.innerHTML = "<p>No notifications.</p>";
-                        return;
-                    }
-
-                    let html = "";
-                    notifications.forEach(n => {
-                        html += `
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="${n.image || 'https://via.placeholder.com/50'}"
-                                    alt="${n.user}" class="rounded-circle me-3" width="50" height="50">
-                                <div>
-                                    <strong>${n.user}</strong><br>
-                                    <small>${n.action}</small><br>
-                                    <span class="text-muted">${n.time}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    notificationList.innerHTML = html;
-                } catch (error) {
-                    console.error(error);
-                    notificationList.innerHTML = "<p>Error loading notifications.</p>";
-                }
-            });
-        });
-    });
-    </script>
 
 </body>
 </html>
