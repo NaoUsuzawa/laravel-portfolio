@@ -109,41 +109,22 @@
                             <span class="fs-5 mb-0">{{ $post->title }}</span>
                             <div class="d-flex align-items-center gap-2">
                                 {{-- LIKE --}}
-                                @if ($post->isLiked())
-                                    <form action="{{ route('like.destroy', $post->id) }}" method="post">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm p-0">
-                                            <i class="fa-solid fa-heart me-1"  style="color: #9F6B46"></i>
-                                        </button>
-                                        <span class="fw-bold" style="color: #9F6B46">{{ $post->likes->count() }}</span>
-                                    </form>
-                                @else
-                                    <form action="{{ route('like.store', $post->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm p-0">
-                                            <i class="fa-regular fa-heart"  style="color: #9F6B46"></i>
-                                        </button>
-                                        <span class="fw-bold"  style="color: #9F6B46">{{ $post->likes->count() }}</span>
-                                    </form>
-                                @endif
+                                <button class="like-button btn btn-sm p-0" data-post-id="{{ $post->id }}" data-liked="{{ $post->isLiked() ? 'true' : 'false' }}">
+                                    @if ($post->isLiked())
+                                        <i class="fa-solid fa-heart me-1" style="color:#F1BDB2; font-size:18px;"></i>
+                                    @else
+                                        <i class="fa-regular fa-heart me-1" style="color:#9F6B46; font-size:18px;"></i>
+                                    @endif
+                                </button>
+                                <span class="like-count fw-bold" style="color:#9F6B46">{{ $post->likes->count() }}</span>
                                 {{-- FAVORITE --}}
-                                @if ($post->isFavorited())
-                                    <form action="{{ route('favorite.destroy', $post->id) }}" method="post">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm p-0">
-                                            <i class="fa-solid fa-star text-brown me-1" style="color: #9F6B46"></i>
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('favorite.store', $post->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm p-0">
-                                            <i class="fa-regular fa-star text-brown me-1" style="color: #9F6B46"></i>
-                                        </button>
-                                    </form>
-                                @endif
+                                <button class="btn btn-sm shadow-none favorite-btn" data-post-id="{{ $post->id }}" data-favorited="{{ $post->isFavorited() ? 'true' : 'false' }}">
+                                    @if ($post->isFavorited())
+                                        <i class="fa-solid fa-star text-warning" style="font-size: 18px;"></i>
+                                    @else
+                                        <i class="fa-regular fa-star" style="font-size: 18px;"></i>
+                                    @endif
+                                </button>
                             </div>
                         </div>
 
@@ -169,4 +150,109 @@
         @endforelse
     </div>
 </div>
+
+{{-- For Favorite button --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = document.querySelector('meta[name="csrf-token"]').content;
+
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const postId = button.dataset.postId;
+                const isFavorited = button.dataset.favorited === 'true';
+
+                const url = isFavorited
+                    ? `/favorite/${postId}/destroy`
+                    : `/favorite/${postId}/store`;
+
+                const method = isFavorited ? 'DELETE' : 'POST';
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const icon = button.querySelector('i');
+
+                        if (data.favorited) {
+                            // ★ register
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid', 'text-warning');
+                            button.dataset.favorited = 'true';
+                        } else {
+                            // ☆ remove
+                            icon.classList.remove('fa-solid', 'text-warning');
+                            icon.classList.add('fa-regular');
+                            icon.style.color = '#9F6B46';
+                            button.dataset.favorited = 'false';
+                        }
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        });
+    });
+</script>
+
+{{-- For Liked button --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', async () => {
+
+                const postId = button.dataset.postId;
+                const liked = button.dataset.liked === 'true';
+
+                const url = liked 
+                    ? `/like/${postId}/destroy`  // DELETE
+                    : `/like/${postId}/store`; // POST same route
+
+                const method = liked ? 'DELETE' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    const icon = button.querySelector('i');
+                    const countElement = button.nextElementSibling;
+
+                    if (data.liked) {
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+                        icon.style.color = '#F1BDB2';
+                    } else {
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+                        icon.style.color = '#9F6B46';
+                    }
+
+                    countElement.textContent = data.like_count;
+
+                    button.dataset.liked = data.liked ? 'true' : 'false';
+                }
+            });
+        });
+    });
+</script>
+
+
 @endsection
