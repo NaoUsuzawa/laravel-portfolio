@@ -25,17 +25,22 @@ class LikeController extends Controller
 
         // 🔔 通知
         $post = Post::find($post_id);
+
         if ($post && $post->user_id !== $user->id) {
 
+            // ✔ プロフィール画像の正しいURLを作る
             $avatar = $user->avatar
-                ? asset('storage/'.$user->avatar)
+                ? asset('storage/avatars/'.$user->avatar)
                 : 'https://via.placeholder.com/50';
 
+            // ✔ 通知を送る（配列が正しく渡る）
             $post->user->notify(new LikeNotification(
                 $user->name,
                 $avatar,
                 $post->id,
-                $post->title
+                $post->title,
+                $post->image,
+                $user->id
             ));
         }
 
