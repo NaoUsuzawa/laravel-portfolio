@@ -18,12 +18,11 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialAuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Metadata\Group;
-use Illuminate\Http\Request;
-
 
 Auth::routes();
 
@@ -105,11 +104,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('auth');
 
     Route::post('/notifications/read-all', function (Request $request) {
-        $user = $request->user(); 
+        $user = $request->user();
         if ($user) {
             $user->unreadNotifications->markAsRead(); // 既読にする
+
             return response()->json(['status' => 'ok']); // JSに返す
         }
+
         return response()->json(['status' => 'unauthorized'], 401);
     })->middleware('auth')->name('notifications.readAll');
 
