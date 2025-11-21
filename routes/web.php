@@ -22,32 +22,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use PHPUnit\Metadata\Group;
 
 Auth::routes();
 
-// Admin Controllers
-// Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function(){
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    // User
-    Route::get('/users', [UsersController::class, 'index'])->name('users');
-    Route::delete('/users/{id}/deactivate', [UsersController::class, 'deactivate'])->name('users.deactivate');
-    Route::patch('/users/{id}/activate', [UsersController::class, 'activate'])->name('users.activate');
-    Route::get('/users/search', [UsersController::class, 'search'])->name('users.search');
-    // Post
-    Route::get('/posts', [AdminpostController::class, 'index'])->name('posts');
-    Route::delete('posts/{id}/deactivate', [AdminpostController::class, 'deactivate'])->name('posts.deactivate');
-    Route::patch('posts/{id}/activate', [AdminpostController::class, 'activate'])->name('posts.activate');
-    Route::get('/posts/search', [AdminpostController::class, 'search'])->name('posts.search');
-    // Categories
-    Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
-    Route::post('categories/store', [CategoriesController::class, 'store'])->name('categories.store');
-    Route::patch('/categories/{id}/update', [CategoriesController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{id}/delete', [CategoriesController::class, 'delete'])->name('categories.delete');
-});
-
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    // Home
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/rankingpost', 'rankingPost')->name('ranking.post');
@@ -63,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/post/{id}/destroy', 'destroy')->name('post.destroy');
     });
 
-    // PROFILE
+    // Profile
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile/{id}/show', 'show')->name('profile.show');
         Route::get('profile/edit', 'edit')->name('profile.edit');
@@ -79,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/prefectures/{id}/posts', 'getPost')->name('map.getPost');
     });
 
-    // follow
+    // Follow
     Route::controller(FollowController::class)->group(function () {
         Route::post('/follow/{user_id}/store', 'store')->name('follow.store');
         Route::delete('/follow/{user_id}/destroy', 'destroy')->name('follow.destroy');
@@ -114,14 +94,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/comment/{id}/destroy', 'destroy')->name('comment.destroy');
     });
 
-    // favorite
+    // Favorite
     Route::controller(FavoriteController::class)->group(function () {
         Route::get('/favorites', 'show')->name('favorite');
         Route::post('/favorite/{post_id}/store', 'store')->name('favorite.store');
         Route::delete('/favorite/{post_id}/destroy', 'destroy')->name('favorite.destroy');
     });
 
-    // direct message
+    // Direct Message
     Route::controller(DmController::class)->group(function () {
         Route::get('/message', 'show')->name('messages.show');
         Route::post('/messages/store', 'store')->name('messages.store');
@@ -138,7 +118,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/conversations/destroy/{id}', 'destroy')->name('conversations.destroy');
     });
 
-    // interest
+    // Interest
     Route::controller(InterestController::class)->group(function () {
         Route::get('/interests/select', 'index')->name('interests.select');
         Route::post('/interests/store', 'store')->name('interests.store');
@@ -149,8 +129,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
 
+    // Admin
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
+        // User
+        Route::get('/users', [UsersController::class, 'index'])->name('users');
+        Route::delete('/users/{id}/deactivate', [UsersController::class, 'deactivate'])->name('users.deactivate');
+        Route::patch('/users/{id}/activate', [UsersController::class, 'activate'])->name('users.activate');
+        Route::get('/users/search', [UsersController::class, 'search'])->name('users.search');
+        // Post
+        Route::get('/posts', [AdminpostController::class, 'index'])->name('posts');
+        Route::delete('posts/{id}/deactivate', [AdminpostController::class, 'deactivate'])->name('posts.deactivate');
+        Route::patch('posts/{id}/activate', [AdminpostController::class, 'activate'])->name('posts.activate');
+        Route::get('/posts/search', [AdminpostController::class, 'search'])->name('posts.search');
+        // Categories
+        Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
+        Route::post('categories/store', [CategoriesController::class, 'store'])->name('categories.store');
+        Route::patch('/categories/{id}/update', [CategoriesController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{id}/delete', [CategoriesController::class, 'delete'])->name('categories.delete');
+    });
 });
 
+// Verify Email
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', function () {
         return view('auth.verify');
@@ -169,5 +168,6 @@ Route::middleware('auth')->group(function () {
     })->name('verification.send');
 });
 
+// Login API
 Route::get('auth/{provider}', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
