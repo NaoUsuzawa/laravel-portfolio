@@ -45,17 +45,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::delete('/categories/{id}/delete', [CategoriesController::class, 'delete'])->name('categories.delete');
 });
 
-Route::get('/message', [DmController::class, 'show'])->name('messages.show');
-Route::post('/messages/store', [DmController::class, 'store'])->name('messages.store');
-Route::delete('/messages/destroy/{id}', [DmController::class, 'destroy'])->name('messages.destroy');
-
-Route::get('/conversations', [ConversationController::class, 'index'])->name('conversation.show');
-Route::get('/conversations/refresh-list', [ConversationController::class, 'refreshList'])->name('conversations.refresh_list');
-Route::post('/conversations/start', [ConversationController::class, 'start_conversation'])->name('conversations.start');
-Route::post('/conversations/search', [ConversationController::class, 'search'])->name('conversations.search');
-Route::post('/conversations/search-followings', [ConversationController::class, 'searchFollowings'])->name('conversations.searchFollowings');
-Route::get('/conversations/{id}', [ConversationController::class, 'show_conversation'])->name('conversations.show');
-Route::delete('/conversations/destroy/{id}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -118,6 +107,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/favorites', 'show')->name('favorite');
         Route::post('/favorite/{post_id}/store', 'store')->name('favorite.store');
         Route::delete('/favorite/{post_id}/destroy', 'destroy')->name('favorite.destroy');
+    });
+
+    // direct message
+    Route::controller(DmController::class)->group(function(){
+        Route::get('/message', 'show')->name('messages.show');
+        Route::post('/messages/store','store')->name('messages.store');
+        Route::delete('/messages/destroy/{id}', 'destroy')->name('messages.destroy');
+    });
+
+    Route::controller(ConversationController::class)->group(function(){
+        Route::get('/conversations', 'index')->name('conversation.show');
+        Route::get('/conversations/refresh-list', 'refreshList')->name('conversations.refresh_list');
+        Route::post('/conversations/start', 'start_conversation')->name('conversations.start');
+        Route::post('/conversations/search', 'search')->name('conversations.search');
+        Route::post('/conversations/search-followings', 'searchFollowings')->name('conversations.searchFollowings');
+        Route::get('/conversations/{id}', 'show_conversation')->name('conversations.show');
+        Route::delete('/conversations/destroy/{id}', 'destroy')->name('conversations.destroy');
     });
 
     // interest
