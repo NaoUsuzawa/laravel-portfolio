@@ -135,7 +135,7 @@
 
     {{-- Pagination --}}
     <div class="d-flex justify-content-center">
-        {{ $all_posts->links('vendor.pagination.custom') }}
+        {{ $all_posts->links() }}
     </div> 
 </div>
 @endsection
