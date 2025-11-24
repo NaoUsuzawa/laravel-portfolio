@@ -114,12 +114,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return response()->json(['status' => 'unauthorized'], 401);
     })->middleware('auth')->name('notifications.readAll');
 
-    Route::post('/messages/mark-read', function() {
+    Route::post('/messages/mark-read', function () {
         $user = auth()->user();
-        if($user){
+        if ($user) {
             $user->unreadMessages()->update(['read_at' => now()]);
+
             return response()->json(['status' => 'ok']);
         }
+
         return response()->json(['status' => 'unauthorized'], 401);
     })->middleware('auth')->name('messages.markRead');
 

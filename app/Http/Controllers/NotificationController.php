@@ -22,6 +22,6 @@ class NotificationController extends Controller
 
         $notifications = Notification::latestLimit()->get();
 
-    return view('notifications.index', compact('notifications'));
+        return view('notifications.index', compact('notifications'));
     }
 }
