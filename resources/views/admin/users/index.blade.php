@@ -112,7 +112,7 @@
 
   {{-- Pagination --}}
   <div class="d-flex justify-content-center">
-    {{ $all_users->links('vendor.pagination.custom') }}
+    {{ $all_users->links() }}
   </div>
 
 </div>
