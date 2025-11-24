@@ -19,6 +19,7 @@ class SetLocale
     {
         $locale = Session::get('locale', 'en');
         App::setLocale($locale);
+
         return $next($request);
     }
 }

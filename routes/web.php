@@ -176,10 +176,11 @@ Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback']
 
 // Translation
 Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'ja'])) {
+    if (! in_array($locale, ['en', 'ja'])) {
         abort(400);
     }
     Session::put('locale', $locale);
     App::setLocale($locale);
+
     return redirect()->back();
 })->name('lang.switch');
