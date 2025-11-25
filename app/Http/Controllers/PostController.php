@@ -236,10 +236,10 @@ class PostController extends Controller
 
         foreach ($post->images as $image) {
             Storage::disk('public')->delete($image->image);
+            $image->delete();
         }
-        $post->images()->delete();
 
-        $post->delete();
+        $post->forceDelete();
 
         return redirect()->route('home')->with('success', 'Post deleted successfully!');
     }
