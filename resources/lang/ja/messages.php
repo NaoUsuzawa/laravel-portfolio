@@ -48,7 +48,7 @@ return [
         'request' => '再送信する',
     ],
 
-    //select-interest
+    // select-interest
     'interest' => [
         'title' => '最大3つのカテゴリーを選択してください',
         'save' => '保存',

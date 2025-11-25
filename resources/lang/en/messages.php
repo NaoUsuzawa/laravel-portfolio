@@ -48,7 +48,7 @@ return [
         'request' => 'Request Another',
     ],
 
-    //select-interest
+    // select-interest
     'interest' => [
         'title' => 'Select up to 3 Categories',
         'save' => 'Save',
