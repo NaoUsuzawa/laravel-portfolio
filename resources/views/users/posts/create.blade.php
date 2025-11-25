@@ -88,11 +88,17 @@
                 </div>
 
                 {{-- Images --}}
-                <div class="mb-4">
-                    <label class="form-label">Images (up to 3)</label>
-                    <div id="image-inputs"></div>
-                    <div id="image-previews" class="image-preview-area"></div>
-                    @error('image') <div class="text-danger small">{{ $message }}</div> @enderror
+                <div class="mb-5">
+                    <label class="form-label fw-bold">Images (max 3 total)</label>
+                    <div class="d-flex flex-wrap gap-3" id="image-upload-area">
+                        <div class="image-slot add-new-slot" id="add-slot" style="width:100px; height:100px;">
+                            <label for="new_image_file_0">+ Add</label>
+                            <input type="file" class="d-none new-image-input" name="image[]" id="new_image_file_0"
+                                onchange="previewNewImage(this)" accept="image/*">
+                        </div>
+                    </div>
+                     @error('image') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                     @error('image.*') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="text-end mt-4">
@@ -102,8 +108,7 @@
                         Cancel
                     </a>
 
-                    <button type="submit"
-                        class="btn btn-outline shadow-sm"
+                    <button type="submit" class="btn btn-outline shadow-sm"
                         style="min-width:150px; font-weight:bold; transition:0.3s;">
                         Post
                     </button>
@@ -113,70 +118,125 @@
     </div>
 </div>
 
+<style>
+.image-slot {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.add-new-slot label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #B0B0B0;
+    color: #9F6B46;
+    font-weight: bold;
+    border-radius: inherit; 
+}
+
+.image-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-slot button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const MAX_IMAGES = 3;
-    const container = document.getElementById('image-inputs');
-    const previewArea = document.getElementById('image-previews');
-    let count = 0;
+    updateAddSlotVisibility();
 
-    function addInput() {
-        if (count >= MAX_IMAGES) return;
-        count++;
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (getCurrentImageCount() > 3) {
+            alert('You can upload up to 3 images.');
+            e.preventDefault();
+        }
+    });
 
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('image-controls');
+    let newImageIndex = 0;
 
-        const label = document.createElement('label');
-        label.textContent = '+ Add';
-        label.classList.add('image-btn');
-
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.name = 'image[]';
-        input.accept = 'image/*';
-        input.style.display = 'none';
-
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        container.appendChild(wrapper);
-
-        label.addEventListener('click', () => input.click());
-
-        input.addEventListener('change', function() {
-            if (!this.files[0]) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.classList.add('image-item');
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-
-                const removeBtn = document.createElement('span');
-                removeBtn.classList.add('remove-btn');
-                removeBtn.textContent = '×';
-                removeBtn.onclick = () => {
-                    div.remove();
-                    wrapper.remove();
-                    count--;
-                    if (count < MAX_IMAGES) addInput();
-                };
-
-                div.appendChild(img);
-                div.appendChild(removeBtn);
-                previewArea.appendChild(div);
-            };
-            reader.readAsDataURL(this.files[0]);
-
-            label.style.display = 'none';
-            if (count < MAX_IMAGES) addInput();
-        });
+    function getCurrentImageCount() {
+        return document.querySelectorAll('.new-image-slot').length;
     }
 
-    addInput();
+    function updateAddSlotVisibility() {
+        const addSlot = document.getElementById('add-slot');
+        if (addSlot) {
+            getCurrentImageCount() >= 3 ? addSlot.classList.add('d-none') : addSlot.classList.remove('d-none');
+        }
+    }
 
-    // Cost slider update
+    window.previewNewImage = function(input) {
+        const file = input.files[0];
+        const addSlot = input.closest('.add-new-slot');
+        if (!file || !addSlot) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            addSlot.classList.remove('add-new-slot');
+            addSlot.classList.add('new-image-slot');
+            addSlot.style.position = 'relative';
+            addSlot.innerHTML = `
+                <img src="${e.target.result}" alt="new image">
+                <button type="button" class="delete-new-image position-absolute"
+                    style="top:4px; right:4px; width:20px; height:20px; font-size:0.8rem; border:none; border-radius:50%; background-color:#9F6B46; color:white; cursor:pointer;"
+                    onclick="deleteNewImage(this)">&times;</button>
+                <input type="file" class="d-none new-image-input" name="image[]" accept="image/*">
+            `;
+
+            const newFileInput = addSlot.querySelector('input[type="file"]');
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            newFileInput.files = dt.files;
+
+            addSlot.removeAttribute('id');
+
+            if (getCurrentImageCount() < 3) {
+                newImageIndex++;
+                const newAddSlot = document.createElement('div');
+                newAddSlot.className = 'image-slot add-new-slot';
+                newAddSlot.id = 'add-slot';
+                newAddSlot.style.cssText = 'width:100px; height:100px;';
+                newAddSlot.innerHTML = `<label for="new_image_file_${newImageIndex}">+ Add</label>
+                    <input type="file" class="d-none new-image-input" name="image[]" id="new_image_file_${newImageIndex}" onchange="previewNewImage(this)" accept="image/*">`;
+                document.getElementById('image-upload-area').appendChild(newAddSlot);
+            }
+
+            updateAddSlotVisibility();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    window.deleteNewImage = function(button) {
+        const slot = button.closest('.image-slot');
+        slot.remove();
+        if (!document.querySelector('.add-new-slot')) {
+            newImageIndex++;
+            const newAddSlot = document.createElement('div');
+            newAddSlot.className = 'image-slot add-new-slot';
+            newAddSlot.id = 'add-slot';
+            newAddSlot.style.cssText = 'width:100px; height:100px;';
+            newAddSlot.innerHTML = `<label for="new_image_file_${newImageIndex}">+ Add</label>
+                <input type="file" class="d-none new-image-input" name="image[]" id="new_image_file_${newImageIndex}" onchange="previewNewImage(this)" accept="image/*">`;
+            document.getElementById('image-upload-area').appendChild(newAddSlot);
+        }
+        updateAddSlotVisibility();
+    }
+
+    // Cost slider
     const costSlider = document.getElementById('cost-slider');
     const costDisplay = document.getElementById('cost-current');
     costSlider?.addEventListener('input', () => {
