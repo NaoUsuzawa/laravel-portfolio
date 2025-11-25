@@ -3,7 +3,7 @@
 @section('title', 'Admin Posts') 
 
 @section('content')
-<div class="container my-4 post-page">
+<div class="container my-4 admin post-page">
 
   {{-- Navigation --}}
   <div class="row nav nav-underline text-center">
@@ -77,13 +77,29 @@
           <tr>
             <td>{{ $post->id }}</td>
             <td>
-              @if ($post->trashed())
+              @php
+                  $firstImage = $post->images->first();
+              @endphp
+              @if ($firstImage)
+                  {{-- post has image --}}
+                  @if ($post->trashed())
+                      <img src="{{ asset('storage/' . $firstImage->image) }}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover;">
+                  @else
+                      <a href="{{ route('post.show', $post->id) }}">
+                          <img src="{{ asset('storage/' . $firstImage->image) }}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover; max-width: none;">
+                      </a>
+                  @endif
+              @else
+                  {{-- no image --}}
+                  <div class="text-muted">No Image</div>
+              @endif
+              {{-- @if ($post->trashed())
                 <img src="{{ asset ('storage/' .  $post->images->first()->image )}}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover;">
               @else
                 <a href="{{ route('post.show', $post->id) }}">
                   <img src="{{ asset ('storage/' .  $post->images->first()->image )}}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover; max-width: none;">
                 </a>
-              @endif
+              @endif --}}
 
             </td>
             <td>
@@ -135,7 +151,7 @@
 
     {{-- Pagination --}}
     <div class="d-flex justify-content-center">
-        {{ $all_posts->links('vendor.pagination.custom') }}
+        {{ $all_posts->links() }}
     </div> 
 </div>
 @endsection

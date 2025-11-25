@@ -49,7 +49,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg shadow-sm fixed-top py-1" style="background-color:#fbefe5;">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+                <a class="navbar-brand d-flex align-items-center brand" href="{{ url('/') }}">
                     <img src="{{ asset('images/image_480.png') }}" alt="Logo" width="50" class="me-2">
                     <span class="brand-text fw-bold fs-1 ms-2">Go Nippon!</span>
                 </a>
@@ -60,36 +60,47 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    <ul class="navbar-nav ms-auto align-items-center gap-1">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}" style="color:#9F6B46;">{{ __('Login') }}</a>
+                                    <a class="nav-link nav-item p-0" href="{{ route('login') }}" style="color:#9F6B46;">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
+                                    <a class="nav-link nav-item ps-4" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item">
                                 <a href="{{ route('post.create') }}" class="nav-link fs-2" style="color:#9F6B46;">
-                                    <i class="fa-solid fa-circle-plus"></i>
+                                    <i class="fa-solid fa-circle-plus nav-item p-0"></i>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('conversation.show') }}" class="nav-link fs-2" style="color:#9F6B46;">
-                                    <i class="fa-regular fa-comment "></i>
+                                    <i class="fa-regular fa-comment nav-item p-0"></i>
                                 </a>
+                                 {{-- 未読メッセージバッジ --}}
+                                    @php
+                                        $unreadMessagesCount = Auth::user()->receivedMessages()->where('read_at', null)->count();
+                                    @endphp
+                                    @if($unreadMessagesCount > 0)
+                                        <span class="position-absolute badge rounded-pill bg-danger"
+                                            id="dmBadge"
+                                            style="font-size: 0.8rem; padding: 3px 6px; top: -2; right: 0;">
+                                            {{ $unreadMessagesCount }}
+                                        </span>
+                                    @endif
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('favorite') }}" class="nav-link fs-3" style="color:#9F6B46;">
-                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star nav-item p-0"></i>
                                 </a>
                             </li>
 
@@ -155,6 +166,25 @@
                                 </div>
                             </li>
                         @endguest
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-globe fa-lg translation"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                        <img src="https://flagcdn.com/us.svg" width="24" class="me-2 border"> English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                        <img src="https://flagcdn.com/jp.svg" width="24" class="me-2 border"> 日本語
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>  
             </div>
@@ -176,6 +206,25 @@
                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
+                        </li>
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-globe fa-lg translation"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                        <img src="https://flagcdn.com/us.svg" width="24" class="me-2 border"> English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                        <img src="https://flagcdn.com/jp.svg" width="24" class="me-2 border"> 日本語
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>          
                 @else
@@ -212,9 +261,22 @@
                             <i class="fa-solid fa-circle-plus me-3"></i> Create Post
                         </a>
                     </li>
-                    <li class="mb-3">
-                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown">
+                    <li class="mb-3 position-relative">
+                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown" id="mobileDmBtn">
                             <i class="fa-regular fa-comment me-3"></i> Messages
+
+                            @auth
+                                @php
+                                    $unreadMessagesCount = Auth::user()->receivedMessages()->where('read_at', null)->count();
+                                @endphp
+                                @if($unreadMessagesCount > 0)
+                                    <span class="position-absolute badge rounded-pill bg-danger"
+                                        id="mobileDmBadge"
+                                        style="font-size: 0.8rem; padding: 3px 6px; top: 0; right: 0;">
+                                        {{ $unreadMessagesCount }}
+                                    </span>
+                                @endif
+                            @endauth
                         </a>
                     </li>
                     <li class="mb-3">
@@ -223,14 +285,41 @@
                         </a>
                     </li>
                     <li class="mb-3">
-                        <a href="#" class="notificationBtn menu-link nav-text-brown">
-                            <i class="fa-regular fa-bell me-3"></i> Notification
+                        <a href="#"
+                        class="notificationBtn menu-link nav-text-brown"
+                        id="mobileNotificationBtn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#notificationModal">
+                        <i class="fa-regular fa-bell me-3"></i> Notification
+                        @if(Auth::check() && Auth::user()->unreadNotifications->count() > 0)
+                            <span class="badge bg-danger rounded-pill ms-2" id="mobileNotificationBadge">
+                                {{ Auth::user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
                         </a>
                     </li>
                     <li class="mb-3">
                         <a href="{{ route('analytics.index') }}" class="notificationBtn menu-link nav-text-brown">
                             <i class="fa-solid fa-chart-line me-3"></i> Analytics
                         </a>
+                    </li>
+                    <!-- Language Dropdown -->
+                    <li class="mb-3 d-flex justify-content-center">
+                        <ul class="nav">
+                            <li class="nav-item translation">
+                                <a class="nav-link d-flex align-items-center {{ App::getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                    <img src="https://flagcdn.com/us.svg" width="24" class="border"> English
+                                </a>
+                            </li>
+                            <li class="translation d-flex align-items-center">
+                                /
+                            </li>
+                            <li class="nav-item translation">
+                                <a class="nav-link d-flex align-items-center {{ App::getLocale() === 'ja' ? 'active' : '' }}" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                    <img src="https://flagcdn.com/jp.svg" width="24" class="border"> 日本語
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -346,6 +435,55 @@
                 .then(data => {
                     if(data.status === 'ok' && profileBadge) {
                         profileBadge.style.display = 'none'; // バッジを消す
+                    }
+                })
+                .catch(err => console.error(err));
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const dmBtn = document.getElementById('dmBtn');
+        const dmBadge = document.getElementById('dmBadge');
+
+        if(dmBtn) {
+            dmBtn.addEventListener('click', function() {
+                fetch("/messages/mark-read", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Content-Type": "application/json"
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'ok' && dmBadge) {
+                        dmBadge.style.display = 'none';
+                    }
+                })
+                .catch(err => console.error(err));
+            });
+        }
+    });
+
+    // スマホ版
+    document.addEventListener('DOMContentLoaded', function () {
+        const mobileNotificationBtn = document.getElementById('mobileNotificationBtn');
+        const mobileNotificationBadge = document.getElementById('mobileNotificationBadge');
+
+        if(mobileNotificationBtn) {
+            mobileNotificationBtn.addEventListener('click', function() {
+                fetch("{{ route('notifications.readAll') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Content-Type": "application/json"
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'ok' && mobileNotificationBadge) {
+                        mobileNotificationBadge.style.display = 'none';
                     }
                 })
                 .catch(err => console.error(err));

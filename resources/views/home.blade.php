@@ -46,21 +46,19 @@
                         <div class="carousel-inner">
                             {{-- Category Ranking --}}
                             <div class="carousel-item active">
-                                <div class="card-header border-0" style="background: #fbefe5;">
+                                <div class="card-header border0 " style="background:#fbefe5; ">
                                     <h5 class="mb-0 fw-bold text-center">Category Ranking</h5>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     @forelse ($categoryRanked as $item)
                                         <li class="list-group-item rank-group-item d-flex justify-content-between align-items-center px-5"
-                                        style="
-                                        background-image: url('{{ asset($item['image']) }}');">
+                                        style=" background-image: url('{{ asset($item['image']) }}');">
 
-                                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(150, 150, 150, 0.35); z-index: 1;"></div>
 
-                                            <span class="rank-text d-flex justify-content-center align-items-center fs-4 text-white" style="position: relative; z-index: 2;">
-                                                <i class="fa-solid fa-crown text-white"></i> &nbsp;{{ $item['rank'] }}.
+                                            <span class="rank-text d-flex justify-content-center align-items-center fs-4 text-white  fw-light" style="position: relative; z-index: 2;">
+                                                <i class="fa-solid fa-crown text-white "></i> &nbsp;{{ $item['rank'] }}.
                                                 &nbsp;
-                                                <a href="{{ route('ranking.post', ['category_id' => $item['id']]) }}" class="text-decoration-none fs-4 ms-3 text-white">
+                                                <a href="{{ route('ranking.post', ['category_id' => $item['id']]) }}" class="text-decoration-none fs-4 ms-3 text-white fw-normal">
                                                     {{ $item['name'] }}
                                                 </a>
                                             </span>
@@ -83,13 +81,7 @@
                                     @forelse ($prefectureRanked as $item)
                                         <li class="list-group-item rank-group-item d-flex justify-content-between align-items-center px-5"
                                         style="
-                                        background-image: url('{{ asset($item['image']) }}');
-                                        background-size: cover;
-                                        background-position: center;
-                                        background-repeat: no-repeat;
-                                        position: relative; 
-                                        ">
-                                         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(150, 150, 150, 0.35); z-index: 1;"></div>
+                                        background-image: url('{{ asset($item['image']) }}');">
                                          <span class="rank-text d-flex justify-content-center align-items-center fs-4 text-white" style="position: relative; z-index: 2";>
                                                 <i class="fa-solid fa-crown text-white"></i> &nbsp;{{ $item['rank'] }}.
                                                 &nbsp;
