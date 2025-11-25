@@ -104,7 +104,7 @@ return [
         'd_modal_title' => 'ユーザーを無効化',
         'd_modal_text' => '本当にこのユーザーを無効にしますか',
         'cancel' => 'キャンセル',
-        'deactivate' => '無効'
+        'deactivate' => '無効',
     ],
 
     // post

@@ -104,7 +104,7 @@ return [
         'd_modal_title' => 'Deactivate User',
         'd_modal_text' => 'Are you sure you want to deactivate',
         'cancel' => 'Cancel',
-        'deactivate' => 'Deactivate'
+        'deactivate' => 'Deactivate',
     ],
 
     // post
