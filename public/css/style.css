@@ -327,8 +327,9 @@ th, td {
     box-shadow: 0 8px 20px var(--shadow);
 }
 .brand:hover{
-    transform: scale(1.05); 
+    transform: scale(1.30); 
 }
+
 .admin a {
     color: #9F6B46;
 }

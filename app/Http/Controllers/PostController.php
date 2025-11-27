@@ -7,6 +7,7 @@ use App\Models\Image;
 use App\Models\Post;
 use App\Models\PostView;
 use App\Models\Prefecture;
+use App\Services\BadgeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +39,7 @@ class PostController extends Controller
     /**
      * 投稿保存
      */
-    public function store(Request $request)
+    public function store(Request $request, BadgeService $badgeService)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -70,10 +71,12 @@ class PostController extends Controller
             'time_min' => $validated['time_min'],
         ]);
 
+        // カテゴリ保存
         if (! empty($validated['category'])) {
             $post->categories()->attach(array_filter($validated['category']));
         }
 
+        // 画像保存
         if ($request->hasFile('image')) {
             foreach ($request->file('image') as $img) {
                 if ($img && $img->isValid()) {
@@ -85,12 +88,25 @@ class PostController extends Controller
             }
         }
 
+        $awardedBadges = $badgeService->checkAndGiveBadges(Auth::user());
+
+        if (! empty($awardedBadges)) {
+            $latestBadge = end($awardedBadges);
+
+            return redirect()->route('home')->with([
+                'success' => 'Post created successfully!',
+                'new_badge' => [
+                    'name' => $latestBadge->name,
+                    'image_path' => $latestBadge->image_path,
+                    'description' => $latestBadge->description,
+                ],
+            ]);
+        }
+
+        // 投稿完了リダイレクト
         return redirect()->route('home')->with('success', 'Post created successfully!');
     }
 
-    /**
-     * 投稿詳細
-     */
     public function show($id)
     {
         $post = Post::with(['categories', 'user', 'images', 'comments.user'])->findOrFail($id);
