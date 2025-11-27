@@ -15,69 +15,66 @@ class CommentController extends Controller
         $this->comment = $comment;
     }
 
-public function store(Request $request, $post_id)
-{
-    $postField = 'comment_body'.$post_id; // 親コメント用
+    public function store(Request $request, $post_id)
+    {
+        $postField = 'comment_body'.$post_id; // 親コメント用
 
-    /**
-     * ▼ 返信かどうか判定
-     * parent_id がある → 返信
-     */
-    $isReply = $request->filled('parent_id');
+        /**
+         * ▼ 返信かどうか判定
+         * parent_id がある → 返信
+         */
+        $isReply = $request->filled('parent_id');
 
+        /**
+         |--------------------------------------------------------------------------
+         | ① 親コメント（parent_id が無い）
+         |--------------------------------------------------------------------------
+         */
+        if (! $isReply) {
 
-    /**
-     |--------------------------------------------------------------------------
-     | ① 親コメント（parent_id が無い）
-     |--------------------------------------------------------------------------
-     */
-    if (!$isReply) {
+            $request->validate([
+                $postField => 'required|max:150',
+            ], [
+                $postField.'.required' => 'You cannot submit an empty comment.',
+                $postField.'.max' => 'The comment must not have more than 150 characters.',
+            ]);
+
+            Comment::create([
+                'post_id' => $post_id,
+                'user_id' => Auth::id(),
+                'content' => $request->$postField,
+            ]);
+
+            return redirect()->route('post.show', $post_id);
+        }
+
+        /**
+         |--------------------------------------------------------------------------
+         | ② 返信コメント（parent_id がある）
+         |--------------------------------------------------------------------------
+         */
+        $replyField = 'comment_body_reply_'.$request->parent_id;
 
         $request->validate([
-            $postField => 'required|max:150',
-        ],[
-            $postField.'.required' => 'You cannot submit an empty comment.',
-            $postField.'.max' => 'The comment must not have more than 150 characters.',
+            $replyField => 'required|max:150',
+            'parent_id' => 'required|integer|exists:comments,id',
+            'reply_to_user_id' => 'nullable|integer|exists:users,id',
+        ], [
+            $replyField.'.required' => 'Reply cannot be empty.',
+            $replyField.'.max' => 'The reply must not exceed 150 characters.',
         ]);
 
         Comment::create([
             'post_id' => $post_id,
             'user_id' => Auth::id(),
-            'content' => $request->$postField,
+            'content' => $request->$replyField,
+            'parent_id' => $request->parent_id,
+            'reply_to_user_id' => $request->reply_to_user_id,
         ]);
 
-        return redirect()->route('post.show', $post_id);
+        return redirect()->route('post.show', $post_id)
+            ->with('open_reply', $request->parent_id); // ←返信元を開いて戻る
     }
-
-
-    /**
-     |--------------------------------------------------------------------------
-     | ② 返信コメント（parent_id がある）
-     |--------------------------------------------------------------------------
-     */
-    $replyField = 'comment_body_reply_'.$request->parent_id;
-
-    $request->validate([
-        $replyField => 'required|max:150',
-        'parent_id' => 'required|integer|exists:comments,id',
-        'reply_to_user_id' => 'nullable|integer|exists:users,id',
-    ],[
-        $replyField.'.required' => 'Reply cannot be empty.',
-        $replyField.'.max' => 'The reply must not exceed 150 characters.',
-    ]);
-
-    Comment::create([
-        'post_id' => $post_id,
-        'user_id' => Auth::id(),
-        'content' => $request->$replyField,
-        'parent_id' => $request->parent_id,
-        'reply_to_user_id' => $request->reply_to_user_id,
-    ]);
-
-    return redirect()->route('post.show', $post_id)
-                     ->with('open_reply', $request->parent_id); // ←返信元を開いて戻る
-}
-
 
     public function destroy($id)
     {
