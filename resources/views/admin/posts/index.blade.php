@@ -8,13 +8,19 @@
   {{-- Navigation --}}
   <div class="row nav nav-underline text-center">
     <div class="col-auto">
-      <a class="nav-link px-3" href="{{ route('admin.users') }}">User</a>
+      <a class="nav-link px-3" href="{{ route('admin.users') }}">
+        {{ __('messages.user.user') }}
+      </a>
     </div>
     <div class="col-auto">
-      <a class="nav-link px-3 active" href="{{ route('admin.posts') }}">Post</a>
+      <a class="nav-link px-3 active" href="{{ route('admin.posts') }}">
+        {{ __('messages.user.post') }}
+      </a>
     </div>
     <div class="col-auto">
-      <a class="nav-link" href="{{ route('admin.categories') }}">Category</a>
+      <a class="nav-link" href="{{ route('admin.categories') }}">
+        {{ __('messages.user.category') }}
+      </a>
     </div>
   </div>
 
@@ -77,13 +83,29 @@
           <tr>
             <td>{{ $post->id }}</td>
             <td>
-              @if ($post->trashed())
+              @php
+                  $firstImage = $post->images->first();
+              @endphp
+              @if ($firstImage)
+                  {{-- post has image --}}
+                  @if ($post->trashed())
+                      <img src="{{ asset('storage/' . $firstImage->image) }}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover;">
+                  @else
+                      <a href="{{ route('post.show', $post->id) }}">
+                          <img src="{{ asset('storage/' . $firstImage->image) }}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover; max-width: none;">
+                      </a>
+                  @endif
+              @else
+                  {{-- no image --}}
+                  <div class="text-muted">No Image</div>
+              @endif
+              {{-- @if ($post->trashed())
                 <img src="{{ asset ('storage/' .  $post->images->first()->image )}}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover;">
               @else
                 <a href="{{ route('post.show', $post->id) }}">
                   <img src="{{ asset ('storage/' .  $post->images->first()->image )}}" class="img-thumbnail mx-auto" style="width:110px; height:110px; object-fit: cover; max-width: none;">
                 </a>
-              @endif
+              @endif --}}
 
             </td>
             <td>
