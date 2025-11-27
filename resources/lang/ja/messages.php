@@ -114,7 +114,29 @@ return [
 
     // category
     'category' => [
+        'placeholder' => 'カテゴリーを追加する',
+        'add' => '追加',
+        'name' => '名前',
+        'count' => 'カウント',
+        'update' => '最終更新日',
+        'action' => '操作',
+        'modal_title1' => 'カテゴリー編集',
+        'modal_title2' => 'カテゴリー削除',
+        'cancel' => 'キャンセル',
+        'edit' => '編集',
+        'delete' => '削除',
+        'delete_text' => '本当にこのカテゴリーを削除しますか？', 
+    ],
 
+    // show post
+    'show_post' => [
+        'edit' => '編集',
+        'delete' => '削除',
+        'currentry' => '¥',
+        'hour' => '時間',
+        'min' => '分',
+        'comment_placeholder' => 'コメントを追加する',
+        'no_comment' => 'コメントがまだありません。',
     ],
 
     // create post
@@ -176,18 +198,18 @@ return [
         'followers' => 'フォロワー',
         'non-followers' => '非フォロワー',
         'subtitle_1' => 'トップ投稿',
-        'subtitle_2' => 'プロフィールのアクティビティ',
+        'subtitle_2' => 'プロフィールアクティビティ',
         'visit' => 'プロフィール訪問数:',
 
-        'title_2' => '~ 反応 ~',
-        'subtitle_3' => '反応別',
-        'like' => 'いいね',
+        'title_2' => '~ 関心 ~',
+        'subtitle_3' => '関心別',
+        'like' => 'いいね:',
         'comment' => 'コメント:',
-        'favorite' => 'お気に入り',
+        'favorite' => 'お気に入り:',
 
         'title_3' => '~ フォロワー ~',
         'subtitle_4' => 'フォロワー推移',
-        'country' => '上位の国',
+        'subtitle_5' => '上位の国',
         'percent' => '% vs 前月',
     ],
 
@@ -198,9 +220,25 @@ return [
         'following' => 'フォロー',
         'country' => '国名: ',
         'left_btn' => 'プロフィール編集',
-        'right_btn' => 'お気に入り投稿',
+        'right_btn' => 'お気に入り投稿一覧',
         'map_title1' => 'マップをクリック！',
         'map_title2' => '',
+        'completed' => '達成！',
+        'prefecture' => '都道府県',
+        'following2' => 'フォロー中',
+        'follow' => 'フォロー',
+        'dm' => 'メッセージ',
+        'no_post' => 'まだ投稿がありません',
+    ],
+
+    //follow following
+    'follow' => [
+        'search' => 'ユーザーを検索する',
+        'btn' => '検索',
+        'follower' => 'フォロワー',
+        'following' => 'フォロー中',
+        'follow' => 'フォロー',
+        'recommend' => 'おすすめユーザー',
     ],
 
     // edit profile
@@ -224,6 +262,15 @@ return [
 
     // map
     'map' => [
-        'map_title' => '都道府県をクリック！',
+        'map_title1' => '都道府県をクリック！',
+        'map_title2' => '',
+        'completed' => '達成！',
+        'prefecture' => '都道府県',
+    ],
+
+    //notification
+    'notification' => [
+        'title' => '通知一覧',
+        'like_text' => 'があなたの投稿をいいねしました',
     ],
 ];
