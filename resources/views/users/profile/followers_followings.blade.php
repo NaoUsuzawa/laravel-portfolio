@@ -187,22 +187,28 @@
                     <div class="d-flex justify-content-between text-center fw-semibold flex-wrap number">
                         <a href="{{ route('profile.show', $user->id) }}" class="text-decoration-none flex-fill">
                             <div class="fs-5 fw-bold">{{ $user->posts->count() }}</div>
-                            <div class="small">Posts</div>
+                            <div class="small">
+                                {{ __('messages.profile.posts') }}
+                            </div>
                         </a>
                         <a href="{{ route('profile.followers', $user->id) }}" class="text-decoration-none flex-fill">
                             <div class="fs-5 fw-bold">{{ $user->followers->count() }}</div>
-                            <div class="small">{{ $user->followers->count() == 1 ? 'Follower' : 'Followers' }}</div>
+                            <div class="small">
+                                {{ __('messages.profile.followers') }}
+                            </div>
                         </a>
                         <a href="{{ route('profile.following', $user->id) }}" class="text-decoration-none flex-fill">
                             <div class="fs-5 fw-bold">{{ $user->following->count() }}</div>
-                            <div class="small">Following</div>
+                            <div class="small">
+                                {{ __('messages.profile.following') }}
+                            </div>
                         </a>
                     </div>
                 </div>          
             </div>
 
             <div class="mb-2">
-                <h4><span> country:</span> {{ $user->country }}</h4>
+                <h4><span> {{ __('messages.profile.country') }}</span> {{ $user->country }}</h4>
                 @if ($user->introduction)
                     <p class="fw-semibold mb-3" style="color:#9F6B46;">
                         {{ $user->introduction }}
@@ -215,13 +221,13 @@
                     <div class="col-auto px-2">
                         <a href="{{ route('profile.edit') }}" 
                             class="btn btn-outline shadow-sm" style="font-weight:bold; width:190px; transition:0.3s;">
-                            Edit profile
+                            {{ __('messages.profile.left_btn') }}
                         </a>
                     </div>
                     <div class="col-auto">
                         <a href="{{ route('favorite') }}" 
                             class="btn btn-pink shadow-sm" style="font-weight:bold; width:190px;">
-                            Favorite
+                            {{ __('messages.profile.right_btn') }}
                         </a>
                     </div>
                 @else
@@ -232,7 +238,7 @@
                                 @method('DELETE')
                                <button type="submit" 
                                     class="btn btn-cancel shadow-sm" style=" font-weight:bold; width:180px;">
-                                    Following
+                                    {{ __('messages.profile.following2') }}
                                 </button>
                             </form>
                         @else
@@ -240,7 +246,7 @@
                                 @csrf
                                 <button type="submit" 
                                         class="btn btn-outline shadow-sm" style="font-weight:bold; width:180px; transition:0.3s;">
-                                    Follow
+                                    {{ __('messages.profile.follow') }}
                                 </button>
                             </form>
                         @endif
@@ -249,7 +255,7 @@
                     <div class="col-auto">
                         <a href="¥" 
                             class="btn btn-pink shadow-sm" style="font-weight:bold; width:180px;">
-                            DM
+                            {{ __('messages.profile.dm') }}
                         </a>
                     </div>
                 @endif
@@ -301,10 +307,10 @@
         <div class="col-12 col-md-4">
             <div class="mx-auto" style="max-width: 500px;">
                 <form action="{{ route('follow.search', $user->id) }}" method="GET" class="d-flex mb-3">
-                    <input type="text" name="search" value="{{ $keyword ?? '' }}" placeholder="Search User ...." class="d-flex form-control me-2" style="width: 75%;">
+                    <input type="text" name="search" value="{{ $keyword ?? '' }}" placeholder="{{ __('messages.follow.search') }}" class="d-flex form-control me-2" style="width: 75%;">
                     <input type="hidden" name="tab" value="{{ $activeTab ?? 'followers' }}">
                     <button class="btn btn-outline ms-auto">
-                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                        <i class="fa-solid fa-magnifying-glass"></i> {{ __('messages.follow.btn') }}
                     </button>
                 </form>
 
@@ -316,7 +322,7 @@
                             class="nav-link d-flex align-items-center justify-content-center h-100 w-100 {{ $activeTab === 'followers' ? 'active' : '' }}"
                             role="tab" aria-controls="followers"
                             aria-selected="{{ $activeTab === 'followers' ? 'true' : 'false' }}">
-                                Followers
+                                {{ __('messages.follow.follower') }}
                             </a>
                         </li>
                         <li class="nav-item text-center flex-fill follow-tab" role="presentation">
@@ -324,7 +330,7 @@
                             class="nav-link d-flex align-items-center justify-content-center h-100 w-100 {{ $activeTab === 'following' ? 'active' : '' }}"
                             role="tab" aria-controls="following"
                             aria-selected="{{ $activeTab === 'following' ? 'true' : 'false' }}">
-                                Followings
+                                {{ __('messages.follow.following') }}
                             </a>
                         </li>
                     </ul>
@@ -339,7 +345,7 @@
                             <div class="d-flex justify-content-center align-items-center text-center mt-2 w-50 mx-auto rounded"
                                 style="color:#ffffff; background-color: #9F6B46; height:50px;">
                                 <h2 class="mb-0" style="font-size:20px;">
-                                    {{ $user->followers->count() }} Followers
+                                    {{ $user->followers->count() }} {{ __('messages.follow.follower') }}
                                 </h2>
                             </div>
 
@@ -369,7 +375,7 @@
                                                     @method('DELETE')
                                                     <input type="hidden" name="tab" value="followers">
                                                     <input type="hidden" name="return_url" value="{{ url()->full() }}">
-                                                    <button type="submit" class="btn m-0 following-btn">Following</button>
+                                                    <button type="submit" class="btn m-0 following-btn">{{ __('messages.follow.following') }}</button>
                                                 </form>
 
 
@@ -378,7 +384,7 @@
                                                     @csrf
                                                     <input type="hidden" name="tab" value="followers">
                                                     <input type="hidden" name="return_url" value="{{ url()->full() }}">
-                                                    <button type="submit" class="btn m-0 follow-btn">Follow</button>
+                                                    <button type="submit" class="btn m-0 follow-btn">{{ __('messages.follow.follow') }}</button>
                                                 </form>
 
                                             @endif
@@ -402,7 +408,7 @@
                             <div class="d-flex justify-content-center align-items-center text-center mt-2 w-50 mx-auto rounded"
                                 style="color:#ffffff; background-color: #9F6B46; height:50px;">
                                 <h2 class="mb-0" style="font-size:20px;">
-                                    {{ $user->following->count() }} Followings
+                                    {{ $user->following->count() }} {{ __('messages.follow.following') }}
                                 </h2>
                             </div>
 
@@ -428,13 +434,13 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <input type="hidden" name="tab" value="following">
-                                                    <button type="submit" class="btn m-0 following-btn">Following</button>
+                                                    <button type="submit" class="btn m-0 following-btn">{{ __('messages.follow.following') }}</button>
                                                 </form>
                                             @else
                                                 <form action="{{ route('follow.store', $following->id) }}" method="post">
                                                     @csrf
                                                     <input type="hidden" name="tab" value="following">
-                                                    <button type="submit" class="btn m-0 follow-btn">Follow</button>
+                                                    <button type="submit" class="btn m-0 follow-btn">{{ __('messages.follow.follow') }}</button>
                                                 </form>
                                             @endif
                                         @endif
@@ -457,7 +463,7 @@
             <div class="shadow p-3 m-3">
                 <div class="d-flex justify-content-center align-items-center text-center mt-2 w-100 mx-auto mb-4">
                     <h2 class="mb-0" style="font-size:20px;">
-                        <i class="fa-solid fa-user"></i> Recommend Users
+                        <i class="fa-solid fa-user"></i> {{ __('messages.follow.recommend') }}
                     </h2>
                 </div>
 
@@ -481,7 +487,9 @@
                                 <form action="{{ route('follow.store', $user_suggested->id) }}" method="post">
                                     @csrf
                                     <input type="hidden" name="tab" id="current-tab" value="{{ $activeTab ?? 'followers' }}">
-                                    <button type="submit" class="btn m-0 follow-btn">Follow</button>
+                                    <button type="submit" class="btn m-0 follow-btn">
+                                        {{ __('messages.follow.follow') }}
+                                    </button>
                                 </form>
                             </div>
                         </div>
