@@ -172,6 +172,5 @@ Route::middleware('auth')->group(function () {
 Route::get('auth/{provider}', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
 
-//Badge
+// Badge
 Route::get('/badges', [\App\Http\Controllers\BadgeController::class, 'index'])->name('badges.index');
-

@@ -39,7 +39,7 @@ class PostController extends Controller
     /**
      * 投稿保存
      */
-    public function store(Request $request, BadgeService $badgeService) 
+    public function store(Request $request, BadgeService $badgeService)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -55,9 +55,9 @@ class PostController extends Controller
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $visitedAt = $validated['date'] . ' ' .
-            str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT) . ':' .
-            str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT) . ':00';
+        $visitedAt = $validated['date'].' '.
+            str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT).':'.
+            str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
 
         $post = Post::create([
             'user_id' => Auth::id(),
@@ -71,7 +71,7 @@ class PostController extends Controller
         ]);
 
         // カテゴリ保存
-        if (!empty($validated['category'])) {
+        if (! empty($validated['category'])) {
             $post->categories()->attach(array_filter($validated['category']));
         }
 
@@ -89,8 +89,9 @@ class PostController extends Controller
 
         $awardedBadges = $badgeService->checkAndGiveBadges(Auth::user());
 
-        if (!empty($awardedBadges)) {
+        if (! empty($awardedBadges)) {
             $latestBadge = end($awardedBadges);
+
             return redirect()->route('home')->with([
                 'success' => 'Post created successfully!',
                 'new_badge' => [

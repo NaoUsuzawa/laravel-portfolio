@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Badge;
+use Illuminate\Database\Seeder;
 
 class BadgeSeeder extends Seeder
 {
@@ -71,10 +71,9 @@ class BadgeSeeder extends Seeder
 
         foreach ($badges as $badge) {
             Badge::firstOrCreate(
-                ['key' => $badge['key']], 
+                ['key' => $badge['key']],
                 $badge
             );
         }
     }
 }
-

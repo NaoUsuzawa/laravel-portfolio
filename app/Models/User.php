@@ -6,13 +6,10 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-use Schema;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -115,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'user1_id')
-                    ->onWhere('user2_id', $this->id);
+            ->onWhere('user2_id', $this->id);
     }
 
     public function messages()
@@ -126,7 +123,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function badges()
     {
         return $this->BelongsToMany(Badge::class, 'badge_user')
-                    ->withPivot('awarded_at')
-                    ->withTimestamps();
+            ->withPivot('awarded_at')
+            ->withTimestamps();
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\Badge;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class BadgeService
 {
@@ -19,7 +18,9 @@ class BadgeService
         // 1. 初投稿バッジ
         if ($user->posts()->count() === 1) { // この時点で初投稿なら
             $badge = $this->award($user, 'first_post');
-            if ($badge) $awarded[] = $badge;
+            if ($badge) {
+                $awarded[] = $badge;
+            }
         }
 
         // 2. 都道府県バッジ
@@ -38,7 +39,9 @@ class BadgeService
 
         if (isset($prefectureBadges[$prefectureCount])) {
             $badge = $this->award($user, $prefectureBadges[$prefectureCount]);
-            if ($badge) $awarded[] = $badge;
+            if ($badge) {
+                $awarded[] = $badge;
+            }
         }
 
         return $awarded;
@@ -51,7 +54,9 @@ class BadgeService
     {
         $badge = Badge::where('key', $badgeKey)->first();
 
-        if (! $badge) return null;
+        if (! $badge) {
+            return null;
+        }
 
         // すでに付与済みか確認
         if ($user->badges()->where('badge_id', $badge->id)->exists()) {
