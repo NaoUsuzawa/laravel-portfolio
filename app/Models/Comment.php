@@ -24,10 +24,10 @@ class Comment extends Model
     public function replies()
     {
         return $this->hasMany(Comment::class, 'parent_id')
-                    ->with('user', 'replyToUser', 'replies');
+            ->with('user', 'replyToUser', 'replies');
     }
 
-    public function  parent()
+    public function parent()
     {
         return $this->belongsTo(Comment::class, 'parent_id');
     }
@@ -36,6 +36,4 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'reply_to_user_id');
     }
-
-    
 }
