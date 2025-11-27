@@ -125,7 +125,7 @@ return [
         'cancel' => 'キャンセル',
         'edit' => '編集',
         'delete' => '削除',
-        'delete_text' => '本当にこのカテゴリーを削除しますか？', 
+        'delete_text' => '本当にこのカテゴリーを削除しますか？',
     ],
 
     // show post
@@ -231,7 +231,7 @@ return [
         'no_post' => 'まだ投稿がありません',
     ],
 
-    //follow following
+    // follow following
     'follow' => [
         'search' => 'ユーザーを検索する',
         'btn' => '検索',
@@ -268,7 +268,7 @@ return [
         'prefecture' => '都道府県',
     ],
 
-    //notification
+    // notification
     'notification' => [
         'title' => '通知一覧',
         'like_text' => 'があなたの投稿をいいねしました',

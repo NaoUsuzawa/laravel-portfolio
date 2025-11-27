@@ -125,7 +125,7 @@ return [
         'cancel' => 'Cancel',
         'edit' => 'Edit',
         'delete' => 'Delete',
-        'delete_text' => 'Are you sure to delete this category', 
+        'delete_text' => 'Are you sure to delete this category',
     ],
 
     // show post
@@ -231,7 +231,7 @@ return [
         'no_post' => 'No Posts Yet',
     ],
 
-    //follow following
+    // follow following
     'follow' => [
         'search' => 'Search User...',
         'btn' => 'Search',
@@ -269,7 +269,7 @@ return [
         'prefecture' => 'Prefecture',
     ],
 
-    //notification
+    // notification
     'notification' => [
         'title' => 'Notifications',
         'like_text' => 'liked your post',
