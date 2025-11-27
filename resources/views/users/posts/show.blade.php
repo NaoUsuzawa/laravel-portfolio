@@ -74,12 +74,14 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end shadow-sm">
                                         <a href="{{ route('post.edit', ['id' => $post->id]) }}" class="dropdown-item text-brown">
-                                            <i class="fa-regular fa-pen-to-square me-2"></i>Edit
+                                            <i class="fa-regular fa-pen-to-square me-2"></i>
+                                            {{ __('messages.show_post.edit') }}
                                         </a>
                                         
                                         <button class="dropdown-item text-danger" data-bs-toggle="modal"
                                             data-bs-target="#delete-post-{{ $post->id }}">
-                                            <i class="fa-regular fa-trash-can me-2"></i>Delete
+                                            <i class="fa-regular fa-trash-can me-2"></i>
+                                            {{ __('messages.show_post.delete') }}
                                         </button>
                                     </div>
                                      @include('users.posts.modals.delete')
@@ -176,11 +178,13 @@
                                 
                                 <div class="d-flex align-items-center justify-content-end text-brown small mb-3 gap-3">
                                   <span><i class="fa-regular fa-calendar me-1 text-info"></i>{{ $post->visited_at ? $post->visited_at->format('Y-m-d') : 'Unknown' }}</span>
-                                   <span><i class="fa-solid fa-coins me-1 text-warning"></i>{{ $post->cost ?? 'Cost' }} Yen</span>
+                                   <span><i class="fa-solid fa-coins me-1 text-warning"></i>
+                                    {{ $post->cost ?? 'Cost' }}
+                                {{ __('messages.show_post.currentry') }}</span>
                                    <span>
                                     <i class="fa-regular fa-clock me-1 text-secondary"></i>
-                                    {{ $post->time_hour ? $post->time_hour . 'h ' : '' }}
-                                    {{ $post->time_min ? $post->time_min . 'min' : '' }}
+                                    {{ $post->time_hour }} {{ __('messages.show_post.hour') }}
+                                    {{ $post->time_min }} {{ __('messages.show_post.min') }}
                                     @if (!$post->time_hour && !$post->time_min)
                                         Time
                                     @endif
@@ -207,7 +211,7 @@
                                         <input type="text" 
                                             name="comment_body{{ $post->id }}" 
                                             class="form-control post-input rounded-start @error('comment_body'.$post->id) is-invalid @enderror" 
-                                            placeholder="Add a comment..." 
+                                            placeholder="{{ __('messages.show_post.comment_placeholder') }}" 
                                             value="{{ old('comment_body'.$post->id) }}">
                                         <button class="btn btn-brown rounded-end" type="submit">
                                             <i class="fa-solid fa-paper-plane"></i>
@@ -269,7 +273,9 @@
 
                                         </div>
                                     @empty
-                                        <p class="text-center text-secondary small">No comments yet.</p>
+                                        <p class="text-center text-secondary small">
+                                            {{ __('messages.show_post.no_comment') }}
+                                        </p>
                                     @endforelse
                                 </div>
 

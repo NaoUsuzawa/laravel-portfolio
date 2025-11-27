@@ -355,7 +355,9 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content p-3">
                             <div class="modal-header">
-                                <h5 class="modal-title">Notifications 🔔</h5>
+                                <h5 class="modal-title">
+                                    {{ __('messages.notification.title') }} 🔔
+                                </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
@@ -394,7 +396,9 @@
                                         <!-- 名前と通知文 -->
                                         <div class="flex-grow-1">
                                             <strong>{{ $n->data['liker_name'] ?? 'Unknown' }}</strong>
-                                            <small>liked your post</small><br>
+                                            <small>
+                                                {{ __('messages.notification.like_text') }}    
+                                            </small><br>
                                             <span class="text-muted">{{ $n->created_at->diffForHumans() }}</span>
                                         </div>
 

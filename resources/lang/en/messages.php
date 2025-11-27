@@ -114,7 +114,29 @@ return [
 
     // category
     'category' => [
+        'placeholder' => 'Add a Category...',
+        'add' => 'Add',
+        'name' => 'Name',
+        'count' => 'Count',
+        'update' => 'Last Update',
+        'action' => 'Action',
+        'modal_title1' => 'Edit Category',
+        'modal_title2' => 'Delete Category',
+        'cancel' => 'Cancel',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+        'delete_text' => 'Are you sure to delete this category',
+    ],
 
+    // show post
+    'show_post' => [
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+        'currentry' => '$',
+        'hour' => 'h',
+        'min' => 'min',
+        'comment_placeholder' => 'Add a comment...',
+        'no_comment' => 'No comments yet.',
     ],
 
     // create post
@@ -181,13 +203,13 @@ return [
 
         'title_2' => '~ Interaction ~',
         'subtitle_3' => 'Byinterection',
-        'like' => 'Likes',
+        'like' => 'Likes:',
         'comment' => 'Comments:',
-        'favorite' => 'Favorite',
+        'favorite' => 'Favorite:',
 
         'title_3' => '~ Followers ~',
         'subtitle_4' => 'Followers Trend',
-        'country' => 'Top Countries',
+        'subtitle_5' => 'Top Countries',
         'percent' => '% vs last month',
     ],
 
@@ -201,6 +223,23 @@ return [
         'right_btn' => 'Favorite',
         'map_title1' => 'Click map ',
         'map_title2' => 'to view full map',
+        'completed' => 'Completed',
+        'prefecture' => 'Prefecture',
+        'following2' => 'Following',
+        'follow' => 'Follow',
+        'dm' => 'DM',
+        'no_post' => 'No Posts Yet',
+    ],
+
+    // follow following
+    'follow' => [
+        'search' => 'Search User...',
+        'btn' => 'Search',
+        'follower' => 'Followers',
+        'following' => 'Following',
+        'follow' => 'Follow',
+        'following' => 'Following',
+        'recommend' => 'Recommend User',
     ],
 
     // edit profile
@@ -224,6 +263,15 @@ return [
 
     // map
     'map' => [
-        'map_title' => 'Click prefecture toview your posts',
+        'map_title1' => 'Click prefecture',
+        'map_title2' => 'toview your posts',
+        'completed' => 'Completed',
+        'prefecture' => 'Prefecture',
+    ],
+
+    // notification
+    'notification' => [
+        'title' => 'Notifications',
+        'like_text' => 'liked your post',
     ],
 ];
