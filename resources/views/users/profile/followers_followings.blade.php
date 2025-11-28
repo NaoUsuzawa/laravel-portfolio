@@ -19,75 +19,6 @@
         oblect-fit:cover;
     }
 
-    @media (max-width: 600px) {
-        html, body {
-        overflow-x: hidden; /* 横スクロール禁止 */
-    }
-
-    .col-12.col-md-4 {
-        margin-left: 0 !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
-    }
-
-    .trip-map-a{
-        padding-right:0%;
-        padding-left: 0.5rem;
-    }
-    .trip-map-a,
-    .profile-row,
-    .click-map {
-        padding-left: 0 !important;
-        padding-right: 10 !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    /* ボタンのマージン調整 */
-    .btn {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
-
-    /* スピナーの位置調整も微修正（右にはみ出ることがあるため） */
-    /* .spinner-wrapper {
-        right: 10%;
-        transform: translateX(0) scale(0.9);
-    } */
-    .col-auto{
-        padding: 0;
-    }
-    .phone {
-        font-size: 12px;
-        padding: 0;
-    }
-
-    .name{
-        padding-left: 2rem;
-    }
-    .number{
-        padding-left: 2rem;
-    }
-    .profile-row{
-    padding-left: 0.5rem;
-    }
-    .spinner-wrapper {
-        bottom: 5px;
-        right: 30px;
-        transform: translateX(10%) scale(0.9);
-    }
-    
-    .btn{
-        margin-left:0.5rem;
-        margin-right:0.5rem;
-    }
-    .click-map{
-        margin-left: 1rem;
-        padding-right: 0;
-        padding-left: 1rem;
-    }
-
-    }
         .map-container {
     position: relative;
     width: 420px;
@@ -161,10 +92,231 @@
     line-height: 1;
     }
 
+@media (max-width: 600px) {
+        html, body {
+        overflow-x: hidden; 
+    }
+
+    .col-12.col-md-4 {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+
+    .trip-map-a{
+        padding-right:0%;
+        padding-left: 0.5rem;
+    }
+    .trip-map-a,
+    .profile-row,
+    .click-map {
+        padding-left: 0 !important;
+        padding-right: 10 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .btn {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .col-auto{
+        padding: 0;
+    }
+    .phone {
+        font-size: 12px;
+        padding: 0;
+    }
+
+    .name{
+        padding-left: 2rem;
+    }
+    .number{
+        padding-left: 2rem;
+    }
+    .profile-row{
+    padding-left: 0.5rem;
+    }
+    .spinner-wrapper {
+        bottom: 5px;
+        right: 30px;
+        transform: translateX(10%) scale(0.9);
+    }
+    
+    .btn{
+        margin-left:0.5rem;
+        margin-right:0.5rem;
+    }
+    .click-map{
+        margin-left: 1rem;
+        padding-right: 0;
+        padding-left: 1rem;
+    }
+    .search-area{
+        margin-top: 1.5rem;
+    }
+    .map-container{
+        margin-left: 0;
+    }
+    .all-badges{
+        width: 50px;
+        height: 50px;
+    }
+    .badge-name{
+        color: #CAAE99; 
+        font-size:10px;
+    }
+
+    .tooltip-wrapper {
+        margin: 0 auto; 
+    }
+ }
+
 </style>
 
 <div class="container">
     <div class="row mt-2  profile-row p-0">
+        <div class="col-md-4">
+            {{-- profile --}}
+            <div class="d-flex align-items-start  profile-row flex-wrap ">
+                <div class=" avatar-wrapper position-relative d-inline-block me-3 mb-3">
+                    @if ($user->avatar)
+                        <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="rounded-circle shadow-sm mb-3" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #9F6B46;">
+                    @else
+                        <i class="fa-solid fa-circle-user text-secondary mb-3" style="font-size: 110px; border: 5px solid #9F6B46; border-radius: 50%; 
+                        padding:0;" ></i>
+                    @endif
+                    <img  src="{{ asset($latestBadge->image_path) }}" 
+                          alt="{{ $latestBadge->name }}"
+                          title="{{ $latestBadge->key}}"
+                          class="brand latest-badge position-absolute">
+                </div>
+                <div class="flex-grow-1 text-start">
+                    <h3 style="margin-left: 15px;">{{ $user->name }}</h3>
+
+                    <div class="d-flex justify-content-between text-center fw-semibold flex-wrap number">
+                        <a href="{{ route('profile.show', $user->id) }}" class="text-decoration-none flex-fill">
+                            <div class="fs-5 fw-bold">{{ $user->posts->count() }}</div>
+                            <div class="small">
+                                {{ __('messages.profile.posts') }}
+                            </div>
+                        </a>
+                        <a href="{{ route('profile.followers', $user->id) }}" class="text-decoration-none flex-fill">
+                            <div class="fs-5 fw-bold">{{ $user->followers->count() }}</div>
+                            <div class="small">
+                                {{ __('messages.profile.followers') }}
+                            </div>
+                        </a>
+                        <a href="{{ route('profile.following', $user->id) }}" class="text-decoration-none flex-fill">
+                            <div class="fs-5 fw-bold">{{ $user->following->count() }}</div>
+                            <div class="small">
+                                {{ __('messages.profile.following') }}
+                            </div>
+                        </a>
+                    </div>
+                </div>          
+            </div>
+
+            <div class="mb-2">
+                <h4><span> {{ __('messages.profile.country') }}</span> {{ $user->country }}</h4>
+                @if ($user->introduction)
+                    <p class="fw-semibold mb-3" style="color:#9F6B46;">
+                        {{ $user->introduction }}
+                    </p>
+                @endif
+            </div>
+
+            <div class="row mb-4 justify-content-center">
+                @if (Auth::user()->id === $user->id)
+                    <div class="col-auto px-2">
+                        <a href="{{ route('profile.edit') }}" 
+                            class="btn btn-outline shadow-sm" style="font-weight:bold; width:190px; transition:0.3s;">
+                            {{ __('messages.profile.left_btn') }}
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{{ route('favorite') }}" 
+                            class="btn btn-pink shadow-sm" style="font-weight:bold; width:190px;">
+                            {{ __('messages.profile.right_btn') }}
+                        </a>
+                    </div>
+                @else
+                    <div class="col-auto px-2">
+                        @if ($user->isFollowed())
+                            <form action="{{ route('follow.destroy', $user->id) }}" method="post" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                               <button type="submit" 
+                                    class="btn btn-cancel shadow-sm" style=" font-weight:bold; width:180px;">
+                                    {{ __('messages.profile.following2') }}
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('follow.store', $user->id) }}" method="post" class="d-inline">
+                                @csrf
+                                <button type="submit" 
+                                        class="btn btn-outline shadow-sm" style="font-weight:bold; width:180px; transition:0.3s;">
+                                    {{ __('messages.profile.follow') }}
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+
+                    <div class="col-auto">
+                        <a href="¥" 
+                            class="btn btn-pink shadow-sm" style="font-weight:bold; width:180px;">
+                            {{ __('messages.profile.dm') }}
+                        </a>
+                    </div>
+                @endif
+            </div>
+            {{-- Badge --}}
+            <h5 class="fw-bold text-center mb-3">------------ Your Badges ------------</h5>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+
+                @foreach ($allBadges as $badge)
+                    <div class="tooltip-wrapper d-flex flex-column display-content-center align-items-center"
+                        data-tooltip="{{ $badge->key }}">
+                        <img 
+                            src="{{ asset($badge->image_path) }}" 
+                            alt="{{ $badge->name }}" 
+                            class="brand all-badges"
+                            style="
+                                @if(!in_array($badge->id, $earnedBadgeIds)) 
+                                    filter: grayscale(100%); opacity: 0.3;
+                                @endif
+                            ">
+                        <p class="mb-0 text-center badge-name">
+                            {{ $badge->name }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- map --}}
+           <div class="row">
+                <div class="map-container rounded-2 ">
+                    <p class="fw-bold h5 click-map text-center mt-3">Click map <span>to view full map</span></p>
+
+                    <a href="{{ route('map.show', $user->id) }}" class="trip-map-a">
+                        <div id="map" style="width: 100%; height: 350px;"></div>
+                    </a>
+                    <div class="spinner-wrapper">
+                        <div class="spinner-outer">
+                            <div class="spinner-fill"></div>
+                            <div class="spinner-text">
+                                <p class="label">Completed</p>
+                                <p class="count">5
+                                     <span style="font-size: 20px">/47</span>
+                                </p>
+                                <p class="small-text">Prefectures</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <x-profile 
             :user="$user"
             :prefectures="$prefectures"
@@ -172,7 +324,7 @@
             {{-- :earnedBadgeIds="$earnedBadgeIds" --}}
         />
 
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 search-area">
             <div class="mx-auto" style="max-width: 500px;">
                 <form action="{{ route('follow.search', $user->id) }}" method="GET" class="d-flex mb-3">
                     <input type="text" name="search" value="{{ $keyword ?? '' }}" placeholder="{{ __('messages.follow.search') }}" class="d-flex form-control me-2" style="width: 75%;">
@@ -226,9 +378,6 @@
                                             @else
                                                 <i class="fa-solid fa-circle-user text-secondary d-block text-center icon-md me-4" style="font-size:60px;"></i>
                                             @endif
-                                                 {{-- badge --}}
-                                            <img src="{{ asset('images/badges/fujisan02.png') }}" alt="Badge" class="position-absolute border-0"
-                                            style="width: 40px; height: 40px; bottom: 10px; right: 0;">                      
                                         </a>
                                         
                                     <div class="d-flex flex-column align-items-start">
@@ -444,8 +593,7 @@ const prefectureNameMap = {
 
      const userId = {{ $user->id ?? 'null' }};
     window.onload = function() {
-        const form = document.querySelector('form');
-
+      const form = document.querySelector('form');
       const baseWidth = 675;
       const baseHeight = 670;
       let svg;
