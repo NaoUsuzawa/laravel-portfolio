@@ -134,7 +134,7 @@ class HomeController extends Controller
             if ($category) {
                 $query->whereHas('categories', fn ($q) => $q->where('id', $category->id));
                 $titleParts[] = $category->name;
-                if (!$prefectureSelected) {
+                if (! $prefectureSelected) {
                     $headerImage = $category->image ?? 'images/default.jpeg';
                 }
                 $categorySelected = true;
