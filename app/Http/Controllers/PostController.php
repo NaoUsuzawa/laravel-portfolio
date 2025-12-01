@@ -40,88 +40,89 @@ class PostController extends Controller
     /**
      * 投稿保存
      */
-public function store(Request $request, BadgeService $badgeService)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        'date' => 'required|date',
-        'time_hour' => 'required|integer|min:0|max:23',
-        'time_min' => 'required|integer|min:0|max:59',
-        'category' => 'required|array|max:3',
-        'category.*' => 'nullable|integer|exists:categories,id',
-        'prefecture_id' => 'required|integer|exists:prefectures,id',
-        'cost' => 'nullable|integer|min:0|max:10000',
-        'image' => 'required|array|max:3',
-        'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
-    ]);
-
-    $visitedAt = $validated['date'] . ' ' .
-        str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT) . ':' .
-        str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT) . ':00';
-
-    DB::beginTransaction();
-
-    try {
-        // 投稿作成
-        $post = Post::create([
-            'user_id' => Auth::id(),
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-            'prefecture_id' => $validated['prefecture_id'],
-            'visited_at' => $visitedAt,
-            'cost' => $validated['cost'] ?? 0,
-            'time_hour' => $validated['time_hour'],
-            'time_min' => $validated['time_min'],
+    public function store(Request $request, BadgeService $badgeService)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'date' => 'required|date',
+            'time_hour' => 'required|integer|min:0|max:23',
+            'time_min' => 'required|integer|min:0|max:59',
+            'category' => 'required|array|max:3',
+            'category.*' => 'nullable|integer|exists:categories,id',
+            'prefecture_id' => 'required|integer|exists:prefectures,id',
+            'cost' => 'nullable|integer|min:0|max:10000',
+            'image' => 'required|array|max:3',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
 
-        // カテゴリ保存
-        if (!empty($validated['category'])) {
-            $post->categories()->attach(array_filter($validated['category']));
-        }
+        $visitedAt = $validated['date'].' '.
+            str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT).':'.
+            str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
 
-        // 画像保存
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $img) {
-                if ($img && $img->isValid()) {
-                    $path = $img->store('images/posts', 'public');
-                    $post->images()->create([
-                        'image' => $path,
-                    ]);
+        DB::beginTransaction();
+
+        try {
+            // 投稿作成
+            $post = Post::create([
+                'user_id' => Auth::id(),
+                'title' => $validated['title'],
+                'content' => $validated['content'],
+                'prefecture_id' => $validated['prefecture_id'],
+                'visited_at' => $visitedAt,
+                'cost' => $validated['cost'] ?? 0,
+                'time_hour' => $validated['time_hour'],
+                'time_min' => $validated['time_min'],
+            ]);
+
+            // カテゴリ保存
+            if (! empty($validated['category'])) {
+                $post->categories()->attach(array_filter($validated['category']));
+            }
+
+            // 画像保存
+            if ($request->hasFile('image')) {
+                foreach ($request->file('image') as $img) {
+                    if ($img && $img->isValid()) {
+                        $path = $img->store('images/posts', 'public');
+                        $post->images()->create([
+                            'image' => $path,
+                        ]);
+                    }
                 }
             }
+
+            // バッジチェック
+            $user = Auth::user();
+            $user->posts->push($post);
+            $awardedBadges = $badgeService->checkAndGiveBadges($user);
+
+            DB::commit(); // コミット
+
+            if (! empty($awardedBadges)) {
+                $latestBadge = end($awardedBadges);
+
+                return redirect()->route('home')->with([
+                    'success' => 'Post created successfully!',
+                    'new_badge' => [
+                        'name' => $latestBadge->name,
+                        'image_path' => $latestBadge->image_path,
+                        'description' => $latestBadge->description,
+                    ],
+                ]);
+            }
+
+            return redirect()->route('home')->with('success', 'Post created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack(); // ロールバック
+
+            // ログにエラーを出す場合
+            \Log::error('Post creation failed: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to create post. Please try again.');
         }
-
-        // バッジチェック
-        $user = Auth::user();
-        $user->posts->push($post);
-        $awardedBadges = $badgeService->checkAndGiveBadges($user);
-
-        DB::commit(); // コミット
-
-        if (!empty($awardedBadges)) {
-            $latestBadge = end($awardedBadges);
-
-            return redirect()->route('home')->with([
-                'success' => 'Post created successfully!',
-                'new_badge' => [
-                    'name' => $latestBadge->name,
-                    'image_path' => $latestBadge->image_path,
-                    'description' => $latestBadge->description,
-                ],
-            ]);
-        }
-
-        return redirect()->route('home')->with('success', 'Post created successfully!');
-    } catch (\Exception $e) {
-        DB::rollBack(); // ロールバック
-
-        // ログにエラーを出す場合
-        \Log::error('Post creation failed: ' . $e->getMessage());
-
-        return redirect()->back()->with('error', 'Failed to create post. Please try again.');
     }
-}
+
     public function show($id)
     {
         $post = Post::with(['categories', 'user', 'images', 'comments.user'])->findOrFail($id);

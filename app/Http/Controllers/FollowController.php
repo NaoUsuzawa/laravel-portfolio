@@ -102,8 +102,8 @@ class FollowController extends Controller
 
         $suggested_users = $this->getSuggestedUsers();
         $prefecture_ids = Post::where('user_id', $user->id)
-        ->pluck('prefecture_id')
-        ->unique();
+            ->pluck('prefecture_id')
+            ->unique();
 
         $prefectures = Prefecture::select('id', 'name', 'code')
             ->get()
@@ -112,12 +112,11 @@ class FollowController extends Controller
 
                 return $pref;
             });
-         $allBadges = Badge::all();
+        $allBadges = Badge::all();
         $earnedBadges = $user->badges()->get();
-         $earnedBadgeIds = $earnedBadges->pluck('id')->toArray();
-         $latestBadge = $user->badges()->orderBy('badge_user.awarded_at', 'desc')->first();
-         $notEarnedBadges = Badge::whereNotIn('id', $earnedBadges->pluck('id'))->get();
-
+        $earnedBadgeIds = $earnedBadges->pluck('id')->toArray();
+        $latestBadge = $user->badges()->orderBy('badge_user.awarded_at', 'desc')->first();
+        $notEarnedBadges = Badge::whereNotIn('id', $earnedBadges->pluck('id'))->get();
 
         return view('users.profile.followers_followings', [
             'user' => $user,
