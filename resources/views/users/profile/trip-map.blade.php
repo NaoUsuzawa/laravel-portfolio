@@ -501,7 +501,7 @@ div{
         .attr("y1", 20)
         .attr("x2", 240)
         .attr("y2", 240)
-        .attr("stroke", "#9F6B46")
+        .attr("stroke", "#666")
         .attr("stroke-width", 1);
 
         svg.append("line")
@@ -509,7 +509,7 @@ div{
         .attr("y1", 240)
         .attr("x2", 240)
         .attr("y2", 240)
-        .attr("stroke", "#9F6B46")
+        .attr("stroke", "#666")
         .attr("stroke-width", 1);
      }
     

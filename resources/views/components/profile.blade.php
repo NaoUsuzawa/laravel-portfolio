@@ -3,6 +3,7 @@
     'prefectures' => [],
     'allBadges' => [],
     'earnedBadgeIds' => [],
+    'latestBadge' => [],
 ])
 
 <div class="col-md-4">
@@ -18,6 +19,13 @@
                 <i class="fa-solid fa-circle-user text-secondary mb-3"
                    style="font-size: 110px; border: 5px solid #9F6B46; border-radius: 50%;"></i>
             @endif
+            @if ($latestBadge)
+            <img src="{{ asset($latestBadge->image_path) }}" 
+                 alt="{{ $latestBadge->name }}"
+                 title="{{ $latestBadge->key }}"
+                 class="all-badges latest-badge position-absolute">
+             @endif
+        
         </div>
 
         {{-- name + post / follow / following --}}
@@ -111,25 +119,28 @@
             </div>
         @endif
     </div>
+    {{-- Badge --}}
+    <h5 class="fw-bold text-center mb-3">
+        ------------ Your Badges ------------
+    </h5>
 
-    {{-- Badges --}}
-    <div class="d-flex flex-wrap gap-3 mb-3">
-        <p class="fw-bold text-center">Your <br> &nbsp; Badges</p>
+     <div class="d-flex flex-wrap gap-3 mb-3">
 
         @foreach ($allBadges as $badge)
-            <div class="d-flex flex-column align-items-center">
-                <img 
-                    src="{{ asset($badge->image_path) }}" 
-                    alt="{{ $badge->name }}"
-                    class="brand"
-                    style="width: 50px; height:50px;
-                        @if(!in_array($badge->id, $earnedBadgeIds))
-                            filter: grayscale(100%); opacity: 0.3;
-                        @endif
-                    ">
-                <p class="mb-0 text-center" style="color: #CAAE99; font-size:10px;">
-                    {{ $badge->name }}
-                </p>
+            <div class="tooltip-wrapper d-flex flex-column display-content-center align-items-center"
+                data-tooltip="{{ $badge->key }}">
+            <img 
+                src="{{ asset($badge->image_path) }}" 
+                alt="{{ $badge->name }}" 
+                class="brand all-badges"
+                style="
+                @if(!in_array($badge->id, $earnedBadgeIds)) 
+                    filter: grayscale(100%); opacity: 0.3;
+                @endif
+            ">
+            <p class="mb-0 text-center badge-name">
+                {{ $badge->name }}
+            </p>
             </div>
         @endforeach
     </div>

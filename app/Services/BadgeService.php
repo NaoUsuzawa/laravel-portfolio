@@ -17,7 +17,7 @@ class BadgeService
 
         // 1. 初投稿バッジ
         if ($user->posts()->count() === 1) { // この時点で初投稿なら
-            $badge = $this->award($user, 'first_post');
+            $badge = $this->award($user, 'Cherry Blossom');
             if ($badge) {
                 $awarded[] = $badge;
             }
@@ -27,14 +27,14 @@ class BadgeService
         $prefectureCount = $user->posts()->pluck('prefecture_id')->unique()->count();
 
         $prefectureBadges = [
-            3 => '3_prefectures',
-            5 => '5_prefectures',
-            10 => '10_prefectures',
-            15 => '15_prefectures',
-            20 => '20_prefectures',
-            30 => '30_prefectures',
-            40 => '40_prefectures',
-            47 => '47_prefectures',
+            3 => 'Karesansui',
+            5 => 'Sumo',
+            10 => 'Onsen hot spring',
+            15 => 'Japanese Castle',
+            20 => 'Lucky Cat ',
+            30 => 'Ninja',
+            40 => 'Maiko-san',
+            47 => 'Mt.Fuji',
         ];
 
         if (isset($prefectureBadges[$prefectureCount])) {

@@ -10,6 +10,7 @@ use App\Models\Prefecture;
 use App\Services\BadgeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -39,27 +40,30 @@ class PostController extends Controller
     /**
      * 投稿保存
      */
-    public function store(Request $request, BadgeService $badgeService)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'date' => 'required|date',
-            'time_hour' => 'required|integer|min:0|max:23',
-            'time_min' => 'required|integer|min:0|max:59',
-            'category' => 'required|array|max:3',
-            'category.*' => 'nullable|integer|exists:categories,id',
-            'prefecture_id' => 'required|integer|exists:prefectures,id',
-            'cost' => 'nullable|integer|min:0|max:10000',
-            'image' => 'required|array|max:3',
-            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
+public function store(Request $request, BadgeService $badgeService)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string',
+        'date' => 'required|date',
+        'time_hour' => 'required|integer|min:0|max:23',
+        'time_min' => 'required|integer|min:0|max:59',
+        'category' => 'required|array|max:3',
+        'category.*' => 'nullable|integer|exists:categories,id',
+        'prefecture_id' => 'required|integer|exists:prefectures,id',
+        'cost' => 'nullable|integer|min:0|max:10000',
+        'image' => 'required|array|max:3',
+        'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
+    ]);
 
-        ]);
+    $visitedAt = $validated['date'] . ' ' .
+        str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT) . ':' .
+        str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT) . ':00';
 
-        $visitedAt = $validated['date'].' '.
-            str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT).':'.
-            str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
+    DB::beginTransaction();
 
+    try {
+        // 投稿作成
         $post = Post::create([
             'user_id' => Auth::id(),
             'title' => $validated['title'],
@@ -72,7 +76,7 @@ class PostController extends Controller
         ]);
 
         // カテゴリ保存
-        if (! empty($validated['category'])) {
+        if (!empty($validated['category'])) {
             $post->categories()->attach(array_filter($validated['category']));
         }
 
@@ -88,9 +92,14 @@ class PostController extends Controller
             }
         }
 
-        $awardedBadges = $badgeService->checkAndGiveBadges(Auth::user());
+        // バッジチェック
+        $user = Auth::user();
+        $user->posts->push($post);
+        $awardedBadges = $badgeService->checkAndGiveBadges($user);
 
-        if (! empty($awardedBadges)) {
+        DB::commit(); // コミット
+
+        if (!empty($awardedBadges)) {
             $latestBadge = end($awardedBadges);
 
             return redirect()->route('home')->with([
@@ -103,10 +112,16 @@ class PostController extends Controller
             ]);
         }
 
-        // 投稿完了リダイレクト
         return redirect()->route('home')->with('success', 'Post created successfully!');
-    }
+    } catch (\Exception $e) {
+        DB::rollBack(); // ロールバック
 
+        // ログにエラーを出す場合
+        \Log::error('Post creation failed: ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'Failed to create post. Please try again.');
+    }
+}
     public function show($id)
     {
         $post = Post::with(['categories', 'user', 'images', 'comments.user'])->findOrFail($id);

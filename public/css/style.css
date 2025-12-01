@@ -340,6 +340,10 @@ th, td {
 
 
 /* Badge */
+.all-badges:hover{
+    transform: scale(1.30); 
+}
+
 .tooltip-wrapper {
     position: relative;
     display: inline-block;
@@ -370,25 +374,6 @@ th, td {
     transform: translateX(-50%) translateY(0);
   }
   
-  .tooltip-wrapper::before {
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    border-width: 6px;
-    border-style: solid;
-    border-color: transparent transparent #F9E6DF transparent;
-    
-    opacity: 0;
-    transition: opacity .25s ease;
-  }
-  
-  .tooltip-wrapper:hover::before {
-    opacity: 1;
-  }
-
   .latest-badge{
     width: 60px; 
     height: 60px; 

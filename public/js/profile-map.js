@@ -130,13 +130,31 @@ window.profileMap = function({ userId, prefectures }) {
                 const engName = prefectureNameMap[prefName];
                 const prefData = prefectures.find(p => p.name === engName);
                 if(prefData) loadPosts(prefData.id, engName);
+
+                
             });
 
         // 投稿済みフラグ
         prefectures.forEach(pref => {
             const el = document.querySelector(`#pref-${pref.code}`);
-            if(el && pref.has_post) el.classList.add('has-post');
+            if(el && pref.has_post) el.classList.add('has-post');    
         });
+        svg.append("line")
+        .attr("x1", 240)
+        .attr("y1", 20)
+        .attr("x2", 240)
+        .attr("y2", 240)
+        .attr("stroke", "#666")
+        .attr("stroke-width", 1);
+
+        svg.append("line")
+        .attr("x1", 20)
+        .attr("y1", 240)
+        .attr("x2", 240)
+        .attr("y2", 240)
+        .attr("stroke", "#666")
+        .attr("stroke-width", 1);
+
     }
 
     function drawMap() {
