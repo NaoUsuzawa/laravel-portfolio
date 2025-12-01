@@ -118,7 +118,7 @@ class DmController extends Controller
                 $messageData['image_path'] = $path;
             }
             // video
-            elseif(str_starts_with($mime, 'video/')){
+            elseif (str_starts_with($mime, 'video/')) {
                 // get the duration of video
                 $duration = $this->getVideoDuration($file->getPathname());
 
@@ -190,8 +190,8 @@ class DmController extends Controller
         }
 
         // remove video
-        if (!empty($message->video_path)) {
-            $videoPath = storage_path('app/public/' . $message->video_path);
+        if (! empty($message->video_path)) {
+            $videoPath = storage_path('app/public/'.$message->video_path);
             if (file_exists($videoPath)) {
                 unlink($videoPath);
             }

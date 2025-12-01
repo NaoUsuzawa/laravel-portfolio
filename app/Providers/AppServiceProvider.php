@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,15 +45,15 @@ class AppServiceProvider extends ServiceProvider
 
         // to provide the number of unread
         view()->composer('*', function ($view) {
-        if (Auth::check()) {
-            $unreadDMs = Message::where('receiver_id', Auth::id())
-                ->whereNull('read_at')
-                ->count();
-        } else {
-            $unreadDMs = 0;
-        }
+            if (Auth::check()) {
+                $unreadDMs = Message::where('receiver_id', Auth::id())
+                    ->whereNull('read_at')
+                    ->count();
+            } else {
+                $unreadDMs = 0;
+            }
 
-        $view->with('unreadDMs', $unreadDMs);
-    });
+            $view->with('unreadDMs', $unreadDMs);
+        });
     }
 }

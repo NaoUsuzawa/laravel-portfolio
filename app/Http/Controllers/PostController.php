@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Image;
-use App\Models\Post;
 use App\Models\Media;
+use App\Models\Post;
 use App\Models\PostView;
 use App\Models\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPUnit\Framework\directoryExists;
 
 class PostController extends Controller
 {
@@ -57,7 +55,6 @@ class PostController extends Controller
             'media.*' => 'required|file|max:204800',
         ]);
 
-
         $visitedAt = $validated['date'].' '.
             str_pad($validated['time_hour'], 2, '0', STR_PAD_LEFT).':'.
             str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
@@ -89,29 +86,29 @@ class PostController extends Controller
                     $path = $file->store('media/posts', 'public');
 
                     $post->media()->create([
-                        'type'  => 'image',
-                        'path'  => $path,
+                        'type' => 'image',
+                        'path' => $path,
                     ]);
                 }
                 // in case Video
-                elseif(str_starts_with($mime, 'video')){
+                elseif (str_starts_with($mime, 'video')) {
                     // get duration of video
                     $duration = $this->getVideoDuration($file);
 
-                    if($duration > 30){
+                    if ($duration > 30) {
                         return redirect()->back()
-                            ->withErrors(['media'=>'The video duration must be less than 30 seconds']);
+                            ->withErrors(['media' => 'The video duration must be less than 30 seconds']);
                     }
 
                     // save video file
                     $path = $file->store('media/posts', 'public');
 
                     // thumbnail path
-                    $thumbPath = 'thumbnails/posts/' . uniqid('thumb_') . '.jpg';
+                    $thumbPath = 'thumbnails/posts/'.uniqid('thumb_').'.jpg';
 
                     // make thumbnail
                     $ok = $this->generateVideoThumbnail($path, $thumbPath);
-                    if($ok){
+                    if ($ok) {
                         $thumbPath = null;
                     }
 
@@ -127,7 +124,8 @@ class PostController extends Controller
         return redirect()->route('home')->with('success', 'Post created successfully!');
     }
 
-    private function getVideoDuration($file){
+    private function getVideoDuration($file)
+    {
 
         $path = $file->getRealPath();
 
@@ -137,7 +135,7 @@ class PostController extends Controller
 
         $info = json_decode($output, true);
 
-        return isset($info['format']['duration']) ? floatval($info['format']['duration']): 0;
+        return isset($info['format']['duration']) ? floatval($info['format']['duration']) : 0;
 
     }
 
@@ -146,9 +144,9 @@ class PostController extends Controller
         // excute FFmpeg command
         $fullVideoPath = storage_path("app/public/{$filePath}");
         $fullThumbPath = storage_path("app/public/{$thumbnailPath}");
-        
+
         // if there is no directly, make new it
-        if (!is_dir(dirname($fullThumbPath))) {
+        if (! is_dir(dirname($fullThumbPath))) {
             mkdir(dirname($fullThumbPath), 0777, true);
         }
 
@@ -240,9 +238,9 @@ class PostController extends Controller
         $post->time_hour = $validated['time_hour'];
         $post->time_min = $validated['time_min'];
 
-        if (!empty($validated['date'])) {
+        if (! empty($validated['date'])) {
             $post->visited_at = sprintf(
-                "%s %02d:%02d:00",
+                '%s %02d:%02d:00',
                 $validated['date'],
                 $validated['time_hour'],
                 $validated['time_min']
@@ -251,7 +249,7 @@ class PostController extends Controller
 
         $post->save();
 
-            // update category
+        // update category
         if (isset($validated['category'])) {
             $post->categories()->sync($validated['category']);
         } else {
@@ -259,7 +257,7 @@ class PostController extends Controller
         }
 
         // 2. remove media
-        if (!empty($validated['deleted_media'])) {
+        if (! empty($validated['deleted_media'])) {
             $mediaToDelete = Media::whereIn('id', $validated['deleted_media'])
                 ->where('post_id', $post->id)
                 ->get();
@@ -270,7 +268,7 @@ class PostController extends Controller
                 Storage::disk('public')->delete($media->path);
 
                 // if media has thumbnail, remove it
-                if($media->thumbnail_path){
+                if ($media->thumbnail_path) {
                     Storage::disk('public')->delete($media->thumbnail_path);
                 }
 
@@ -300,11 +298,11 @@ class PostController extends Controller
             foreach ($request->file('new_media') as $file) {
 
                 $mime = $file->getMimeType();
-                $type = str_starts_with($mime, 'image') ? 'image': 'video'; 
+                $type = str_starts_with($mime, 'image') ? 'image' : 'video';
                 $dir = $type === 'image' ? 'media/posts' : 'media/posts';
 
-                // video duration check 
-                if($type === 'video'){
+                // video duration check
+                if ($type === 'video') {
                     $duration = $this->getVideoDuration($file);
 
                     if ($duration > 30) {
@@ -319,9 +317,9 @@ class PostController extends Controller
 
                 $thumbnailPath = null;
 
-                if($type === 'video'){
+                if ($type === 'video') {
 
-                    $thumbnailPath = 'thumbnails/posts/' . uniqid('thumb_') . '.jpg';
+                    $thumbnailPath = 'thumbnails/posts/'.uniqid('thumb_').'.jpg';
 
                     $ok = $this->generateVideoThumbnail($path, $thumbnailPath);
                     // if you fail to generate thumb nail, leave it null
@@ -357,7 +355,7 @@ class PostController extends Controller
         foreach ($post->media as $media) {
             Storage::disk('public')->delete($media->path);
 
-            if($media->thumbnail_path){
+            if ($media->thumbnail_path) {
                 Storage::disk('public')->delete($media->thumbnail_path);
             }
         }
