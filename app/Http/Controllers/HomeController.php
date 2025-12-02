@@ -36,7 +36,11 @@ class HomeController extends Controller
             }])
                 ->orderByDesc('relevance')
                 ->orderByDesc('created_at');
-        } else { // newest
+        } elseif ($order === 'followers') {
+            $followingIds = Auth::user()->following()->pluck('users.id')->toArray();
+            $postsQuery->whereIn('user_id', $followingIds)
+                ->orderByDesc('created_at');
+        } else {
             $postsQuery->orderByDesc('created_at');
         }
         $posts = $postsQuery->paginate(30)->appends(['order' => $order]);
@@ -109,7 +113,7 @@ class HomeController extends Controller
         $query = Post::with(['categories', 'prefecture', 'images']);
 
         $titleParts = [];
-        $headerImage = 'images/default.jpeg';
+        $headerImage = 'images/nippon.jpg';
         $prefectureSelected = false;
         $categorySelected = false;
 
@@ -130,7 +134,9 @@ class HomeController extends Controller
             if ($category) {
                 $query->whereHas('categories', fn ($q) => $q->where('id', $category->id));
                 $titleParts[] = $category->name;
-                $headerImage = $category->image ?? 'images/default.jpeg';
+                if (! $prefectureSelected) {
+                    $headerImage = $category->image ?? 'images/default.jpeg';
+                }
                 $categorySelected = true;
             }
         }

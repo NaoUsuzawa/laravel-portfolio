@@ -46,14 +46,22 @@ class AppServiceProvider extends ServiceProvider
         // to provide the number of unread
         view()->composer('*', function ($view) {
             if (Auth::check()) {
-                $unreadDMs = Message::where('receiver_id', Auth::id())
+                $user = Auth::user();
+
+                $unreadNotifications = $user->unreadNotifications()->count();
+
+                $unreadDMs = Message::where('receiver_id', $user->id)
                     ->whereNull('read_at')
                     ->count();
             } else {
+                $unreadNotifications = 0;
                 $unreadDMs = 0;
             }
 
-            $view->with('unreadDMs', $unreadDMs);
+            $view->with([
+                'unreadNotifications' => $unreadNotifications,
+                'unreadDMs'=> $unreadDMs,
+            ]);
         });
     }
 }

@@ -31,16 +31,15 @@
     {{-- Leaflet  --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    
 
     {{-- D3.js --}}
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
+    {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    
     @vite(['resources/css/app.css', 'resources/js/app.js']) 
+    
 
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
@@ -84,13 +83,10 @@
                             <li class="nav-item">
                                 <a href="{{ route('conversation.show') }}" class="nav-link fs-2" style="color:#9F6B46;">
                                     <i class="fa-regular fa-comment nav-item p-0"></i>
-
-                                    @if(isset($unreadDMs) && $unreadDMs > 0)
+                                    {{-- DM未読通知バッヂ --}}
+                                    @if ($unreadDMs > 0)
                                         <span class="position-absolute badge rounded-pill bg-danger"
-                                            style="
-                                                font-size: 0.8rem;
-                                                padding: 3px 6px;
-                                            ">
+                                            style="font-size:0.8rem; padding:3px 6px;">
                                             {{ $unreadDMs }}
                                         </span>
                                     @endif
@@ -119,17 +115,11 @@
                                     @endif
 
                                     {{-- バッジ（プロフィール右上） --}}
-                                    @if(Auth::check() && Auth::user()->unreadNotifications->count() > 0)
-                                        <span 
-                                            class="position-absolute badge rounded-pill bg-danger"
+                                    @if($unreadNotifications > 0)
+                                        <span class="position-absolute badge rounded-pill bg-danger"
                                             id="notificationBadge"
-                                            style="
-                                                font-size: 0.8rem;
-                                                padding: 3px 6px;
-                                                left: 80%;
-                                                transform: translate(-50%, 0);
-                                            ">
-                                            {{ Auth::user()->unreadNotifications->count() }}
+                                            style="font-size:0.8rem; padding:3px 6px; top:0; right:0;">
+                                            {{ $unreadNotifications }}
                                         </span>
                                     @endif
                                 </button>
@@ -137,26 +127,24 @@
                                 <div class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2"
                                     aria-labelledby="account-dropdown">
                                     @can('admin')
-                                        <a href="{{ route('admin.users') }}" class="dropdown-item"><i class="fa-solid fa-lock me-2"></i></i> Admin</a>
+                                        <a href="{{ route('admin.users') }}" class="dropdown-item"><i class="fa-solid fa-lock me-2"></i></i> {{ __('messages.header.admin') }}</a>
                                         <hr class="dropdown-divider">
                                     @endcan
 
-                                    <a href="{{ route('profile.show', Auth::user()->id) }}" class="dropdown-item"><i class="fa-solid fa-user me-2"></i> Profile</a>
+                                    <a href="{{ route('profile.show', Auth::user()->id) }}" class="dropdown-item"><i class="fa-solid fa-user me-2"></i> {{ __('messages.header.profile') }}</a>
 
                                     <a href="#" class="dropdown-item"
                                         data-bs-toggle="modal"
                                         data-bs-target="#notificationModal"
                                         id="notificationBtn">
-                                        <i class="fa-regular fa-bell me-2"></i>Notification
-
-                                         @if(Auth::check() && Auth::user()->unreadNotifications->count() > 0)
-                                            <span class="badge bg-danger rounded-pill ms-2">
-                                                {{ Auth::user()->unreadNotifications->count() }}
-                                            </span>
+                                        <i class="fa-regular fa-bell me-2"></i>{{ __('messages.header.notification') }}
+                                        {{-- ドロップダウンの中のnotification通知バッヂ --}}
+                                        @if($unreadNotifications > 0)
+                                            <span class="badge bg-danger rounded-pill ms-2"id="notificationBadge">{{ $unreadNotifications }}</span>
                                         @endif
                                     </a>
 
-                                    <a href="{{ route('analytics.index', Auth::user()->id) }}" class="dropdown-item"><i class="fa-solid fa-chart-line me-2"></i>Analytics</a>
+                                    <a href="{{ route('analytics.index', Auth::user()->id) }}" class="dropdown-item"><i class="fa-solid fa-chart-line me-2"></i>{{ __('messages.header.analytics') }}</a>
 
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i> {{ __('Logout') }}</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -165,6 +153,25 @@
                                 </div>
                             </li>
                         @endguest
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-globe fa-lg translation"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                        <img src="https://flagcdn.com/us.svg" width="24" class="me-2 border"> English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                        <img src="https://flagcdn.com/jp.svg" width="24" class="me-2 border"> 日本語
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>  
             </div>
@@ -186,6 +193,25 @@
                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}" style="color:#9F6B46;">{{ __('Register') }}</a>
+                        </li>
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown d-flex align-items-center">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-globe fa-lg translation"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                        <img src="https://flagcdn.com/us.svg" width="24" class="me-2 border"> English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                        <img src="https://flagcdn.com/jp.svg" width="24" class="me-2 border"> 日本語
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>          
                 @else
@@ -219,16 +245,17 @@
                 <ul class="list-unstyled w-100">
                     <li class="mb-3">
                         <a href="{{ route('post.create') }}" class="menu-link nav-text-brown">
-                            <i class="fa-solid fa-circle-plus me-3"></i> Create Post
+                            <i class="fa-solid fa-circle-plus me-3"></i> {{ __('messages.header.create_post') }}
                         </a>
                     </li>
-                    <li class="mb-3">
-                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-comment me-3"></i> Messages
+                    <li class="mb-3 position-relative">
+                        <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown" id="mobileDmBtn">
+                            <i class="fa-regular fa-comment me-3"></i> {{ __('messages.header.messages') }}
 
-                            @if(isset($unreadDMs) && $unreadDMs > 0)
-                                <span class="position-absolute badge bg-danger rounded-pill"
-                                    style="right: 120px; font-size: 0.8rem; padding: 3px 6px;">
+                            @if($unreadDMs > 0)
+                                <span class="position-absolute badge rounded-pill bg-danger"
+                                    id="mobileDmBadge"
+                                    style="right:100px;">
                                     {{ $unreadDMs }}
                                 </span>
                             @endif
@@ -236,27 +263,45 @@
                     </li>
                     <li class="mb-3">
                         <a href="{{ route('favorite') }}" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-star me-3"></i> Favorite Post
+                            <i class="fa-regular fa-star me-3"></i> {{ __('messages.header.favorite_post') }}
                         </a>
                     </li>
                     <li class="mb-3">
-                        <a href="#" class="notificationBtn menu-link nav-text-brown"
-                            id="notificationBtnMobile"
-                            data-bs-toggle="modal"
-                            data-bs-target="#notificationModal">
-                            <i class="fa-regular fa-bell me-3"></i> Notification
-                            @if(Auth::check() && Auth::user()->unreadNotifications->count() > 0)
-                                <span id="notificationBadgeMobile" class="badge bg-danger rounded-pill ms-2"
-                                    style="font-size: 0.8rem;padding: 3px 6px;">
-                                    {{ Auth::user()->unreadNotifications->count() }}
+                        <a href="#"
+                        class="notificationBtn menu-link nav-text-brown"
+                        id="mobileNotificationBtn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#notificationModal">
+                            <i class="fa-regular fa-bell me-3"></i> {{ __('messages.header.notification') }}
+                            @if($unreadNotifications > 0)
+                                <span class="badge bg-danger rounded-pill ms-2" id="mobileNotificationBadge">
+                                    {{ $unreadNotifications }}
                                 </span>
                             @endif
                         </a>
                     </li>
                     <li class="mb-3">
                         <a href="{{ route('analytics.index') }}" class="notificationBtn menu-link nav-text-brown">
-                            <i class="fa-solid fa-chart-line me-3"></i> Analytics
+                            <i class="fa-solid fa-chart-line me-3"></i> {{ __('messages.header.analytics') }}
                         </a>
+                    </li>
+                    <!-- Language Dropdown -->
+                    <li class="mb-3 d-flex justify-content-center">
+                        <ul class="nav">
+                            <li class="nav-item translation">
+                                <a class="nav-link d-flex align-items-center {{ App::getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', ['locale' => 'en']) }}">
+                                    <img src="https://flagcdn.com/us.svg" width="24" class="border"> English
+                                </a>
+                            </li>
+                            <li class="translation d-flex align-items-center">
+                                /
+                            </li>
+                            <li class="nav-item translation">
+                                <a class="nav-link d-flex align-items-center {{ App::getLocale() === 'ja' ? 'active' : '' }}" href="{{ route('lang.switch', ['locale' => 'ja']) }}">
+                                    <img src="https://flagcdn.com/jp.svg" width="24" class="border"> 日本語
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -264,7 +309,7 @@
                     <a href="{{ route('logout') }}" 
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                     class="btn" style="border: 2px solid #F1BDB2; color: #F1BDB2; font-weight: bold; background-color: transparent; transition: 0.3s;">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        <i class="fa-solid fa-right-from-bracket"></i> {{ __('messages.header.logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
@@ -272,7 +317,7 @@
 
                     @can('admin')
                         <a href="{{ route('admin.users') }}" class="btn" style="background-color:#F1BDB2; color:white; font-weight:bold; transition:0.3s;">
-                            <i class="fa-solid fa-lock"></i> Admin
+                            <i class="fa-solid fa-lock"></i> {{ __('messages.header.admin') }}
                         </a>
                     @endcan
                 </div>
@@ -283,189 +328,181 @@
             @yield('content')
         </main>
     </div>
-    @yield('scripts')
 
-    @stack('scripts')
-
-                <!-- 通知モーダル -->
-                <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content p-3">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Notifications 🔔</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-
-                            <div class="modal-body">
-                                @forelse ($notifications as $n)
-                                    <div class="d-flex align-items-center mb-3">
-                                        @php
-                                            // いいねしたユーザーのアバター
-                                            $avatar = $n->data['liker_avatar'] ?? 'https://via.placeholder.com/50';
-
-                                            // 投稿画像URLの初期値（プレースホルダー）
-                                            $thumbHtml = '<img src="https://via.placeholder.com/60" class="post-image-square rounded-0">';
-                                            // $postImageUrl = 'https://via.placeholder.com/60';
-
-                                            // 投稿に紐づく最初の画像を取得
-                                            if (isset($n->data['post_id'])) {
-
-                                                $post = \App\Models\Post::find($n->data['post_id']);
-
-                                                if($post && $post->media->isNotEmpty()){
-                                                    $m = $post->media->first();
-                                                    // image
-                                                    if($m->type === 'image'){
-                                                        $thumbHtml = '
-                                                            <img src="' . asset("storage/{$m->path}") . '" 
-                                                                class="post-image-square rounded-0"
-                                                                style="object-fit: cover; width:60px; height:60px;">
-                                                        ';
-                                                    }
-                                                    // video + thumbnail
-                                                    if($m->type === 'video' && $m->thumbnail_path){
-                                                        $thumbHtml = '
-                                                            <img src="' . asset("storage/{$m->thumbnail_path}") . '"
-                                                                class="post-image-square rounded-0"
-                                                                style="object-fit: cover; width:60px; height:60px;">
-                                                        ';
-                                                    }
-
-                                                    // video only
-                                                    if($m->type === 'video'){
-                                                        $thumbHtml = '
-                                                            <video
-                                                                src="' . asset("storage/{$m->path}") . '"
-                                                                muted
-                                                                playsinline
-                                                                class="rounded-0"
-                                                                style="object-fit: cover; width:60px; height:60px;">
-                                                            </video>
-                                                        ';
-                                                    }
-                                                }
-                                            }
-                                        @endphp
-                                        <!-- いいねしたユーザー画像 -->
-                                        <a href="{{ isset($n->data['liker_id']) ? route('profile.show', ['id' => $n->data['liker_id']]) : '#' }}">
-                                            @php
-                                                $avatar = $n->data['liker_avatar'] ?? null;
-                                                if(!$avatar || $avatar === 'null'){
-                                                    $avatar = null;
-                                                }
-                                            @endphp
-                                            @if ($avatar)
-                                                <img src="{{ $avatar }}"
-                                                class="rounded-circle me-3"
-                                                width="50"
-                                                height="50"
-                                                style="object-fit: cover;">
-                                            @else
-                                                <i class="fa-solid fa-circle-user text-secondary me-3" style="font-size:50px; color:#ccc;"></i>
-                                            @endif
-                                        </a>
-
-                                        <!-- 名前と通知文 -->
-                                        <div class="flex-grow-1">
-                                            <strong>{{ $n->data['liker_name'] ?? 'Unknown' }}</strong>
-                                            <small>liked your post</small><br>
-                                            <span class="text-muted">{{ $n->created_at->diffForHumans() }}</span>
-                                        </div>
-
-                                        <!-- 投稿画像（右側） -->
-                                        <a href="{{ route('post.show', $n->data['post_id']) }}">
-                                            {{-- <img src="{{ $postImageUrl }}" class="post-image-square rounded-0"> --}}
-                                            {!! $thumbHtml !!}
-                                        </a>
-
-                                    </div>
-                                @empty
-                                    <p class="text-muted">No notifications.</p>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
+    <!-- 通知モーダル -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{ __('messages.notification.title') }} 🔔
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <div class="modal-body">
+                    @forelse ($notifications as $n)
+                        <div class="d-flex align-items-center mb-3">
+                            @php
+                                // いいねしたユーザーのアバター
+                                $avatar = $n->data['liker_avatar'] ?? 'https://via.placeholder.com/50';
+
+                                // 投稿画像URLの初期値（プレースホルダー）
+                                $thumbHtml = '<img src="https://via.placeholder.com/60" class="post-image-square rounded-0">';
+                                // $postImageUrl = 'https://via.placeholder.com/60';
+
+                                // 投稿に紐づく最初の画像を取得
+                                if (isset($n->data['post_id'])) {
+
+                                    $post = \App\Models\Post::find($n->data['post_id']);
+
+                                    if($post && $post->media->isNotEmpty()){
+                                        $m = $post->media->first();
+                                        // image
+                                        if($m->type === 'image'){
+                                            $thumbHtml = '
+                                                <img src="' . asset("storage/{$m->path}") . '" 
+                                                    class="post-image-square rounded-0"
+                                                    style="object-fit: cover; width:60px; height:60px;">
+                                            ';
+                                        }
+                                        // video + thumbnail
+                                        if($m->type === 'video' && $m->thumbnail_path){
+                                            $thumbHtml = '
+                                                <img src="' . asset("storage/{$m->thumbnail_path}") . '"
+                                                    class="post-image-square rounded-0"
+                                                    style="object-fit: cover; width:60px; height:60px;">
+                                            ';
+                                        }
+
+                                        // video only
+                                        if($m->type === 'video'){
+                                            $thumbHtml = '
+                                                <video
+                                                    src="' . asset("storage/{$m->path}") . '"
+                                                    muted
+                                                    playsinline
+                                                    class="rounded-0"
+                                                    style="object-fit: cover; width:60px; height:60px;">
+                                                </video>
+                                            ';
+                                        }
+                                    }
+                                }
+                            @endphp
+                            <!-- いいねしたユーザー画像 -->
+                            <a href="{{ isset($n->data['liker_id']) ? route('profile.show', ['id' => $n->data['liker_id']]) : '#' }}">
+                                @php
+                                    $avatar = $n->data['liker_avatar'] ?? null;
+                                    if(!$avatar || $avatar === 'null'){
+                                        $avatar = null;
+                                    }
+                                @endphp
+                                @if ($avatar)
+                                    <img src="{{ $avatar }}"
+                                    class="rounded-circle me-3"
+                                    width="50"
+                                    height="50"
+                                    style="object-fit: cover;">
+                                @else
+                                    <i class="fa-solid fa-circle-user text-secondary me-3" style="font-size:50px; color:#ccc;"></i>
+                                @endif
+                            </a>
+
+                            <!-- 名前と通知文 -->
+                            <div class="flex-grow-1">
+                                <strong>{{ $n->data['liker_name'] ?? 'Unknown' }}</strong>
+                                <small>
+                                    {{ __('messages.notification.like_text') }}    
+                                </small><br>
+                                <span class="text-muted">{{ $n->created_at->diffForHumans() }}</span>
+                            </div>
+
+                            <!-- 投稿画像（右側） -->
+                            <a href="{{ route('post.show', $n->data['post_id']) }}">
+                                {{-- <img src="{{ $postImageUrl }}" class="post-image-square rounded-0"> --}}
+                                {!! $thumbHtml !!}
+                            </a>
+
+                        </div>
+                    @empty
+                        <p class="text-muted">No notifications.</p>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
 
-    
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    {{-- for badge --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-    const notificationBtn = document.getElementById('notificationBtn'); // PC
-    const profileBadge = document.getElementById('notificationBadge');
+            const notificationBtn = document.getElementById('notificationBtn');
+            const mainBadge = document.getElementById('notificationBadge');
+            const mobileBadge = document.getElementById('mobileNotificationBadge');
 
-    const notificationBtnMobile = document.getElementById('notificationBtnMobile'); // Mobile
-    const mobileBadge = document.getElementById('notificationBadgeMobile');
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', function () {
 
-    function readNotifications() {
-        fetch("{{ route('notifications.readAll') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-                "Content-Type": "application/json"
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                // PCバッジを消す
-                if (profileBadge) {
-                    profileBadge.style.display = 'none';
-                }
-                // モバイルバッジを消す
-                if (mobileBadge) {
-                    mobileBadge.style.display = 'none';
-                }
+                    fetch("{{ route('notifications.readAll') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            if (mainBadge) mainBadge.style.display = 'none';
+                            if (mobileBadge) mobileBadge.style.display = 'none';
+                        }
+                    });
+                });
             }
-        })
-        .catch(err => console.error(err));
-    }
 
-    // PC版クリックイベント
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', readNotifications);
-    }
+        });
+    </script>
 
-    // モバイル版クリックイベント
-    if (notificationBtnMobile) {
-        notificationBtnMobile.addEventListener('click', readNotifications);
-    }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 
-    // if (modal) {
-    //     modal.addEventListener('shown.bs.modal', function () {
+    @if(session('new_badge'))
+        <div class="modal fade" id="badgeModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    {{-- modal header --}}
+                    <div class="modal-header justify-content-center text-center w-100" style="background-color:#b4a08b; color: #fff; border-bottom: none;">
+                        <h3 class="h5 modal-title fw-bold mb-0">New Badge Earned!</h3>
+                    </div>
+                    {{-- modal body --}}
+                    <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
+                        <img src="{{ asset(session('new_badge')['image_path']) }}" 
+                            alt="{{ session('new_badge')['name'] }}"
+                            style="width:160px; height:160px; object-fit:contain;">
+                        <h6 class="mt-2 fw-bold fs-4" style="color: #9F6B46;">{{ session('new_badge')['name'] }}</h6>
+                        <p class="text-sm" style="color: #CAAE99;">{{ session('new_badge')['description'] }}</p>
+                    </div>
+                    {{-- modal footer --}}
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline mt-2" data-bs-dismiss="modal">Close</button>
+                        <a href="{{ route('profile.show', Auth::user()->id) }}" class="btn btn-pink mt-2">Profile Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    //         fetch("{{ route('notifications.readAll') }}", {
-    //             method: "POST",
-    //             headers: {
-    //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-    //                 "Content-Type": "application/json"
-    //             },
-    //         })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             if (data.status === 'ok') {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var badgeModalEl = document.getElementById('badgeModal');
+                if (badgeModalEl) {
+                    var badgeModal = new bootstrap.Modal(badgeModalEl);
+                    badgeModal.show();
+                }
+            });
+        </script>
+    @endif
 
-    //                 // 🔵 ナビバーのバッジを消す
-    //                 if (profileBadge) {
-    //                     profileBadge.style.display = 'none';
-    //                 }
+    @yield('scripts')
 
-    //                 // 🔵 ドロップダウン内のバッジも消す
-    //                 const dropdownBadge = document.querySelector('#notificationBtn .badge');
-    //                 if (dropdownBadge) {
-    //                     dropdownBadge.remove();
-    //                 }
-    //             }
-    //         })
-    //         .catch(err => console.error(err));
-    //     });
-    // }
-
-});
-</script>
+    @stack('scripts')
 </body>
 </html>
