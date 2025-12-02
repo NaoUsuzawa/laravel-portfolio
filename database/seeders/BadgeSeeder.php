@@ -29,7 +29,7 @@ class BadgeSeeder extends Seeder
                 'key' => 'Sumo',
                 'name' => '5 Prefectures',
                 'description' => 'Awarded for publishing 5 prefectures.',
-                'image_path' => 'images/badges/sumo04.png',             
+                'image_path' => 'images/badges/sumo04.png',
             ],
 
             [
