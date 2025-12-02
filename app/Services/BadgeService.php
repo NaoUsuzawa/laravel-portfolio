@@ -7,12 +7,11 @@ use App\Models\User;
 
 class BadgeService
 {
-
     public function checkAndGiveBadges(User $user): array
     {
         $awarded = [];
 
-        if ($user->posts()->count() === 1) { 
+        if ($user->posts()->count() === 1) {
             $badge = $this->award($user, 'Cherry Blossom');
             if ($badge) {
                 $awarded[] = $badge;
@@ -42,7 +41,6 @@ class BadgeService
         return $awarded;
     }
 
-    
     public function award(User $user, string $badgeKey)
     {
         $badge = Badge::where('key', $badgeKey)->first();
