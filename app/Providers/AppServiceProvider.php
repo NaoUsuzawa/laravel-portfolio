@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with([
                 'unreadNotifications' => $unreadNotifications,
-                'unreadDMs'=> $unreadDMs,
+                'unreadDMs' => $unreadDMs,
             ]);
         });
     }

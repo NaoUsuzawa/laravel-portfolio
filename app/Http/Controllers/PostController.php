@@ -62,7 +62,7 @@ class PostController extends Controller
             str_pad($validated['time_min'], 2, '0', STR_PAD_LEFT).':00';
 
         DB::beginTransaction();
-        
+
         try {
             // 投稿作成
             $post = Post::create([
@@ -114,7 +114,7 @@ class PostController extends Controller
 
                         // make thumbnail
                         $ok = $this->generateVideoThumbnail($path, $thumbPath);
-                        if (!$ok) {
+                        if (! $ok) {
                             $thumbPath = null;
                         }
 
@@ -125,7 +125,7 @@ class PostController extends Controller
                         ]);
                     }
                 }
-            }   
+            }
 
             // バッジチェック
             $user = Auth::user();
@@ -273,7 +273,7 @@ class PostController extends Controller
         $post->time_hour = $validated['time_hour'];
         $post->time_min = $validated['time_min'];
 
-         // update visited_at
+        // update visited_at
         if (! empty($validated['date'])) {
             $post->visited_at = sprintf(
                 '%s %02d:%02d:00',
@@ -286,7 +286,7 @@ class PostController extends Controller
 
         $post->save();
 
-         // update category
+        // update category
         if (isset($validated['category'])) {
             $post->categories()->sync($validated['category']);
         } else {
@@ -370,7 +370,7 @@ class PostController extends Controller
                     'thumbnail_path' => $thumbnailPath,
                 ]);
             }
-        }  
+        }
 
         return redirect()
             ->route('post.show', $post->id)
