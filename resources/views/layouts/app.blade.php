@@ -466,26 +466,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 
     @if(session('new_badge'))
-        <div class="modal fade" id="badgeModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    {{-- modal header --}}
-                    <div class="modal-header justify-content-center text-center w-100" style="background-color:#b4a08b; color: #fff; border-bottom: none;">
-                        <h3 class="h5 modal-title fw-bold mb-0">New Badge Earned!</h3>
-                    </div>
-                    {{-- modal body --}}
-                    <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
-                        <img src="{{ asset(session('new_badge')['image_path']) }}" 
-                            alt="{{ session('new_badge')['name'] }}"
-                            style="width:160px; height:160px; object-fit:contain;">
-                        <h6 class="mt-2 fw-bold fs-4" style="color: #9F6B46;">{{ session('new_badge')['name'] }}</h6>
-                        <p class="text-sm" style="color: #CAAE99;">{{ session('new_badge')['description'] }}</p>
-                    </div>
-                    {{-- modal footer --}}
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-outline mt-2" data-bs-dismiss="modal">Close</button>
-                        <a href="{{ route('profile.show', Auth::user()->id) }}" class="btn btn-pink mt-2">Profile Page</a>
-                    </div>
+    <div class="modal fade" id="badgeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                {{-- modal header --}}
+                <div class="modal-header justify-content-center text-center w-100" style="background-color:#b4a08b; color: #fff; border-bottom: none;">
+                    <h3 class="h5 modal-title fw-bold mb-0">New Badge Earned!</h3>
+                </div>
+                {{-- modal body --}}
+                <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
+                    <img src="{{ asset(session('new_badge')['image_path']) }}" 
+                        alt="{{ session('new_badge')['name'] }}"
+                        style="width:160px; height:160px; object-fit:contain;">
+                    <h6 class="mt-2 fw-bold fs-4" style="color: #9F6B46;">{{ session('new_badge')['key'] }}</h6>
+                    <p class="text-sm" style="color: #CAAE99;">{{ session('new_badge')['description'] }}</p>
+                </div>
+                {{-- modal footer --}}
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline mt-2" data-bs-dismiss="modal">Close</button>
+                    <a href="{{ route('profile.show', Auth::user()->id) }}" class="btn btn-pink mt-2">Profile Page</a>
                 </div>
             </div>
         </div>
