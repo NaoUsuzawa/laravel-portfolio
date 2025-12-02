@@ -33,7 +33,7 @@ class PostController extends Controller
     public function create()
     {
         $all_categories = Category::all();
-        $prefectures = Prefecture::all();
+        $prefectures = Prefecture::orderBy('name')->get();
 
         return view('users.posts.create', compact('all_categories', 'prefectures'));
     }
@@ -234,7 +234,7 @@ class PostController extends Controller
     {
         $post = Post::with('categories')->findOrFail($id);
         $all_categories = Category::all();
-        $prefectures = Prefecture::all();
+        $prefectures = Prefecture::orderBy('name')->get();
         $selected_categories = $post->categories->pluck('id')->toArray();
 
         return view(
