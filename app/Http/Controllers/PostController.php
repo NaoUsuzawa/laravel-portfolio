@@ -243,7 +243,7 @@ class PostController extends Controller
         );
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, BadgeService $badgeService)
     {
         $post = Post::findOrFail($id);
 
@@ -373,6 +373,8 @@ class PostController extends Controller
             }
         }
 
+        //   $badgeService->syncBadges(Auth::user());
+
         return redirect()
             ->route('post.show', $post->id)
             ->with('success', 'Post updated successfully!');
@@ -381,7 +383,7 @@ class PostController extends Controller
     /**
      * 投稿削除
      */
-    public function destroy($id)
+    public function destroy($id, BadgeService $badgeService)
     {
         $post = Post::with('media')->findOrFail($id);
 
@@ -399,12 +401,9 @@ class PostController extends Controller
 
         $post->media()->delete();
 
-        foreach ($post->images as $image) {
-            Storage::disk('public')->delete($image->image);
-            $image->delete();
-        }
-
         $post->forceDelete();
+
+        //  $badgeService->syncBadges(Auth::user());
 
         return redirect()->route('home')->with('success', 'Post deleted successfully!');
     }
