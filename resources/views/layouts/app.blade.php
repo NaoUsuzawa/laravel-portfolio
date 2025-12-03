@@ -50,7 +50,7 @@
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center brand" href="{{ url('/') }}">
                     <img src="{{ asset('images/image_480.png') }}" alt="Logo" width="50" class="me-2">
-                    <span class="brand-text fw-bold fs-1 ms-2">Go Nippon!</span>
+                    <span class="logo-text fw-bold ms-2 pe-2" >Go Nippon!</span>
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -75,14 +75,14 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a href="{{ route('post.create') }}" class="nav-link fs-2" style="color:#9F6B46;">
+                                <a href="{{ route('post.create') }}" class="nav-link fs-2 py-0" style="color:#a78167;">
                                     <i class="fa-solid fa-circle-plus nav-item p-0"></i>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('conversation.show') }}" class="nav-link fs-2" style="color:#9F6B46;">
-                                    <i class="fa-regular fa-comment nav-item p-0"></i>
+                                <a href="{{ route('conversation.show') }}" class="nav-link fs-2 py-0" style="color:#a78167;">
+                                    <i class="fa-solid fa-comment nav-item p-0"></i>
                                     {{-- DM未読通知バッヂ --}}
                                     @if ($unreadDMs > 0)
                                         <span class="position-absolute badge rounded-pill bg-danger"
@@ -94,23 +94,23 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('favorite') }}" class="nav-link fs-3" style="color:#9F6B46;">
-                                    <i class="fa-regular fa-star nav-item p-0"></i>
+                                <a href="{{ route('favorite') }}" class="nav-link fs-2 py-0" style="color:#a78167;">
+                                    <i class="fa-solid fa-star nav-item "></i>
                                 </a>
                             </li>
 
                             <li class="nav-item dropdown position-relative">
                                 <button class="btn shadow-none nav-link d-flex align-items-center position-relative"
                                     id="account-dropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                    style="color:#9F6B46;">
+                                    style="color:#a78167;">
 
                                     @if (Auth::user()->avatar)
                                         <img src="{{ Auth::user()->avatar }}" 
                                             alt="{{ Auth::user()->name }}" 
-                                            class="rounded-circle" 
-                                            style="width: 40px; height: 40px; object-fit: cover; flex-shrink: 0;">
+                                            class="rounded-circle p-0" 
+                                            style="width: 35px; height: 35px; object-fit: cover; flex-shrink: 0;">
                                     @else
-                                        <i class="fa-solid fa-circle-user text-secondary" 
+                                        <i class="fa-solid fa-circle-user text-secondary p-0" 
                                         style="font-size: 40px;"></i>
                                     @endif
 
@@ -137,7 +137,7 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#notificationModal"
                                         id="notificationBtn">
-                                        <i class="fa-regular fa-bell me-2"></i>{{ __('messages.header.notification') }}
+                                        <i class="fa-solid fa-bell me-2"></i>{{ __('messages.header.notification') }}
                                         {{-- ドロップダウンの中のnotification通知バッヂ --}}
                                         @if($unreadNotifications > 0)
                                             <span class="badge bg-danger rounded-pill ms-2" id="notificationBadgeDropdown">{{ $unreadNotifications }}</span>
@@ -157,7 +157,7 @@
                         <li class="nav-item dropdown d-flex align-items-center">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-globe fa-lg translation"></i>
+                                <i class="fa-solid fa-globe fa-lg translation " style="color:#a78167;"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
                                 <li>
@@ -180,9 +180,9 @@
         <nav class="navbar fixed-top d-flex d-lg-none" style="background-color:#fbefe5;">
             <div class="container d-flex justify-content-between align-items-center">
 
-                <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+                <a class="navbar-brand d-flex align-items-center " href="{{ url('/') }}">
                     <img src="{{ asset('images/image_480.png') }}" alt="Logo" width="40" class="me-2">
-                    <span class="brand-text fw-bold fs-3">Go Nippon!</span>
+                    <span class="logo-text fw-bold">Go Nippon!</span>
                 </a>
 
                 @guest
@@ -250,7 +250,7 @@
                     </li>
                     <li class="mb-3 position-relative">
                         <a href="{{ route('conversation.show') }}" class="menu-link nav-text-brown" id="mobileDmBtn">
-                            <i class="fa-regular fa-comment me-3"></i> {{ __('messages.header.messages') }}
+                            <i class="fa-solid fa-comment me-3"></i> {{ __('messages.header.messages') }}
 
                             @if($unreadDMs > 0)
                                 <span class="position-absolute badge rounded-pill bg-danger"
@@ -263,7 +263,7 @@
                     </li>
                     <li class="mb-3">
                         <a href="{{ route('favorite') }}" class="menu-link nav-text-brown">
-                            <i class="fa-regular fa-star me-3"></i> {{ __('messages.header.favorite_post') }}
+                            <i class="fa-solid fa-star me-3"></i> {{ __('messages.header.favorite_post') }}
                         </a>
                     </li>
                     <li class="mb-3">
@@ -272,7 +272,7 @@
                         id="mobileNotificationBtn"
                         data-bs-toggle="modal"
                         data-bs-target="#notificationModal">
-                            <i class="fa-regular fa-bell me-3"></i> {{ __('messages.header.notification') }}
+                            <i class="fa-solid fa-bell me-3"></i> {{ __('messages.header.notification') }}
                             @if($unreadNotifications > 0)
                                 <span class="badge bg-danger rounded-pill ms-2" id="mobileNotificationBadge">
                                     {{ $unreadNotifications }}

@@ -47,7 +47,7 @@
                         <div class="carousel-inner">
                             {{-- Category Ranking --}}
                             <div class="carousel-item active">
-                                <div class="card-header border0 " style="background:#fbefe5; ">
+                                <div class="card-header border0 ">
                                     <h5 class="mb-0 fw-bold text-center">{{ __('messages.home.category_ranking_title') }}</h5>
                                 </div>
                                 <ul class="list-group list-group-flush">
@@ -75,7 +75,7 @@
 
                             {{-- Prefecture Ranking --}}
                             <div class="carousel-item">
-                                <div class="card-header border-0" style="background:#fbefe5;">
+                                <div class="card-header border-0">
                                     <h5 class="mb-0 fw-bold text-center">{{ __('messages.home.prefecture_ranking_title') }}</h5>
                                 </div>
                                 <ul class="list-group list-group-flush">

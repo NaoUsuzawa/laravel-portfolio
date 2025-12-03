@@ -51,7 +51,7 @@ h5, span, label {
 }
 
 .card-header {
-    background: rgba(159, 107, 70, 0.2);
+    background:#fae9db;
 }
 
 .nav-link.active {
@@ -86,10 +86,21 @@ h5, span, label {
 
 /* navber */
 .brand-text {
-    color: #4a3b2d;
+    color: #836653;
     font-style: italic;
     letter-spacing: 0.5px;
 }
+
+.logo-text {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 600;
+    background: linear-gradient(90deg, #59331A, #8F7058);        
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+}
+
 
 .nav-text-brown {
     color: #9F6B46 !important;
@@ -415,7 +426,7 @@ th, td {
 .post-image{
     width: 100%;
     aspect-ratio:1 / 1;
-    oblect-fit:cover;
+    object-fit:cover;
 }
 .map-container {
 position: relative;

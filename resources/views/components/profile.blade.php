@@ -72,14 +72,14 @@
             <div class="col-auto px-2">
                 <a href="{{ route('profile.edit') }}"
                    class="btn btn-outline shadow-sm" 
-                   style="font-weight:bold; width:190px;">
+                   style="font-weight:bold; width:180px;">
                     {{ __('messages.profile.left_btn') }}
                 </a>
             </div>
             <div class="col-auto">
                 <a href="{{ route('favorite') }}" 
                    class="btn btn-pink shadow-sm" 
-                   style="font-weight:bold; width:190px;">
+                   style="font-weight:bold; width:180px;">
                     {{ __('messages.profile.right_btn') }}
                 </a>
             </div>
