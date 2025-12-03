@@ -164,10 +164,10 @@ class PostController extends Controller
 
         if ($ext === 'heic') {
 
-            $newName = uniqid('img_') . '.jpg';
-            $savePath = storage_path('app/public/media/posts/' . $newName);
+            $newName = uniqid('img_').'.jpg';
+            $savePath = storage_path('app/public/media/posts/'.$newName);
 
-            if (!is_dir(dirname($savePath))) {
+            if (! is_dir(dirname($savePath))) {
                 mkdir(dirname($savePath), 0777, true);
             }
 
@@ -177,7 +177,7 @@ class PostController extends Controller
             shell_exec($cmd);
 
             if (file_exists($savePath)) {
-                return 'media/posts/' . $newName;
+                return 'media/posts/'.$newName;
             }
 
             // 変換失敗時はそのまま保存
@@ -221,8 +221,6 @@ class PostController extends Controller
 
         return file_exists($fullThumbPath);
     }
-
-
 
     /**
      * 投稿詳細
