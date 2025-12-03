@@ -62,7 +62,7 @@
           <td>{{ $user->id }}</td>
           <td>
             @if ($user->avatar)
-              <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="rounded-circle d-block mx-auto border border-2 border-dark" style="width:45px; height:45px; object-fit: cover;">
+              <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="rounded-circle d-block mx-auto  border-2 " style="width:45px; height:45px; object-fit: cover; border:1px solid 9F6B46;">
             @else
               <i class="fa-solid fa-circle-user fa-3x d-block text-center text-secondary icon-md m-auto"></i>
             @endif
