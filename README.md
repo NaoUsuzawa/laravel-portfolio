@@ -362,3 +362,14 @@ http://127.0.0.1:8000 にアクセス
 <br>
 
 本プロジェクトを通して、Laravel を用いたバックエンド開発やチーム開発の実践的な経験を積むことができました。
+
+
+---
+
+## 💼 Portfolio / My Project
+
+### Go Nippon
+A travel-sharing application for foreign visitors to Japan.  
+GitHub: [https://github.com/NaoUsuzawa/laravel-portfolio](https://github.com/NaoUsuzawa/laravel-portfolio)
+
+本プロジェクトは IT 留学中にチームで開発したもので、Laravel を用いたバックエンド開発やチーム開発の実践的な経験を積むことができました。
