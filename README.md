@@ -1,12 +1,24 @@
-# Go Nippon - Instagram-like SNS for Foreign Visitors to Japan  
+# Go Nippon - A travel-sharing application for foreign visitors to Japan 
 ### 日本語版はこの下にあります ⬇️
 
 ---
 
 # 🇺🇸 English Version
 
-**Go Nippon** is an Instagram-style SNS designed specifically for foreigners traveling or living in Japan.  
-It provides features such as posts, trip map, DM, and analytics to make sharing Japan experiences more fun and intuitive.
+**Go Nippon** is a travel-sharing application for foreign visitors to Japan.  
+It allows users to share posts, explore trip maps, send direct messages, and view analytics, making Japan travel experiences more fun and interactive.
+
+---
+
+## 🙋‍♀️ My Role (Team Development)
+This application was developed as a **team project** during my IT study abroad program, where I gained experience in team-based web development using Laravel.
+
+My main responsibilities included:
+- Implementing the **notification feature**, including backend logic, database design, and data handling
+- Developing **admin-side functions** using PHP (Laravel)
+- Designing and implementing the **Admin UI**
+- Creating the **Analytics UI** to visualize application data
+- Collaborating with team members using GitHub (pull requests & code reviews)
 
 ---
 
@@ -18,6 +30,38 @@ It provides features such as posts, trip map, DM, and analytics to make sharing 
 - **UI Design**: Bootstrap
 - **Media Uploads**: Multiple images & video support
 
+---
+## ⚙️ Environment Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/NaoUsuzawa/laravel-portfolio.git
+
+# 2. Move into the project directory
+cd laravel-portfolio
+
+# 3. Install PHP dependencies
+composer install
+
+# 4. Install JavaScript dependencies
+npm install
+
+# 5. Create environment file
+cp .env.example .env
+
+# 6. Generate application key
+php artisan key:generate
+
+# 7. Run database migrations
+php artisan migrate
+
+# 8. Start development servers
+npm run dev
+php artisan serve
+
+# 9. Access the application at:
+http://127.0.0.1:8000 
+```
 ---
 
 ## ✨ Main Features
@@ -124,7 +168,7 @@ Visualize your activity:
 - [Home](readme_images/home.png)
 - [Show Post](readme_images/showpost.png)
 - [Edit Post](readme_images/editpost.png)
-- [Favarite Post](readme_images/favorite.png)
+- [Favorite Post](readme_images/favorite.png)
 - [Profile](readme_images/profile.png)
 - [Follower](readme_images/follower.png)
 - [Trip Map](readme_images/tripmap.png)
@@ -132,12 +176,30 @@ Visualize your activity:
 - [Analytics](readme_images/analytics.png)
 - [Admin](readme_images/admin.png)
 
+
+<br>
+
+This project helped me gain hands-on experience in team development and backend-focused feature implementation using Laravel.
+
+
 ---
 
 # 🇯🇵 日本語版
 
-**Go Nippon（ゴー・ニッポン）** は、日本を旅行・滞在している外国人向けに特化したインスタ風 SNS です。  
-投稿・地図・DM・アナリティクスなど多機能で、日本での体験共有を楽しく便利にします。
+**Go Nippon（ゴー・ニッポン）** は、日本を訪れる外国人向けの旅行体験共有アプリです。  
+投稿を共有したり、旅行マップで旅の記録を確認したり、ダイレクトメッセージを送ったり、アナリティクスで旅の成果を見たりして、日本での旅行をより楽しく便利にします。
+
+---
+
+## 🙋‍♀️ 担当範囲（チーム開発）
+本アプリは IT留学中にチームで開発したプロジェクトです。
+
+私は主に以下の機能を担当しました：
+- 通知機能の実装（バックエンド処理・DB設計・データ管理）
+- 管理者向け機能の開発（Laravel / PHP）
+- 管理画面（Admin UI）の設計・実装
+- データを可視化する Analytics UI の実装
+- GitHub を用いたチーム開発（PR・レビュー）
 
 ---
 
@@ -149,6 +211,39 @@ Visualize your activity:
 - **デザイン**: Bootstrap  
 - **画像・動画投稿**: 複数枚の画像 & 動画に対応
 
+---
+
+## ⚙️ 環境構築手順
+
+```bash
+# 1. リポジトリをクローン
+git clone https://github.com/NaoUsuzawa/laravel-portfolio.git
+
+# 2. プロジェクトフォルダへ移動
+cd laravel-portfolio
+
+# 3. PHPライブラリをインストール
+composer install
+
+# 4. JavaScriptライブラリをインストール
+npm install
+
+# 5. 環境設定ファイル作成
+cp .env.example .env
+
+# 6. アプリケーションキー生成
+php artisan key:generate
+
+# 7. マイグレーション実行
+php artisan migrate
+
+# 8. 開発サーバー起動
+npm run dev
+php artisan serve
+
+# 9. ブラウザでアプリを確認
+http://127.0.0.1:8000 にアクセス
+```
 ---
 
 ## ✨ 主な機能
@@ -262,3 +357,8 @@ Visualize your activity:
 - [ダイレクトメッセージ画面](readme_images/dm.png)
 - [分析画面](readme_images/analytics.png)
 - [管理画面](readme_images/admin.png)
+
+
+<br>
+
+本プロジェクトを通して、Laravel を用いたバックエンド開発やチーム開発の実践的な経験を積むことができました。
